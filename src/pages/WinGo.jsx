@@ -1,5 +1,4 @@
 import "../styles/wingo.css";
-import "../styles/wingoModal.css";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import GameHistory, { MyHistory } from "./gamehistory";
 import { useNavigate } from "react-router-dom";
