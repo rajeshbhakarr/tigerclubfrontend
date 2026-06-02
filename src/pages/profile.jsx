@@ -4,6 +4,12 @@ import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
 import axios from "axios";
 
+
+import walletImg from "../assets/wallett.png";
+import depositImg from "../assets/deposit.jpeg";
+import withdrawImg from "../assets/withdraw.png";
+import vipImg from "../assets/vipp.jpeg";
+
 const API = "http://localhost:5000/api";
 
 const Profile = () => {
@@ -68,19 +74,19 @@ const { fetchBalance, balance, user } = useWallet();
 
       <div className="btnn">
         <div className="item" onClick={() => navigate("/wallet")}>
-          <img src="src/assets/wallett.png" className="im" />
+          <img  src={walletImg} className="im" />
           <p>wallet</p>
         </div>
         <div className="item" onClick={() => navigate("/deposit")}>
-          <img src="src/assets/deposit.jpeg" className="im" />
+          <img src={depositImg} className="im" />
           <p>Deposit</p>
         </div>
         <div className="item" onClick={() => navigate("/withdraw")}>
-          <img src="src/assets/withdraw.png" className="im" />
+          <img src={withdrawImg} className="im" />
           <p>Withdraw</p>
         </div>
         <div className="item" onClick={() => navigate("/vip")}>
-          <img src="src/assets/vipp.jpeg" className="im" />
+          <img  src={vipImg} className="im" />
           <p>VIP</p>
         </div>
       </div>

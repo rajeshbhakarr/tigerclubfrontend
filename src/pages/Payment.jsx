@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/payment.css";
 
+import qrCode from "../assets/qrcode.jpeg";
+
 const Payment = () => {
   const location = useLocation();
   const amount = location.state?.amount || 0;
@@ -55,7 +57,7 @@ const Payment = () => {
 
       {/* QR Box */}
       <div className="qr-box">
-        <img className="qrcode" src="src/assets/qrcode.jpeg" alt="qr" />
+        <img className="qrcode" src={qrCode} alt="qr" />
       </div>
 
       {/* UPI */}
