@@ -5,6 +5,17 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "./home.css";
 
+import inderLogo from "../assets/inder.png";
+import logooBanner from "../assets/logoo.png";
+import wingoImg from "../assets/wingo.png";
+import minesImg from "../assets/mines.jpeg";
+import aviatorImg from "../assets/aviator.jpeg";
+import wingoooImg from "../assets/wingooo.jpeg";
+import k3Img from "../assets/k3.png";
+import d5Img from "../assets/5d.png";
+import trxImg from "../assets/trxx.png";
+import dragonImg from "../assets/dragon.png";
+
 const Home = () => {
 const { balance, user } = useWallet();  
 const navigate = useNavigate();
@@ -31,7 +42,7 @@ const openGame = (path) => {
     <div className="home">
       {/* HEADER */}
       <div className="indr">
-        <img src="src/assets/inder.png" className="log" alt="logo" />
+        <img src={inderLogo} className="log" alt="logo" />
         <p className="ind">INDR</p>
       </div>
 
@@ -45,7 +56,7 @@ const openGame = (path) => {
       </div>
 
       {/* BANNER */}
-      <img src="src/assets/logoo.png" className="logoo" alt="banner" />
+      <img src={logooBanner} className="logoo" alt="banner" />
 
       {/* WALLET */}
       <div className="wallet">
@@ -70,13 +81,13 @@ const openGame = (path) => {
 
         <div className="scroll-roww">
           <img
-            src="src/assets/wingo.png"
+           src={wingoImg}
             className="ccarddd redd"
             alt="wingo"
 onClick={() => openGame("/wingo")}            style={{ cursor: "pointer" }}
           />
-          <img src="src/assets/mines.jpeg" className="carddd greenn " />
-          <img src="src/assets/aviator.jpeg" className="carddd orange"   onClick={() => openGame("/aviator")} />
+          <img src={minesImg} className="carddd greenn " />
+          <img src={aviatorImg} className="carddd orange"   onClick={() => openGame("/aviator")} />
         </div>
       </div>
 
@@ -88,25 +99,25 @@ onClick={() => openGame("/wingo")}            style={{ cursor: "pointer" }}
         <div className="grid">
           <div className="game-card">
             <img
-              src="src/assets/wingooo.jpeg"
+              src={wingoooImg}
 onClick={() => openGame("/wingo")}            />
           </div>
 
           <div className="game-card">
-            <img src="src/assets/k3.png" />
+            <img src={k3Img} />
           </div>
 
           <div className="game-card">
-            <img src="src/assets/5d.png" />
+            <img src={d5Img} />
           </div>
 
           <div className="game-card">
-            <img src="src/assets/trxx.png" />
+            <img src={trxImg} />
           </div>
         </div>
 
         <img
-          src="src/assets/dragon.png"
+          src={dragonImg}
 onClick={() => openGame("/dragontiger")}          className="dragon"
         />
       </div>
