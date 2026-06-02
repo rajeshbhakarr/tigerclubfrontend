@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../../../styles/admin/requests.css";
 
-const API = "http://localhost:5000/api";
+const API = "https://indr-backend-production.up.railway.app/api";
 
 function Requests() {
   const [deposits, setDeposits] = useState([]);

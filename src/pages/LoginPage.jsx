@@ -5,7 +5,7 @@ import axios from "axios";
 import { useWallet } from "../context/WalletContext";
 
 
-const API = "http://172.29.109.200:5000/api";
+const API = "https://indr-backend-production.up.railway.app";
 const LoginPage = () => {
 
   const { fetchBalance } = useWallet();

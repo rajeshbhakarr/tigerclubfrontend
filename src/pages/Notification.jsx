@@ -4,7 +4,7 @@ import { useWallet } from "../context/WalletContext";
 import "../styles/notification.css";
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+const API = "https://indr-backend-production.up.railway.app/api";
 
 function Notification() {
   const navigate = useNavigate();

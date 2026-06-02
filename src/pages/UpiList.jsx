@@ -9,7 +9,7 @@ useEffect(() => {
   const loadUpi = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/profile/me",
+        "https://indr-backend-production.up.railway.appproduction.up.railway.app/api/profile/me",
         {
           headers: {
             Authorization:

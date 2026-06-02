@@ -1,5 +1,5 @@
 // src/api/aviatorApi.js
-const API_URL = "http://localhost:5000";
+const API_URL = "https://indr-backend-production.up.railway.app";
 
 function getToken() {
   return localStorage.getItem("token");

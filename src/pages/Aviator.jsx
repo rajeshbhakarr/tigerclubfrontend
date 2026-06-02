@@ -11,7 +11,7 @@ import {
   getActiveBet,
   createAviatorStream,
 } from "../api/Aviatorapi";
-const API_URL = "http://localhost:5000";
+const API_URL = "https://indr-backend-production.up.railway.app";
 
 
 

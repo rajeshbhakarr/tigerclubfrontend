@@ -33,7 +33,7 @@ function AddBank() {
 
   try {
     const res = await fetch(
-      "http://localhost:5000/api/profile/save-bank",
+      "https://indr-backend-production.up.railway.app/api/profile/save-bank",
       {
         method: "POST",
         headers: {

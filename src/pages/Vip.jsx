@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/vip.css";
 
-const API = "http://localhost:5000/api";
+const API = "https://indr-backend-production.up.railway.app/api";
 
 const VIP_COLORS = [
   "linear-gradient(135deg, #667eea, #764ba2)",

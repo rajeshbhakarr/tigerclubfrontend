@@ -13,7 +13,7 @@ if (!guestId) {
   localStorage.setItem("guestId", guestId);
 }
 
-const API = "http://localhost:5000/api";
+const API = "https://indr-backend-production.up.railway.app/api";
 
 const BOT_MSG = {
   deposit:

@@ -23,7 +23,7 @@ const withdrawableBalance =
   const loadPaymentData = async () => {
     try {
       const res = await fetch(
-        "http://localhost:5000/api/profile/me",
+        "https://indr-backend-production.up.railway.app/api/profile/me",
         {
           headers: {
             Authorization:
@@ -61,7 +61,7 @@ const withdrawableBalance =
 
     setLoading(true);
     try {
-      const res = await fetch("http://localhost:5000/api/withdraw", {
+      const res = await fetch("https://indr-backend-production.up.railway.app/api/withdraw", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

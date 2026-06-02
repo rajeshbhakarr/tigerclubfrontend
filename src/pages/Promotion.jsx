@@ -20,7 +20,7 @@ function Promotion() {
   const fetchPromotionData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("http://localhost:5000/api/promotion", {
+      const res = await fetch("https://indr-backend-production.up.railway.app/api/promotion", {
         headers: { Authorization: "Bearer " + token },
       });
       const result = await res.json();

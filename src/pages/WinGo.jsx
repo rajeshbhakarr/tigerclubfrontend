@@ -6,7 +6,7 @@ import { placeBet, getMyBets } from "../api/wingoApi";
 import { useWallet } from "../context/WalletContext";
 
 const ROUND_DURATION = 30;
-const API_URL = "http://localhost:5000";
+const API_URL = "https://indr-backend-production.up.railway.app";
 
 const WinGo = () => {
   const { balance, setBalance, fetchBalance } = useWallet();

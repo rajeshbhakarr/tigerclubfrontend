@@ -12,7 +12,7 @@ function Withdrawhistory() {
   }, []);
 
   const fetchWithdraws = async () => {
-    const res = await fetch("http://localhost:5000/api/withdraw/my-withdraws", {
+    const res = await fetch("https://indr-backend-production.up.railway.app/api/withdraw/my-withdraws", {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },

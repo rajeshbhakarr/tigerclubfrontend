@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
   import { useNavigate } from "react-router-dom";
   import "../styles/activity.css";
 
-  const API = "http://localhost:5000/api";
+  const API = "https://indr-backend-production.up.railway.app/api";
 
   const ATTENDANCE_REWARDS = [
     { day: 1, amount: 8 },

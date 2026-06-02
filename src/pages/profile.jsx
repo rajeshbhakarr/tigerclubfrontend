@@ -10,7 +10,7 @@ import depositImg from "../assets/deposit.jpeg";
 import withdrawImg from "../assets/withdraw.png";
 import vipImg from "../assets/vipp.jpeg";
 
-const API = "http://localhost:5000/api";
+const API = "https://indr-backend-production.up.railway.app/api";
 
 const Profile = () => {
 const { fetchBalance, balance, user } = useWallet();

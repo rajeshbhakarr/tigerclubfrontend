@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../../../styles/admin/users.css";
 
-const API = "http://localhost:5000/api/admin";
+const API = "https://indr-backend-production.up.railway.app/api/admin";
 
 function Users() {
   const [users, setUsers] = useState([]);
@@ -412,7 +412,7 @@ function Users() {
                 onClick={async () => {
                   try {
                     await fetch(
-                      "http://localhost:5000/api/admin/edit-needtobet",
+                      "https://indr-backend-production.up.railway.app/api/admin/edit-needtobet",
                       {
                         method: "POST",
                         headers: {

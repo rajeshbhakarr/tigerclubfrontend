@@ -23,7 +23,7 @@ function AddUpi() {
 
   try {
     const res = await fetch(
-      "http://localhost:5000/api/profile/save-upi",
+      "https://indr-backend-production.up.railway.app/api/profile/save-upi",
       {
         method: "POST",
         headers: {

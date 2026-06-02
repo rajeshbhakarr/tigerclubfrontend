@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "https://indr-backend-production.up.railway.app";
 
 // Bet place karna
 export const placeBet = async (data) => {

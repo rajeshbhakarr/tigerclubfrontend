@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const API = "http://localhost:5000/api/admin";
+const API = "https://indr-backend-production.up.railway.app/api/admin";
 const token = () => localStorage.getItem("token");
 const hdr = () => ({ Authorization: "Bearer " + token() });
 
