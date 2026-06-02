@@ -1,0 +1,508 @@
+body {
+  margin: 0;
+  font-family: Arial;
+  background: linear-gradient(to right, #5f6bdc, #7a4db3);
+  overflow-x: hidden;
+}
+
+/* Force mobile size on ALL screens (laptop/desktop shows phone size) */
+@media (min-width: 421px) {
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+}
+
+.home {
+  max-width: 420px;
+  margin: auto;
+  background: #fff;
+  padding-bottom: 0px;
+}
+
+/* On desktop, add rounded corners and shadow */
+@media (min-width: 421px) {
+  .home {
+    border-radius: 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    margin: 0 auto;
+  }
+  
+  .bottom-nav {
+    width: 420px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    right: auto !important;
+  }
+}
+
+/* HEADER */
+.indr {
+  width: 100%;
+  max-width: 420px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: white;
+  border-bottom: 3px solid #ff00ff;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  box-sizing: border-box;
+}
+
+.log {
+  width: 100px;
+}
+
+.ind {
+  font-size: 22px;
+  font-weight: 900;
+  margin-left: 10px;
+}
+
+/* NAV */
+.top-nav {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  overflow-x: auto;
+  cursor: pointer;
+  scrollbar-width: thin;
+}
+
+.top-nav::-webkit-scrollbar {
+  height: 3px;
+}
+
+.top-nav::-webkit-scrollbar-track {
+  background: #eee;
+  border-radius: 10px;
+}
+
+.top-nav::-webkit-scrollbar-thumb {
+  background: #ff4d4f;
+  border-radius: 10px;
+}
+
+.nav {
+  padding: 6px 12px;
+  background: #eee;
+  border-radius: 12px;
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.nav.active {
+  background: #ff4d4f;
+  color: #fff;
+}
+
+/* BANNER */
+.logoo {
+  width: calc(100% - 20px);
+  margin: 0 10px;
+  padding: 0;
+  border-radius: 15px;
+  cursor: pointer;
+  display: block;
+}
+
+/* WALLET */
+.wallet {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wallet-left p {
+  font-size: 12px;
+  margin: 0;
+  margin-left: 20px;
+}
+
+.wallet-left h2 {
+  margin: 0;
+  margin-left: 20px;
+  font-size: 20px;
+}
+
+.wallet-btns {
+  display: flex;
+  gap: 8px;
+}
+
+.deposit {
+  background: #ff4d4f;
+  color: #000000;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  width: 100px;
+  height: 40px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.withdraw {
+  background: #c98913;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* CARDS */
+.scroll-roww {
+  display: flex;
+  gap: 30px;
+  padding: 10px;
+  margin-left: 2px;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+
+.scroll-roww::-webkit-scrollbar {
+  height: 3px;
+}
+
+.carddd {
+  width: 110px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ccarddd {
+  width: 110px;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.redd { border: 2px solid rgb(206, 10, 10); }
+.greenn { border: 2px solid green; }
+.orange { border: 2px solid orange; }
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 10px;
+}
+
+.game-card {
+  position: relative;
+  cursor: pointer;
+}
+
+.game-card img {
+  width: 100%;
+  height: 100px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.game-card span {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-weight: bold;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+/* DRAGON */
+.dragon {
+  width: calc(100% - 20px);
+  margin: 10px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: block;
+}
+
+/* INFO */
+.info-box {
+  margin: 10px;
+  padding: 10px;
+  background: #2a5298;
+  color: #fff;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  display: flex;
+  justify-content: space-around;
+  padding: 8px;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+  z-index: 100;
+}
+
+/* Add padding at bottom of home to prevent content hiding behind fixed nav */
+.home {
+  padding-bottom: 70px;
+}
+
+.bottom-nav div {
+  text-align: center;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.bottom-nav div:hover {
+  background: #f0f0f0;
+}
+
+.go {
+  background: red;
+  color: #fff;
+  padding: 10px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.lottery-title {
+  margin-left: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.sub {
+  margin-left: 15px;
+  font-size: 14px;
+  color: #666;
+}
+
+.title {
+  margin-left: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Responsive adjustments for mobile */
+@media (max-width: 480px) {
+  .home {
+    max-width: 100%;
+    margin: 0;
+    border-radius: 0;
+  }
+  
+  .indr {
+    width: 100%;
+    padding: 10px 15px;
+  }
+  
+  .log {
+    width: 80px;
+  }
+  
+  .ind {
+    font-size: 18px;
+  }
+  
+  .wallet-left h2 {
+    font-size: 18px;
+  }
+  
+  .deposit, .withdraw {
+    width: 85px;
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+  
+  .carddd, .ccarddd {
+    width: 95px;
+    height: 90px;
+  }
+  
+  .scroll-roww {
+    gap: 15px;
+  }
+  
+  .game-card img {
+    height: 85px;
+  }
+  
+  .bottom-nav {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .lottery-title, .sub, .title {
+    margin-left: 12px;
+  }
+}
+
+/* Extra small devices (below 360px) */
+@media (max-width: 360px) {
+  .indr {
+    height: 60px;
+    padding: 8px 12px;
+  }
+  
+  .log {
+    width: 70px;
+  }
+  
+  .ind {
+    font-size: 16px;
+  }
+  
+  .wallet-left h2 {
+    font-size: 16px;
+    margin-left: 12px;
+  }
+  
+  .wallet-left p {
+    font-size: 10px;
+    margin-left: 12px;
+  }
+  
+  .deposit, .withdraw {
+    width: 75px;
+    height: 35px;
+    font-size: 12px;
+  }
+  
+  .carddd, .ccarddd {
+    width: 80px;
+    height: 75px;
+  }
+  
+  .nav {
+    padding: 5px 10px;
+    font-size: 12px;
+  }
+  
+  .game-card img {
+    height: 75px;
+  }
+  
+  .game-card span {
+    font-size: 10px;
+  }
+  
+  .bottom-nav div {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+  
+  .go {
+    width: 35px;
+    height: 35px;
+    font-size: 12px;
+    padding: 0;
+  }
+  
+  .lottery-title {
+    font-size: 14px;
+    margin-left: 10px;
+  }
+  
+  .sub {
+    font-size: 12px;
+    margin-left: 10px;
+  }
+  
+  .title {
+    font-size: 14px;
+    margin-left: 8px;
+  }
+  
+  .info-box {
+    font-size: 12px;
+    margin: 8px;
+  }
+}
+
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+  .nav:active {
+    transform: scale(0.96);
+  }
+  
+  .deposit:active, .withdraw:active {
+    transform: scale(0.97);
+  }
+  
+  .carddd:active, .ccarddd:active {
+    transform: scale(0.98);
+  }
+  
+  .game-card:active {
+    transform: scale(0.98);
+  }
+  
+  .bottom-nav div:active {
+    background: #f0f0f0;
+    transform: scale(0.96);
+  }
+}
+
+/* Fix for landscape mode on mobile */
+@media (max-width: 800px) and (orientation: landscape) {
+  .home {
+    padding-bottom: 60px;
+  }
+  
+  .bottom-nav {
+    padding: 5px;
+  }
+  
+  .go {
+    width: 35px;
+    height: 35px;
+  }
+  
+  .indr {
+    height: 55px;
+  }
+  
+  .game-card img {
+    height: 70px;
+  }
+}
+
+/* Ensure images don't overflow */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Smooth scrolling for horizontal scrolls */
+.top-nav, .scroll-roww {
+  -webkit-overflow-scrolling: touch;
+}

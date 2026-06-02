@@ -1,0 +1,159 @@
+.au-container {
+  max-width: 420px;
+  margin: auto;
+  background: #f5f5f5;
+  min-height: 100vh;
+  font-family: Arial;
+}
+
+/* Force mobile size on ALL devices (laptop/desktop shows phone size) */
+@media (min-width: 421px) {
+  body {
+    background: #2c2c2c;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .au-container {
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0,0,0,0.3);
+    min-height: auto;
+    height: 100vh;
+    overflow-y: auto;
+  }
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 420px) {
+  .au-container {
+    width: 100%;
+    min-height: 100vh;
+  }
+  
+  .au-save {
+    max-width: 100%;
+  }
+}
+
+/* header */
+.au-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* warning */
+.au-warning {
+  margin: 15px;
+  padding: 12px;
+  background: #ffe5e5;
+  color: red;
+  border-radius: 10px;
+  font-size: 13px;
+  text-align: center;
+}
+
+/* form */
+.au-form {
+  padding: 15px;
+  padding-bottom: 80px; /* space for fixed button */
+}
+
+.au-form label {
+  display: block;
+  margin: 12px 0 5px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.au-form input {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #eee;
+  outline: none;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.au-form input:focus {
+  background: #e8e8e8;
+  box-shadow: 0 0 0 2px rgba(0,0,0,0.05);
+}
+
+/* note */
+.au-note {
+  color: red;
+  font-size: 11px;
+  margin: 5px 0 10px;
+}
+
+/* save button - fixed at bottom */
+.au-save {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  padding: 15px;
+  border: none;
+  background: #cfcfd4;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 20;
+}
+
+.au-save:hover {
+  background: #bbb;
+}
+
+.au-save:active {
+  transform: translateX(-50%) scale(0.98);
+}
+
+/* Small screen fine-tuning */
+@media (max-width: 420px) {
+  .au-head {
+    padding: 12px 15px;
+    font-size: 16px;
+  }
+  
+  .au-form {
+    padding: 12px;
+    padding-bottom: 75px;
+  }
+  
+  .au-form input {
+    padding: 10px;
+  }
+  
+  .au-save {
+    padding: 14px;
+    font-size: 15px;
+  }
+  
+  .au-warning {
+    margin: 12px;
+    padding: 10px;
+    font-size: 12px;
+  }
+}

@@ -1,0 +1,215 @@
+.ps-page {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #0f172a, #1e3a5f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ps-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 30px 20px;
+  width: 100%;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+  box-sizing: border-box;
+}
+
+/* Icon */
+.ps-icon-wrap {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, #f59e0b, #fbbf24);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.4);
+  margin-bottom: 4px;
+}
+
+.ps-icon {
+  font-size: 36px;
+}
+
+/* Title */
+.ps-title {
+  font-size: 22px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+  text-align: center;
+}
+
+.ps-sub {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+  text-align: center;
+}
+
+.ps-warn {
+  font-size: 13px;
+  color: #ef4444;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+/* Info box */
+.ps-info {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ps-info-icon {
+  font-size: 16px;
+  margin-top: 1px;
+  flex-shrink: 0;
+}
+
+.ps-info p {
+  margin: 0;
+  font-size: 12px;
+  color: #1e40af;
+  line-height: 1.5;
+}
+
+/* Steps */
+.ps-steps {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ps-step {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid #f3f4f6;
+  background: #fafafa;
+}
+
+.ps-step:last-child {
+  border-bottom: none;
+}
+
+.ps-step.done {
+  background: #f0fdf4;
+}
+
+.ps-step.active {
+  background: #fffbeb;
+}
+
+.ps-step-icon {
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.ps-step-text {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.ps-step.done .ps-step-text {
+  color: #16a34a;
+}
+
+.ps-step.active .ps-step-text {
+  color: #d97706;
+}
+
+/* Badges */
+.ps-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  flex-shrink: 0;
+}
+
+.ps-badge.green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.ps-badge.yellow {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* Buttons */
+.ps-btn-home {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: opacity 0.3s;
+}
+
+.ps-btn-home:hover {
+  opacity: 0.9;
+}
+
+.ps-btn-support {
+  width: 100%;
+  padding: 14px;
+  background: white;
+  color: #1e40af;
+  border: 2px solid #bfdbfe;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.ps-btn-support:hover {
+  background: #eff6ff;
+}
+
+/* laptop par bhi mobile size hi dikhe */
+@media screen and (min-width: 421px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    background: #0a0e1a;
+  }
+  
+  .ps-page {
+    padding: 20px;
+  }
+  
+  .ps-card {
+    max-width: 400px;
+    border-radius: 28px;
+  }
+}

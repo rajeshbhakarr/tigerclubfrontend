@@ -1,0 +1,474 @@
+/* FULL SCREEN FIX */
+.adminpanelpage {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  overflow: hidden;
+  font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* SIDEBAR DEFAULT */
+.axp-sidebar {
+  width: 260px;
+  height: 100vh;
+  overflow-y: auto;   /* 🔥 SCROLL ENABLE */
+  position: fixed;    /* 🔥 FIXED SIDEBAR */
+
+  left: 0;
+  top: 0;
+
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(20px);
+  padding: 24px 16px;
+  background: linear-gradient(180deg, #0f172a, #020617);
+  border-right: 1px solid rgba(255,255,255,0.05);
+  box-shadow: 5px 0 25px rgba(0,0,0,0.5);
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* HIDE SIDEBAR */
+.axp-sidebar.closed {
+  width: 0;
+  overflow: hidden;
+  padding: 0;
+  border-right: none;
+}
+
+/* CONTENT FULL WIDTH */
+.axp-content {
+  flex: 1;
+  margin-left: 260px;   /* 🔥 sidebar ki width */
+  overflow-y: auto;
+  padding: 20px 28px;
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.4s ease;
+}
+.axp-sidebar.closed + .axp-content {
+  margin-left: 0;
+}
+
+.axp-sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.axp-sidebar::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF8C00, #FFD700);
+  border-radius: 10px;
+}
+/* REMOVE ANY CENTER LIMIT */
+body, html {
+  margin: 0;
+  padding: 0;
+  background: #0a0a1a;
+}
+
+/* IMPORTANT 🔥 */
+#root {
+  width: 100%;
+  height: 100%;
+}
+
+/* TOP BAR */
+.axp-topbar {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 12px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  margin-bottom: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.axp-topbar h3 {
+  color: #fff;
+  font-size: 1.4rem;
+  font-weight: 600;
+  background: linear-gradient(135deg, #fff, #a8c0ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.3px;
+}
+
+/* MENU BUTTON */
+.axp-menu-btn {
+  font-size: 24px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: white;
+  cursor: pointer;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.axp-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.02);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* SIDEBAR LOGO */
+.axp-logo {
+  color: #fff;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 32px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  background: linear-gradient(135deg, #FFD700, #FF8C00);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: -0.5px;
+}
+
+/* SIDEBAR BUTTONS */
+.axp-sidebar button {
+  width: 100%;
+  padding: 12px 18px;
+  margin: 4px 0;
+  border: none;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  backdrop-filter: blur(4px);
+}
+
+/* Add icons effect - you can add emojis or icons later */
+.axp-sidebar button::before {
+  font-size: 1.2rem;
+}
+
+/* HOVER EFFECT */
+.axp-sidebar button:hover {
+  background: linear-gradient(90deg, rgba(255, 140, 0, 0.2), rgba(255, 215, 0, 0.1));
+  color: #fff;
+  transform: translateX(6px);
+  border-left: 3px solid #FF8C00;
+}
+
+/* ACTIVE BUTTON */
+.axp-sidebar button.active {
+  background: linear-gradient(90deg, #FF8C00, #FFD700);
+  color: #000;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(255, 140, 0, 0.4);
+  border-left: 3px solid #fff;
+}
+
+/* LOGOUT SPECIAL */
+.logout-btn {
+  margin-top: auto !important;
+  background: rgba(255, 77, 79, 0.12) !important;
+  color: #ff7a7a !important;
+  border: 1px solid rgba(255, 77, 79, 0.3) !important;
+}
+
+.logout-btn:hover {
+  background: linear-gradient(90deg, #ff4d4f, #ff7875) !important;
+  color: #fff !important;
+  border-left: 3px solid #fff !important;
+  transform: translateX(6px);
+}
+
+/* SCROLLBAR STYLING */
+.axp-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.axp-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+}
+
+.axp-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #FF8C00, #FFD700);
+  border-radius: 10px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .axp-sidebar {
+    position: fixed;
+    z-index: 1000;
+    height: 100vh;
+    left: 0;
+    top: 0;
+  }
+  
+  .axp-content {
+    padding: 16px;
+  }
+  
+  .axp-topbar h3 {
+    font-size: 1.1rem;
+  }
+}
+
+.menu-section {
+  margin-top: 10px;
+}
+
+.menu-section button {
+  width: 100%;
+  text-align: left;
+}
+
+.submenu {
+  margin-left: 10px;
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.submenu button {
+  font-size: 14px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 8px;
+  padding: 8px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* wingo css */
+/* wingo css */
+/* wingo css */
+
+
+
+
+
+/* ===== WINGO MANAGER ===== */
+.wingo-container {
+  padding: 20px;
+  color: #fff;
+}
+
+.wingo-title {
+  font-size: 26px;
+  font-weight: 700;
+  margin-bottom: 15px;
+  background: linear-gradient(90deg, #FFD700, #FF8C00);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+/* TOP INFO */
+.wingo-info {
+  display: flex;
+  gap: 30px;
+  margin-bottom: 20px;
+  font-size: 15px;
+  opacity: 0.9;
+}
+
+/* BOX CARD */
+.wingo-card {
+  background: rgba(255,255,255,0.05);
+  padding: 20px;
+  border-radius: 20px;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+/* BIG SMALL */
+.wingo-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.wingo-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  transition: 0.3s;
+}
+
+.wingo-btn:hover {
+  transform: scale(1.05);
+  background: linear-gradient(90deg, #FF8C00, #FFD700);
+  color: #000;
+}
+
+/* ACTIVE SELECT */
+.wingo-btn.active {
+  background: linear-gradient(90deg, #FF8C00, #FFD700);
+  color: #000;
+  box-shadow: 0 5px 20px rgba(255,140,0,0.5);
+}
+
+/* NUMBER GRID */
+.wingo-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.wingo-number {
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.06);
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.wingo-number:hover {
+  background: #FFD700;
+  color: #000;
+  transform: scale(1.05);
+}
+
+.wingo-number.active {
+  background: linear-gradient(135deg, #FF8C00, #FFD700);
+  color: #000;
+  box-shadow: 0 0 15px #FF8C00;
+}
+
+/* COLORS */
+.wingo-colors {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.color-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+.color-red { background: #ff3b3b; }
+.color-green { background: #00c853; }
+.color-violet { background: #a855f7; }
+
+.color-btn:hover {
+  transform: scale(1.05);
+}
+
+.color-btn.active {
+  box-shadow: 0 0 15px #fff;
+}
+
+/* SUBMIT */
+.wingo-submit {
+  width: 100%;
+  padding: 14px;
+  border-radius: 16px;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(90deg, #FF8C00, #FFD700);
+  color: #000;
+  transition: 0.3s;
+}
+
+.wingo-submit:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 20px #FFD700;
+}
+
+/* LAST RESULT */
+.wingo-result {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.05);
+}
+
+
+
+
+
+/* dragon tigercss */
+/* dragon tigercss */
+/* dragon tigercss */
+
+
+
+
+/* DRAGON TIGER ROW */
+.dragon-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+/* COMMON BUTTON */
+.dragon-btn {
+  flex: 1;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  transition: all 0.3s ease;
+}
+
+/* HOVER */
+.dragon-btn:hover {
+  transform: scale(1.05);
+}
+
+/* ACTIVE STATES */
+.active-dragon {
+  background: linear-gradient(135deg, #00c853, #64dd17);
+  color: #000;
+}
+
+.active-tiger {
+  background: linear-gradient(135deg, #ff3d00, #ff9100);
+  color: #fff;
+}
+
+.active-tie {
+  background: linear-gradient(135deg, #7c4dff, #b388ff);
+  color: #fff;
+}

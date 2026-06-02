@@ -1,0 +1,433 @@
+/* ══════════════════════════════════
+   ACTIVITY PAGE - MOBILE RESPONSIVE
+   (Laptop pe bhi mobile jaisa dikhega)
+══════════════════════════════════ */
+
+/* Base container - mobile first + laptop pe bhi fixed mobile width */
+.activity-page {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #f0f4f8;
+  padding-bottom: 80px;
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+}
+
+/* Ensure all elements use border-box */
+.activity-page * {
+  box-sizing: border-box;
+}
+
+/* Header - touch friendly */
+.act-header {
+  background: linear-gradient(135deg, #1a8a3c, #22c55e);
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.act-header h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+.act-back {
+  font-size: 22px;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Toast - properly centered on mobile */
+.act-toast {
+  position: fixed;
+  top: 70px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px;
+  border-radius: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 999;
+  animation: fadeIn 0.3s ease;
+  white-space: nowrap;
+  max-width: 90%;
+  white-space: normal;
+  text-align: center;
+}
+.act-toast.success { background: #22c55e; color: white; }
+.act-toast.error { background: #ef4444; color: white; }
+@keyframes fadeIn { from { opacity: 0; top: 60px; } to { opacity: 1; top: 70px; } }
+
+/* Tabs - sticky works on mobile */
+.act-tabs {
+  display: flex;
+  background: white;
+  border-bottom: 2px solid #e5e7eb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.act-tab {
+  flex: 1;
+  padding: 12px 4px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+}
+.act-tab.active {
+  color: #16a34a;
+  border-bottom: 3px solid #16a34a;
+  background: #f0fdf4;
+}
+
+.act-content {
+  padding: 16px;
+}
+
+/* ══ ATTENDANCE ══ */
+.att-banner {
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  border-radius: 16px;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+.att-banner h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.att-banner p {
+  margin: 0 0 12px;
+  font-size: 12px;
+  opacity: 0.85;
+}
+.att-stats-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.att-stat-box {
+  background: rgba(255,255,255,0.2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.att-stat-box span {
+  font-size: 10px;
+  opacity: 0.85;
+}
+.att-stat-box strong {
+  font-size: 16px;
+  font-weight: 700;
+}
+.att-emoji {
+  font-size: 48px;
+}
+
+/* 3-column grid - responsive on mobile */
+.att-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.att-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 8px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+}
+.att-card.current {
+  border-color: #22c55e;
+  background: #f0fdf4;
+}
+.att-card.done {
+  background: #f9fafb;
+  opacity: 0.7;
+}
+
+.att-amount {
+  font-size: 14px;
+  font-weight: 700;
+  color: #111;
+}
+.att-coin {
+  font-size: 28px;
+}
+.att-claim-btn {
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 60px;
+}
+.att-claim-btn:disabled {
+  opacity: 0.6;
+}
+.att-done {
+  color: #22c55e;
+  font-size: 18px;
+  font-weight: 700;
+}
+.att-day {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.gift-card {
+  grid-column: span 3;
+  flex-direction: row;
+  justify-content: space-around;
+  padding: 16px;
+  flex-wrap: wrap;
+}
+
+/* ══ BETTING TASKS ══ */
+.bet-banner {
+  background: linear-gradient(135deg, #1e3a5f, #2563eb);
+  border-radius: 16px;
+  padding: 16px;
+  color: white;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+.bet-banner-icon {
+  font-size: 40px;
+}
+.bet-banner h3 {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 700;
+}
+.bet-banner p {
+  margin: 0;
+  font-size: 11px;
+  opacity: 0.8;
+}
+
+.bet-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.bet-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  gap: 12px;
+}
+.bet-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1;
+  min-width: 120px;
+}
+.bet-status-icon {
+  font-size: 20px;
+}
+.bet-label {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+}
+.bet-prog {
+  margin: 0 0 4px;
+  font-size: 11px;
+  color: #6b7280;
+}
+.bet-bar {
+  width: 120px;
+  max-width: 100%;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.bet-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: 10px;
+  transition: width 0.5s;
+}
+
+.bet-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.bet-reward {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f59e0b;
+}
+.bet-btn {
+  background: linear-gradient(135deg, #15803d, #22c55e);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  min-width: 70px;
+}
+.bet-btn.claimed {
+  background: #d1fae5;
+  color: #16a34a;
+  cursor: default;
+}
+.bet-btn.disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: default;
+}
+
+/* ══ DEPOSIT BONUS ══ */
+.dep-banner {
+  background: linear-gradient(135deg, #92400e, #f59e0b);
+  border-radius: 16px;
+  padding: 20px;
+  color: white;
+  margin-bottom: 16px;
+  text-align: center;
+}
+.dep-banner h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 700;
+}
+.dep-banner p {
+  margin: 0;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.dep-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dep-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  gap: 12px;
+}
+.dep-left {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.dep-icon {
+  font-size: 28px;
+}
+.dep-label {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #111;
+}
+.dep-sub {
+  margin: 0;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.dep-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.dep-reward {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f59e0b;
+}
+.dep-btn {
+  background: linear-gradient(135deg, #92400e, #f59e0b);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  min-width: 70px;
+}
+.dep-btn.claimed {
+  background: #fef3c7;
+  color: #92400e;
+  cursor: default;
+}
+.dep-btn.disabled {
+  background: #e5e7eb;
+  color: #9ca3af;
+  cursor: default;
+}
+
+/* Extra small devices ke liye fine-tuning */
+@media (max-width: 420px) {
+  .activity-page {
+    max-width: 100%;
+    margin: 0;
+  }
+  .att-grid {
+    gap: 8px;
+  }
+  .att-card {
+    padding: 10px 4px;
+  }
+  .bet-card, .dep-card {
+    padding: 12px;
+  }
+}

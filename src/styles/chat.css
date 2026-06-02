@@ -1,0 +1,297 @@
+/* Chat Page - Fully Responsive (Mobile First) */
+.chat-page {
+  max-width: 420px; /* ✅ Fixed mobile width */
+  margin: 0 auto; /* ✅ Center aligned */
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #f2f2f2;
+  overflow: hidden; /* ✅ Prevents unwanted scrolling */
+}
+
+.chat-header {
+  background: #4caf50;
+  color: white;
+  height: 56px; /* ✅ Slightly better touch target */
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  gap: 10px;
+  position: relative;
+  flex-shrink: 0; /* ✅ Header fixed height */
+}
+
+.chat-header p {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  flex: 1;
+  text-align: center;
+  margin-left: 0; /* ✅ Fixed alignment */
+}
+
+/* ✅ Back button fixed */
+.back-btn {
+  font-size: 28px;
+  cursor: pointer;
+  color: white; /* ✅ Better visibility */
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ✅ Optional menu button (if you have) */
+.menu-btn {
+  font-size: 24px;
+  cursor: pointer;
+  color: white;
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.chat-body {
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* ✅ Message container */
+.msg {
+  max-width: 80%;
+  padding: 10px 14px;
+  border-radius: 18px;
+  margin-bottom: 4px;
+  white-space: pre-line;
+  word-wrap: break-word;
+  font-size: 14px;
+  line-height: 1.4;
+  animation: fadeInMsg 0.3s ease-out;
+}
+
+@keyframes fadeInMsg {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.msg.bot {
+  background: #e0e0e0;
+  color: #1a1a1a;
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+
+.msg.user {
+  background: #4caf50;
+  color: white;
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+
+/* ✅ Input area */
+.chat-input {
+  display: flex;
+  padding: 10px 12px;
+  background: white;
+  align-items: center;
+  gap: 8px;
+  border-top: 1px solid #e0e0e0;
+  flex-shrink: 0;
+}
+
+.chat-input input {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 24px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #fff;
+}
+
+.chat-input input:focus {
+  border-color: #4caf50;
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+.chat-input button {
+  background: #4caf50;
+  border: none;
+  color: white;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.chat-input button:hover {
+  background: #45a049;
+  transform: scale(1.02);
+}
+
+.file-btn {
+  cursor: pointer;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: #4caf50;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.file-btn:hover {
+  background: rgba(76, 175, 80, 0.1);
+}
+
+/* ✅ Typing indicator (optional) */
+.typing-indicator {
+  display: flex;
+  gap: 4px;
+  padding: 8px 14px;
+  background: #e0e0e0;
+  border-radius: 18px;
+  align-self: flex-start;
+  width: fit-content;
+}
+
+.typing-indicator span {
+  width: 8px;
+  height: 8px;
+  background: #888;
+  border-radius: 50%;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.typing-indicator span:nth-child(1) {
+  animation-delay: 0s;
+}
+.typing-indicator span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.typing-indicator span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typing {
+  0%, 60%, 100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  30% {
+    transform: translateY(-8px);
+    opacity: 1;
+  }
+}
+
+/* ✅ Scrollbar styling */
+.chat-body::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-body::-webkit-scrollbar-track {
+  background: #e0e0e0;
+  border-radius: 10px;
+}
+
+.chat-body::-webkit-scrollbar-thumb {
+  background: #4caf50;
+  border-radius: 10px;
+}
+
+/* ✅ Laptop/Desktop pe bhi same mobile view */
+@media (min-width: 769px) {
+  .chat-page {
+    max-width: 420px;
+    margin: 0 auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* ✅ Extra small devices (below 420px) */
+@media (max-width: 420px) {
+  .chat-page {
+    max-width: 100%;
+  }
+  
+  .msg {
+    max-width: 85%;
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+  
+  .chat-header p {
+    font-size: 14px;
+  }
+  
+  .back-btn, .menu-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+  }
+  
+  .file-btn, .chat-input button {
+    width: 38px;
+    height: 38px;
+  }
+  
+  .chat-input input {
+    padding: 8px 14px;
+    font-size: 13px;
+  }
+}
+
+/* ✅ Fix for notched phones (iPhone etc) */
+@supports (padding: max(0px)) {
+  .chat-page {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+  
+  .chat-header {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+  
+  .chat-input {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
+}

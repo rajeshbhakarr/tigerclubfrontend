@@ -1,0 +1,293 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Register Page - Mobile First */
+.register-page {
+  max-width: 100%;
+  margin: auto;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* Laptop/Desktop par bhi mobile jaisa dikhne ke liye */
+@media (min-width: 769px) {
+  body {
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .register-page {
+    max-width: 450px;
+    margin: 0 auto;
+    border-radius: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    min-height: auto;
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+}
+
+/* Tablet optimization */
+@media (min-width: 480px) and (max-width: 768px) {
+  .register-page {
+    max-width: 480px;
+  }
+}
+
+/* HEADER */
+.register-header {
+  background: linear-gradient(180deg, #ff5a5a, #ff7a7a);
+  color: white;
+  padding: 24px 20px;
+  border-bottom-left-radius: 24px;
+  border-bottom-right-radius: 24px;
+}
+
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.top-row h2 {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+/* Back button ke liye space (agar ho to) */
+.top-row span:first-child {
+  cursor: pointer;
+  padding: 8px;
+  margin: -8px;
+  display: inline-block;
+}
+
+.register-header p {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
+/* BODY */
+.register-body {
+  padding: 24px 20px;
+}
+
+.ttiitle {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 24px;
+  color: #f34040;
+}
+
+@media (max-width: 400px) {
+  .ttiitle {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+}
+
+/* Input Labels */
+label {
+  display: block;
+  margin: 14px 0 6px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #333;
+}
+
+/* Phone Box */
+.phone-box {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.code {
+  background: #eeeeee;
+  padding: 14px 16px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #555;
+}
+
+.phone-box input {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  background: #eeeeee;
+  border-radius: 12px;
+  outline: none;
+  font-size: 15px;
+  transition: all 0.2s ease;
+}
+
+.phone-box input:focus {
+  background: #e8e8e8;
+  box-shadow: 0 0 0 2px rgba(255, 90, 90, 0.2);
+}
+
+/* Input Box */
+.input-box {
+  display: flex;
+  align-items: center;
+  background: #eeeeee;
+  border-radius: 12px;
+  padding: 4px 16px;
+  transition: all 0.2s ease;
+}
+
+.input-box:focus-within {
+  background: #e8e8e8;
+  box-shadow: 0 0 0 2px rgba(255, 90, 90, 0.2);
+}
+
+.input-box input {
+  flex: 1;
+  border: none;
+  background: none;
+  outline: none;
+  padding: 14px 0;
+  font-size: 15px;
+}
+
+/* Optional: Agar input ke andar icon ho to */
+.input-box .icon {
+  margin-right: 10px;
+  color: #999;
+}
+
+/* Agreement Checkbox */
+.agree {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 18px;
+  font-size: 13px;
+  color: #555;
+  line-height: 1.4;
+}
+
+.agree input {
+  width: 18px;
+  height: 18px;
+  margin-top: 1px;
+  cursor: pointer;
+  accent-color: #ff5a5a;
+}
+
+.agree label {
+  margin: 0;
+  font-weight: normal;
+  display: inline;
+  cursor: pointer;
+}
+
+/* Register Button */
+.register-btn {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(90deg, #b93e3e, #ca4848);
+  border: none;
+  border-radius: 40px;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 24px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.register-btn:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+}
+
+/* Hover effect for devices that support hover */
+@media (hover: hover) {
+  .register-btn:hover {
+    background: linear-gradient(90deg, #c44545, #db5252);
+    box-shadow: 0 4px 15px rgba(185, 62, 62, 0.3);
+  }
+}
+
+/* Login Link */
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.login-link span {
+  color: #ff4d4d;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 4px 8px;
+  display: inline-block;
+}
+
+.login-link span:active {
+  opacity: 0.7;
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+  .register-header {
+    padding: 20px 16px;
+  }
+  
+  .register-body {
+    padding: 20px 16px;
+  }
+  
+  .top-row h2 {
+    font-size: 18px;
+  }
+  
+  .code {
+    padding: 12px 14px;
+  }
+  
+  .phone-box input,
+  .input-box input {
+    padding: 12px 0;
+    font-size: 14px;
+  }
+  
+  .register-btn {
+    padding: 14px;
+    font-size: 16px;
+  }
+}
+
+/* Safe area support for notched phones */
+@supports (padding: max(0px)) {
+  .register-page {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+  
+  .register-header {
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+  
+  .register-body {
+    padding-left: max(20px, env(safe-area-inset-left));
+    padding-right: max(20px, env(safe-area-inset-right));
+  }
+}

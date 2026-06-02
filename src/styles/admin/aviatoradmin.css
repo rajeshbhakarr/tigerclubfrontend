@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+
+.adm-root {
+  font-family: 'Rajdhani', sans-serif;
+  background: #0a0c14;
+  color: #f0f4ff;
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  padding-bottom: 30px;
+}
+
+.adm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: #e63946;
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.adm-live {
+  font-size: 12px;
+  color: #ffe07a;
+  animation: blink 1s ease-in-out infinite;
+}
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* Monitor */
+.adm-monitor {
+  background: #111420;
+  border: 1px solid #252a3a;
+  margin: 12px;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.adm-monitor-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.adm-stat { text-align: center; }
+.adm-stat-label { font-size: 11px; color: #8892aa; letter-spacing: 0.5px; margin-bottom: 4px; }
+.adm-stat-val {
+  font-family: 'Orbitron', monospace;
+  font-size: 16px;
+  font-weight: 700;
+}
+.adm-stat-val.blue { color: #4cc9f0; }
+
+/* Plane bar */
+.adm-plane-bar {
+  position: relative;
+  background: #1c2030;
+  border-radius: 99px;
+  height: 32px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.adm-plane-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  border-radius: 99px;
+  transition: width 0.3s linear, background 0.3s;
+  opacity: 0.4;
+}
+
+.adm-plane-emoji {
+  position: absolute;
+  right: 10px;
+  font-size: 18px;
+}
+
+/* Controls */
+.adm-controls {
+  margin: 0 12px 12px;
+  text-align: center;
+}
+
+.adm-force-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #e63946, #a02030);
+  color: #fff;
+  font-family: 'Orbitron', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(230,57,70,0.4);
+  transition: all 0.2s;
+}
+
+.adm-force-btn:hover:not(.disabled) {
+  box-shadow: 0 4px 30px rgba(230,57,70,0.6);
+  transform: scale(1.01);
+}
+
+.adm-force-btn.disabled {
+  background: #1c2030;
+  color: #4a5270;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.adm-forced-msg {
+  margin-top: 8px;
+  color: #f4b942;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.adm-hint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #4a5270;
+}
+
+/* Section */
+.adm-section {
+  margin: 0 12px 12px;
+  background: #111420;
+  border: 1px solid #252a3a;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.adm-section-title {
+  padding: 10px 14px;
+  background: #161925;
+  font-size: 12px;
+  font-weight: 600;
+  color: #8892aa;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid #252a3a;
+}
+
+/* Crash list */
+.adm-crash-list { max-height: 200px; overflow-y: auto; }
+.adm-crash-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 14px;
+  border-bottom: 1px solid #1c2030;
+  font-size: 13px;
+}
+
+.adm-cr-id   { color: #4cc9f0; font-family: 'Orbitron', monospace; font-size: 11px; }
+.adm-cr-val  { font-family: 'Orbitron', monospace; font-weight: 700; font-size: 14px; }
+.adm-cr-val.high { color: #9b5de5; }
+.adm-cr-val.low  { color: #e63946; }
+.adm-cr-time { color: #4a5270; font-size: 11px; }
+
+/* History grid */
+.adm-hist-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 12px;
+}
+
+.adm-hist-pill {
+  font-family: 'Orbitron', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+.adm-hist-pill.low  { color: #4cc9f0; background: rgba(76,201,240,0.1); }
+.adm-hist-pill.mid  { color: #f4b942; background: rgba(244,185,66,0.1); }
+.adm-hist-pill.high { color: #9b5de5; background: rgba(155,93,229,0.1); }
+.adm-hist-pill.mega { color: #e63946; background: rgba(230,57,70,0.1); }
+
+.adm-empty {
+  padding: 16px;
+  text-align: center;
+  color: #4a5270;
+  font-size: 13px;
+}

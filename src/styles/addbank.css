@@ -1,0 +1,95 @@
+.ab-container {
+  max-width: 420px;
+  margin: 0 auto;
+  background: #f5f5f5;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  width: 100%;
+}
+
+/* header */
+.ab-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #fff;
+}
+
+/* warning */
+.ab-warning {
+  margin: 15px;
+  padding: 10px;
+  background: #ffe5e5;
+  color: red;
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+/* form */
+.ab-form {
+  padding: 15px;
+  padding-bottom: 80px;
+}
+
+.ab-form label {
+  display: block;
+  margin: 10px 0 5px;
+  font-size: 14px;
+}
+
+/* input + select */
+.ab-form input,
+.ab-form select {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #eee;
+  outline: none;
+  box-sizing: border-box;
+}
+
+/* save button */
+.ab-save {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  padding: 15px;
+  border: none;
+  background: #cfcfd4;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* laptop par bhi mobile size hi dikhe */
+@media screen and (min-width: 421px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+    background: #e0e0e0;
+  }
+  
+  .ab-container {
+    max-width: 420px;
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  }
+  
+  .ab-save {
+    max-width: 420px;
+    border-radius: 0 0 20px 20px;
+  }
+}

@@ -1,0 +1,83 @@
+/* Mobile-first responsive version - Laptop/Desktop me bhi mobile size dikhega */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 16px;
+}
+
+/* Main container for game cards - mobile first layout */
+.game-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.game-card {
+  width: calc(50% - 6px);  /* Mobile me 2 cards per row */
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.game-img {
+  height: 70px;
+  background: orange;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+/* Laptop/Desktop me bhi same mobile size (max 420px width) */
+@media (min-width: 768px) {
+  body {
+    background: #1a1a2e;
+    padding: 30px;
+  }
+  
+  .game-container {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  
+  .game-card {
+    width: calc(50% - 6px);  /* Laptop me bhi 2 cards per row - mobile jaisa */
+  }
+}
+
+/* For very small phones (below 350px) */
+@media (max-width: 350px) {
+  .game-card {
+    width: 100%;  /* 1 card per row on very small screens */
+  }
+}
+
+/* Hover effect only on devices that support hover (laptops) */
+@media (hover: hover) {
+  .game-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+  }
+}
+
+/* Touch-friendly tap effect for mobile */
+@media (hover: none) {
+  .game-card:active {
+    transform: scale(0.98);
+    transition: transform 0.05s;
+  }
+}

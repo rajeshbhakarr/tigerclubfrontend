@@ -1,0 +1,273 @@
+/* Mobile-first responsive version - Laptop/Desktop me bhi mobile size dikhega */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #d1d5db;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* ── PAGE ── */
+.promo-page {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: auto;
+  background: #f0f2f5;
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* Laptop/Desktop pe bhi mobile size center me */
+@media (min-width: 768px) {
+  body {
+    background: #1a1a2e;
+    padding: 20px;
+  }
+  .promo-page {
+    margin: 0 auto;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+}
+
+/* ── HEADER ── */
+.promo-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #6c3de0, #a855f7);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  box-shadow: 0 2px 12px rgba(108,61,224,0.3);
+}
+.promo-back-btn {
+  width: 36px; height: 36px;
+  background: rgba(255,255,255,0.2);
+  border: none; border-radius: 50%;
+  color: white; font-size: 18px; font-weight: 700;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s;
+}
+.promo-back-btn:hover { background: rgba(255,255,255,0.35); }
+.promo-header-title {
+  font-size: 18px; font-weight: 700; color: white;
+  letter-spacing: 0.5px; margin: 0;
+}
+
+/* ── HERO CARD ── */
+.promo-hero-card {
+  margin: 16px;
+  background: linear-gradient(135deg, #6c3de0 0%, #a855f7 50%, #ec4899 100%);
+  border-radius: 20px;
+  padding: 28px 20px;
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(108,61,224,0.35);
+  position: relative;
+  overflow: hidden;
+}
+.promo-hero-card::before {
+  content: '';
+  position: absolute;
+  top: -30px; right: -30px;
+  width: 120px; height: 120px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 50%;
+}
+.promo-hero-card::after {
+  content: '';
+  position: absolute;
+  bottom: -20px; left: -20px;
+  width: 80px; height: 80px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 50%;
+}
+.promo-hero-icon { font-size: 36px; margin-bottom: 8px; }
+.promo-hero-amount {
+  font-size: 38px; font-weight: 800; color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  line-height: 1;
+}
+.promo-hero-label {
+  font-size: 13px; color: rgba(255,255,255,0.85);
+  margin-top: 8px; font-weight: 500;
+}
+.promo-hero-hint {
+  font-size: 11px; color: rgba(255,255,255,0.65);
+  margin-top: 6px;
+}
+
+/* ── STATS ROW ── */
+.promo-stats-row {
+  display: flex; gap: 12px;
+  margin: 0 16px 16px;
+}
+.promo-stat-card {
+  flex: 1; border-radius: 16px;
+  padding: 18px 12px; text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.promo-stat-invite {
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border: 1px solid #fed7aa;
+}
+.promo-stat-deposit {
+  background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+  border: 1px solid #bbf7d0;
+}
+.promo-stat-icon { font-size: 24px; margin-bottom: 6px; }
+.promo-stat-value { font-size: 22px; font-weight: 800; color: #1f2937; }
+.promo-stat-label { font-size: 12px; color: #6b7280; font-weight: 500; margin-top: 4px; }
+
+/* ── SECTION TITLE ── */
+.promo-section-title {
+  font-size: 15px; font-weight: 700; color: #1f2937;
+  margin-bottom: 12px; letter-spacing: 0.3px;
+}
+
+/* ── INVITE SECTION ── */
+.promo-invite-section {
+  margin: 0 16px 16px;
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+}
+.promo-code-box {
+  display: flex; align-items: center; gap: 10px;
+  background: #f3f4f6; border-radius: 12px;
+  padding: 12px 14px; margin-bottom: 14px;
+  border: 1px solid #e5e7eb;
+}
+.promo-code-text {
+  flex: 1; font-size: 18px; font-weight: 800;
+  color: #6c3de0; letter-spacing: 2px;
+  word-break: break-all;
+}
+.promo-code-copy-btn {
+  padding: 7px 14px; border: none; border-radius: 8px;
+  background: #6c3de0; color: white;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s; white-space: nowrap;
+  flex-shrink: 0;
+}
+.promo-code-copy-btn:hover { background: #5b32c7; transform: scale(1.03); }
+
+.promo-invite-btn {
+  width: 100%; padding: 14px;
+  background: linear-gradient(135deg, #6c3de0, #a855f7);
+  color: white; border: none; border-radius: 12px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  box-shadow: 0 4px 14px rgba(108,61,224,0.35);
+  transition: all 0.2s; letter-spacing: 0.5px;
+}
+.promo-invite-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,61,224,0.4); }
+.promo-invite-btn-icon { font-size: 16px; }
+
+.promo-invite-url {
+  margin-top: 10px; font-size: 11px; color: #9ca3af;
+  text-align: center; word-break: break-all;
+  background: #f9fafb; padding: 8px; border-radius: 8px;
+  border: 1px dashed #e5e7eb;
+}
+
+/* ── COMMISSION SECTION ── */
+.promo-commission-section {
+  margin: 0 16px 16px;
+  background: white; border-radius: 16px;
+  padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+}
+.promo-commission-grid { display: flex; gap: 12px; }
+.promo-commission-card {
+  flex: 1; border-radius: 14px;
+  padding: 16px 12px; text-align: center;
+  background: linear-gradient(135deg, #fdf4ff, #f5f3ff);
+  border: 1px solid #e9d5ff;
+}
+.promo-commission-icon { font-size: 22px; margin-bottom: 6px; }
+.promo-commission-amount { font-size: 20px; font-weight: 800; color: #6c3de0; }
+.promo-commission-label { font-size: 12px; color: #6b7280; margin-top: 4px; font-weight: 500; }
+
+/* ── HOW IT WORKS ── */
+.promo-how-section {
+  margin: 0 16px 16px;
+  background: white; border-radius: 16px;
+  padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+}
+.promo-steps {
+  display: flex; align-items: center; gap: 6px;
+  flex-wrap: nowrap; overflow-x: auto;
+  padding-bottom: 4px;
+}
+.promo-step {
+  flex: 1; min-width: 80px; text-align: center;
+}
+.promo-step-num {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: linear-gradient(135deg, #6c3de0, #a855f7);
+  color: white; font-size: 14px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 8px;
+  box-shadow: 0 3px 8px rgba(108,61,224,0.3);
+}
+.promo-step-text { font-size: 11px; color: #4b5563; font-weight: 500; line-height: 1.4; }
+.promo-step-arrow { font-size: 16px; color: #a855f7; font-weight: 700; flex-shrink: 0; }
+
+/* ── REFERRAL LIST ── */
+.promo-referral-section {
+  margin: 0 16px 16px;
+  background: white; border-radius: 16px;
+  padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #e5e7eb;
+}
+.promo-referral-list { display: flex; flex-direction: column; gap: 10px; }
+.promo-referral-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px; background: #f9fafb; border-radius: 12px;
+  border: 1px solid #f3f4f6;
+}
+.promo-referral-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: linear-gradient(135deg, #6c3de0, #a855f7);
+  color: white; font-size: 16px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.promo-referral-info { flex: 1; }
+.promo-referral-name { font-size: 14px; font-weight: 600; color: #1f2937; }
+.promo-referral-date { font-size: 11px; color: #9ca3af; margin-top: 2px; }
+.promo-referral-deposit { font-size: 14px; font-weight: 700; color: #16a34a; }
+
+/* Small screen adjustments */
+@media (max-width: 380px) {
+  .promo-stats-row {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .promo-commission-grid {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .promo-step {
+    min-width: 70px;
+  }
+  .promo-step-text {
+    font-size: 10px;
+  }
+}

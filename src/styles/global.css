@@ -1,0 +1,214 @@
+/* Global Styles - Mobile Fixed (375px) - GAP FIXED */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: #3a3229;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ADMIN FULL SCREEN FIX - Keep full for admin */
+.admin-full {
+  max-width: 100% !important;
+  width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 🔥 FULL SCREEN ADMIN FIX */
+#root {
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main app wrapper - Fixed to 375px mobile size */
+.app-wrapper {
+  max-width: 375px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  background: #f5f5f5;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Bottom Navigation - Fixed inside 375px container */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 16px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px));
+  box-shadow: 0 -2px 20px rgba(0,0,0,0.1);
+  border-radius: 20px 20px 0 0;
+  z-index: 1000;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: #666;
+  font-size: 11px;
+  gap: 4px;
+  transition: all 0.3s;
+  padding: 6px 8px;
+  border-radius: 12px;
+}
+
+.ghx-number::before {
+  content: none !important;
+  display: none !important;
+}
+
+.ghx-dot.red::before {
+  content: none !important;
+  display: none !important;
+}
+
+.nav-item:hover {
+  color: #667eea;
+  transform: translateY(-2px);
+}
+
+.nav-icon {
+  font-size: 22px;
+}
+
+/* Home Page - GAP FIXED */
+.home-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  padding-bottom: 80px;
+  flex: 1;
+  margin: 0;
+}
+
+/* Extra padding bottom fix for last element */
+.home-container:last-child {
+  margin-bottom: 0;
+  padding-bottom: 85px;
+}
+
+.home-card {
+  background: white;
+  border-radius: 24px;
+  padding: 28px 20px;
+  text-align: center;
+  max-width: 100%;
+  width: 100%;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+  margin: 0;
+}
+
+.home-card h1 {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.weather {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
+  padding: 10px;
+  background: #f3f4f6;
+  border-radius: 12px;
+}
+
+.deposit-button {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  width: 100%;
+  max-width: 280px;
+}
+
+.deposit-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* Touch-friendly tap targets */
+button,
+.nav-item,
+.deposit-button {
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.nav-item:active {
+  opacity: 0.7;
+  transform: scale(0.96);
+}
+
+/* Safe area for notches */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .bottom-nav {
+    padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  }
+  
+  .app-wrapper {
+    padding-bottom: 0;
+  }
+}
+
+/* Scroll behavior */
+.home-container::-webkit-scrollbar {
+  width: 3px;
+}
+
+.home-container::-webkit-scrollbar-thumb {
+  background: #dcdcdc;
+  border-radius: 10px;
+}
+
+/* 🔥 EXTRA FIX - Body no extra space */
+body::before,
+body::after,
+.app-wrapper::before,
+.app-wrapper::after {
+  display: none;
+}
+
+/* Remove any margin from children */
+.app-wrapper > *:first-child {
+  margin-top: 0;
+}
+
+.app-wrapper > *:last-child {
+  margin-bottom: 0;
+}

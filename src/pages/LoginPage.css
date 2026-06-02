@@ -1,0 +1,213 @@
+/* Color Variables */
+:root {
+  --primary-bg: #f7f8ff;
+  --header-pink: #f95959;
+  --text-gray: #757575;
+  --border-color: #e0e0e0;
+  --white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.login-container {
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  background-color: var(--primary-bg);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Section */
+.header {
+  background-color: var(--header-pink);
+  color: var(--white);
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Form Section */
+.form-section {
+  padding: 20px;
+  flex-grow: 1;
+}
+
+.input-group {
+  margin-bottom: 20px;
+}
+
+.label-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: 500;
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.country-code {
+  width: 80px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  background: var(--white);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.main-input {
+  flex: 1;
+  padding: 12px 15px;
+  border-radius: 8px;
+  border: 1px solid var(--border-color);
+  font-size: 16px;
+  outline: none;
+  background: var(--white);
+}
+
+.main-input:focus {
+  border-color: var(--header-pink);
+}
+
+/* Buttons */
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  background-color: var(--header-pink);
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 20px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.btn-login:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+.btn-register {
+  width: 100%;
+  padding: 14px;
+  background-color: transparent;
+  color: var(--header-pink);
+  border: 1px solid var(--header-pink);
+  border-radius: 30px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.btn-register:hover {
+  transform: scale(1.02);
+  background: rgba(249, 89, 89, 0.05);
+}
+
+/* Footer Icons */
+.footer-links {
+  display: flex;
+  justify-content: space-around;
+  padding: 30px 20px;
+  text-align: center;
+  margin-top: auto;
+}
+
+.icon-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: #333;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.icon-link:hover {
+  transform: translateY(-3px);
+}
+
+.icon-circle {
+  font-size: 24px;
+  color: var(--header-pink);
+}
+
+/* laptop par bhi mobile size hi dikhe */
+@media screen and (min-width: 361px) {
+  body {
+    background: #e8e8e8;
+    padding: 20px;
+  }
+  
+  .login-container {
+    max-width: 360px;
+    min-height: auto;
+    border-radius: 28px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Extra small devices (under 360px) */
+@media screen and (max-width: 360px) {
+  .login-container {
+    max-width: 100%;
+  }
+  
+  .header-title {
+    font-size: 20px;
+  }
+  
+  .btn-login, .btn-register {
+    font-size: 16px;
+    padding: 12px;
+  }
+  
+  .footer-links {
+    padding: 20px 15px;
+  }
+  
+  .icon-link {
+    font-size: 12px;
+  }
+  
+  .icon-circle {
+    font-size: 20px;
+  }
+}

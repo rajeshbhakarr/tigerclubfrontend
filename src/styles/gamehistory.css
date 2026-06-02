@@ -1,0 +1,215 @@
+/* Wingo History - Mobile First */
+.wingo-history-wrapper {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  overflow-x: auto;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Laptop/Desktop par bhi mobile jaisa dikhne ke liye */
+@media (min-width: 769px) {
+  body {
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .wingo-history-wrapper {
+    max-width: 450px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 24px;
+    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+  }
+}
+
+/* Tablet ke liye */
+@media (min-width: 480px) and (max-width: 768px) {
+  .wingo-history-wrapper {
+    max-width: 500px;
+  }
+}
+
+/* Header Styling */
+.wingo-history-header {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  align-items: center;
+  background: linear-gradient(45deg, #ff5f5f, #ff4d4f);
+  color: #fff;
+  padding: 14px 12px;
+  border-radius: 12px;
+  margin: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  gap: 4px;
+}
+
+.wingo-history-header div {
+  text-align: center;
+  word-break: break-word;
+}
+
+.wingo-history-header div:first-child {
+  text-align: left;
+}
+
+/* Period Text */
+.wingo-period {
+  font-size: 13px;
+  color: #222;
+  font-weight: 500;
+}
+
+/* History Rows */
+.wingo-history-row {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 14px 12px;
+  border-bottom: 1px solid #eeeeee;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  gap: 4px;
+}
+
+.wingo-history-row:active {
+  background: #fafafa;
+}
+
+/* Row text alignment */
+.wingo-history-row > div {
+  text-align: center;
+  word-break: break-word;
+}
+
+.wingo-history-row > div:first-child {
+  text-align: left;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Dots Styling - Sabse Important Part */
+.wingo-dot-base {
+  width: 14px !important;
+  height: 14px !important;
+  border-radius: 50% !important;
+  display: inline-block !important;
+  flex-shrink: 0 !important;
+}
+
+/* Tablet/mobile pe dot thoda bada for better tap visibility */
+@media (max-width: 768px) {
+  .wingo-dot-base {
+    width: 12px !important;
+    height: 12px !important;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 400px) {
+  .wingo-dot-base {
+    width: 10px !important;
+    height: 10px !important;
+  }
+}
+
+.wingo-dot-red {
+  background-color: #ff2626 !important;
+  box-shadow: 0 0 0 1px rgba(255, 38, 38, 0.2);
+}
+
+.wingo-dot-green {
+  background-color: #16a34a !important;
+  box-shadow: 0 0 0 1px rgba(22, 163, 74, 0.2);
+}
+
+.wingo-dot-violet {
+  background-color: #d946ef !important;
+  box-shadow: 0 0 0 1px rgba(217, 70, 239, 0.2);
+}
+
+/* Color Container */
+.wingo-history-color-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* Number Text Styling */
+.wingo-num-text {
+  text-align: center;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+@media (max-width: 480px) {
+  .wingo-num-text {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 360px) {
+  .wingo-num-text {
+    font-size: 16px;
+  }
+}
+
+.wingo-num-red {
+  color: #ff2626;
+}
+
+.wingo-num-green {
+  color: #16a34a;
+}
+
+.wingo-num-mix {
+  background: linear-gradient(45deg, #6d28d9, #d946ef);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+
+/* Horizontal scroll handling for small screens if needed */
+@media (max-width: 420px) {
+  .wingo-history-wrapper {
+    overflow-x: auto;
+  }
+  
+  .wingo-history-header,
+  .wingo-history-row {
+    min-width: 380px;
+  }
+}
+
+/* Hover effect for devices that support hover */
+@media (hover: hover) {
+  .wingo-history-row:hover {
+    background: #f9f9f9;
+    transform: translateX(2px);
+  }
+}
+
+/* Last row ko border bottom nahi */
+.wingo-history-row:last-child {
+  border-bottom: none;
+}
+
+/* Safe area support for modern phones */
+@supports (padding: max(0px)) {
+  .wingo-history-wrapper {
+    padding-left: max(0px, env(safe-area-inset-left));
+    padding-right: max(0px, env(safe-area-inset-right));
+  }
+}

@@ -1,0 +1,464 @@
+/* Profile.css */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Force mobile size on ALL screens (laptop/desktop shows phone size) */
+@media (min-width: 421px) {
+  body {
+    background: #1a1a2e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  .profile-container {
+    border-radius: 24px !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3) !important;
+    margin: 0 auto !important;
+    max-width: 420px !important;
+    width: 100% !important;
+  }
+}
+
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue",
+    Arial, sans-serif;
+}
+
+.profile-container {
+  max-width: 420px;
+  margin: 0 auto;
+  background: #f5f5f5;
+  min-height: 100vh;
+  border-radius: 0;
+  overflow-x: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  padding-bottom: 70px;
+}
+
+/* Header Section */
+.profile-header {
+  background: linear-gradient(135deg, #d34040 0%, #ffa514 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 0 0 20px 20px;
+}
+
+.member-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.member-id {
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.vip-badge {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1a2e;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.uid-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.uid-label {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+.last-login {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Balance Card */
+.balance-card {
+  background: white;
+  margin: -20px 20px 20px 20px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.balance-label {
+  color: #000000;
+  font-size: 14px;
+  margin-bottom: 10px;
+  margin-right: 70px;
+}
+
+.balance-amount {
+  color: #1a1a2e;
+  font-size: 30px;
+  font-weight: bold;
+  margin-right: 70px;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 0 20px;
+  margin-bottom: 20px;
+}
+
+.action-btn {
+  border: none;
+  padding: 12px 0;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.action-btn.active {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+}
+
+/* Content Area */
+.content-area {
+  background: white;
+  margin: 0 20px 20px 20px;
+  padding: 20px;
+  border-radius: 15px;
+  min-height: 100px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tab-content {
+  color: #666;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Menu List */
+.menu-list {
+  background: white;
+  margin: 0 20px 20px 20px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.menu-item:last-child {
+  border-bottom: none;
+}
+
+.menu-icon {
+  font-size: 20px;
+  margin-right: 15px;
+}
+
+.menu-text {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.menu-sub {
+  font-size: 12px;
+  color: #999;
+  margin-left: 10px;
+}
+
+.menu-value {
+  font-size: 13px;
+  color: #666;
+}
+
+.badge {
+  background: #ff4444;
+  color: white;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: bold;
+}
+
+.notification-item {
+  position: relative;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-width: 420px;
+  margin: 0 auto;
+  background: white;
+  display: flex;
+  justify-content: space-around;
+  padding: 12px 20px;
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 20px 20px 0 0;
+}
+
+/* On desktop, fix bottom nav within the container */
+@media (min-width: 421px) {
+  .bottom-nav {
+    max-width: 420px;
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    border-radius: 20px 20px 0 0;
+  }
+  
+  .profile-container {
+    padding-bottom: 70px;
+  }
+}
+
+.nav-item {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #999;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  margin-left: 5px;
+}
+
+.nav-item span {
+  margin-left: 10px;
+}
+
+.nav-item.highlight {
+  background: linear-gradient(135deg, #ffd700, #ffed4e);
+  color: #1a1a2e;
+  border-radius: 25px;
+  padding: 8px 18px;
+  font-weight: bold;
+}
+
+.nav-item:hover {
+  color: #667eea;
+}
+
+.nav-item.highlight:hover {
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .profile-container {
+    max-width: 100%;
+  }
+
+  .action-buttons {
+    gap: 8px;
+  }
+
+  .action-btn {
+    font-size: 12px;
+    padding: 10px 0;
+  }
+
+  .menu-item {
+    padding: 14px 16px;
+  }
+
+  .bottom-nav {
+    padding: 10px 16px;
+    max-width: 100%;
+  }
+
+  .nav-item {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .nav-item span {
+    margin-left: 6px;
+  }
+
+  .nav-item.highlight {
+    padding: 6px 14px;
+  }
+}
+
+/* Extra small devices */
+@media (max-width: 360px) {
+  .action-buttons {
+    gap: 6px;
+  }
+  
+  .action-btn {
+    font-size: 11px;
+    padding: 8px 0;
+  }
+  
+  .balance-amount {
+    font-size: 24px;
+    margin-right: 50px;
+  }
+  
+  .balance-label {
+    margin-right: 50px;
+  }
+  
+  .menu-item {
+    padding: 12px 14px;
+  }
+  
+  .menu-text {
+    font-size: 13px;
+  }
+  
+  .nav-item {
+    font-size: 10px;
+    padding: 5px 6px;
+  }
+  
+  .nav-item span {
+    margin-left: 4px;
+  }
+  
+  .nav-item.highlight {
+    padding: 5px 10px;
+  }
+}
+
+/* Add padding at bottom for fixed nav */
+.profile-container {
+  padding-bottom: 70px;
+}
+
+/* Animation for active tab */
+.action-btn.active {
+  animation: fadeInScale 0.2s ease;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Smooth transitions */
+.menu-item,
+.action-btn,
+.nav-item {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wallett {
+  width: 100px;
+  position: relative;
+}
+
+.btn {
+  display: flex;
+  gap: 60px;
+  padding: 10px;
+  justify-content: center;
+}
+
+.btnn {
+  display: flex;
+  gap: 60px;
+  padding: 10px;
+  justify-content: center;
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.im {
+  width: 50px;
+}
+
+.item p {
+  margin: 5px 0 0;
+  font-size: 15px;
+  color: black;
+}
+
+.item:hover,
+.item:active,
+.item:focus {
+  transform: none !important;
+  background: none !important;
+  box-shadow: none !important;
+}
+
+.tttt {
+  width: -10px;
+  cursor: pointer;
+}
+
+.item:hover {
+  transform: none !important;
+  background: none !important;
+}
+
+/* Touch device optimization */
+@media (hover: none) and (pointer: coarse) {
+  .action-btn:active {
+    transform: scale(0.96);
+  }
+  
+  .menu-item:active {
+    background: rgba(0, 0, 0, 0.05);
+  }
+  
+  .nav-item:active {
+    transform: scale(0.95);
+  }
+  
+  .item:active {
+    transform: scale(0.98) !important;
+  }
+}

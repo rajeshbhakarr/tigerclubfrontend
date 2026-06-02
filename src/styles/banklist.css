@@ -1,0 +1,211 @@
+/* Bank Page - Mobile First */
+.bank-page {
+  max-width: 100%;
+  margin: auto;
+  background: #f5f5f5;
+  min-height: 100vh;
+  padding: 15px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+}
+
+/* Laptop/Desktop par bhi mobile jaisa dikhne ke liye */
+@media (min-width: 769px) {
+  body {
+    background: #e0e0e0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+
+  .bank-page {
+    max-width: 450px;
+    margin: 0 auto;
+    border-radius: 32px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+    max-height: 95vh;
+    scrollbar-width: thin;
+  }
+}
+
+/* Tablet ke liye smooth transition */
+@media (min-width: 480px) and (max-width: 768px) {
+  .bank-page {
+    max-width: 480px;
+    padding: 20px;
+  }
+}
+
+/* Header */
+.bank-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  background: transparent;
+  padding: 0 5px;
+}
+
+/* Card - Touch friendly */
+.bank-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s ease;
+}
+
+.bank-card:active {
+  transform: scale(0.99);
+}
+
+/* Row */
+.bank-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background: #f2f2f2;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  font-size: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Row ke andar agar extra text ho to handle */
+.bank-row span:first-child {
+  font-weight: 500;
+  color: #333;
+}
+
+.bank-row span:last-child {
+  font-weight: 600;
+  color: #222;
+}
+
+/* Select - Bank option */
+.bank-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  padding: 8px 0;
+  font-size: 15px;
+  flex-wrap: wrap;
+}
+
+.bank-select span:first-child {
+  color: #555;
+}
+
+.bank-select span:last-child {
+  font-weight: 600;
+  color: #ff5f5f;
+  background: rgba(255, 95, 95, 0.1);
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* Tick / Badge */
+.tick {
+  background: #ff5f5f;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 7px;
+  font-size: 11px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+/* Add Box - Clickable */
+.bank-add-box {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px 16px;
+  text-align: center;
+  border: 2px dashed #cccccc;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  margin-top: 8px;
+}
+
+.bank-add-box:active {
+  transform: scale(0.98);
+  background: #fafafa;
+}
+
+/* Hover effect for laptop (optional, touch pe ignore) */
+@media (hover: hover) {
+  .bank-add-box:hover {
+    border-color: #ff5f5f;
+    background: #fff5f5;
+  }
+  
+  .bank-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+}
+
+.plus {
+  font-size: 36px;
+  margin-bottom: 12px;
+  color: #bbbbbb;
+  display: block;
+}
+
+.bank-add-box p {
+  color: #999999;
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Extra small devices (below 400px) */
+@media (max-width: 400px) {
+  .bank-page {
+    padding: 12px;
+  }
+  
+  .bank-header {
+    font-size: 16px;
+    gap: 8px;
+  }
+  
+  .bank-row {
+    font-size: 13px;
+    padding: 10px;
+  }
+  
+  .bank-select {
+    font-size: 13px;
+    gap: 8px;
+  }
+  
+  .plus {
+    font-size: 32px;
+  }
+  
+  .bank-add-box {
+    padding: 30px 12px;
+  }
+}
+
+/* Fix for notch / safe area on modern mobiles */
+@supports (padding: max(0px)) {
+  .bank-page {
+    padding-left: max(15px, env(safe-area-inset-left));
+    padding-right: max(15px, env(safe-area-inset-right));
+    padding-bottom: max(15px, env(safe-area-inset-bottom));
+  }
+}

@@ -1,0 +1,274 @@
+/* ══════════════════════════════════
+   WALLET PAGE - MOBILE RESPONSIVE
+   (Laptop pe bhi mobile jaisa dikhega)
+══════════════════════════════════ */
+
+.wl-page {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: #f5f5f5;
+  font-family: 'Segoe UI', sans-serif;
+  box-sizing: border-box;
+}
+
+.wl-page * {
+  box-sizing: border-box;
+}
+
+/* Header */
+.wl-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #ff5a5a, #ff7a7a);
+  color: white;
+}
+
+.wl-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.wl-back {
+  font-size: 22px;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Balance Card */
+.wl-balance-card {
+  margin: 20px 16px;
+  background: linear-gradient(135deg, #ff5a5a, #ff7a7a);
+  border-radius: 20px;
+  padding: 32px 20px;
+  text-align: center;
+  color: white;
+  box-shadow: 0 8px 24px rgba(255, 90, 90, 0.3);
+}
+
+.wl-balance-label {
+  font-size: 14px;
+  opacity: 0.9;
+  margin: 0 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.wl-balance-amount {
+  font-size: 42px;
+  font-weight: 800;
+  margin: 0 0 16px;
+  letter-spacing: -1px;
+  word-break: break-word;
+}
+
+.wl-refresh-btn {
+  background: rgba(255,255,255,0.2);
+  border: 1px solid rgba(255,255,255,0.4);
+  border-radius: 20px;
+  padding: 8px 20px;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.2s;
+  min-width: 80px;
+}
+
+.wl-refresh-btn:active {
+  transform: scale(0.96);
+}
+
+/* Action Cards */
+.wl-actions {
+  display: flex;
+  gap: 12px;
+  margin: 0 16px 16px;
+  flex-wrap: wrap;
+}
+
+.wl-action-card {
+  flex: 1;
+  min-width: calc(50% - 12px);
+  background: white;
+  border-radius: 16px;
+  padding: 20px 12px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  transition: all 0.2s;
+}
+
+.wl-action-card:active {
+  transform: scale(0.98);
+}
+
+.wl-action-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.wl-action-label {
+  font-size: 15px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: #1e293b;
+}
+
+.wl-action-sub {
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.wl-action-icon.deposit {
+  background: #dcfce7;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 24px;
+}
+
+.wl-action-icon.withdraw {
+  background: #fee2e2;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+  font-size: 24px;
+}
+
+/* Info Card */
+.wl-info-card {
+  background: white;
+  border-radius: 16px;
+  margin: 0 16px 16px;
+  padding: 16px 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+
+.wl-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 500;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wl-divider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 4px 0;
+}
+
+/* Quick Links */
+.wl-quick {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 16px 20px;
+}
+
+.wl-quick-btn {
+  background: white;
+  border-radius: 12px;
+  padding: 14px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  transition: 0.2s;
+  text-align: center;
+}
+
+.wl-quick-btn:active {
+  transform: scale(0.98);
+  background: #fff5f5;
+  color: #ff5a5a;
+}
+
+/* Extra small devices ke liye fine-tuning */
+@media (max-width: 420px) {
+  .wl-balance-amount {
+    font-size: 36px;
+  }
+  
+  .wl-balance-card {
+    padding: 24px 16px;
+    margin: 16px;
+  }
+  
+  .wl-actions {
+    gap: 10px;
+  }
+  
+  .wl-action-card {
+    padding: 16px 10px;
+  }
+  
+  .wl-action-icon.deposit,
+  .wl-action-icon.withdraw {
+    width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+  
+  .wl-info-card {
+    padding: 12px 16px;
+  }
+  
+  .wl-info-row {
+    font-size: 13px;
+  }
+}
+
+/* Very small devices (360px and below) */
+@media (max-width: 360px) {
+  .wl-actions {
+    flex-direction: column;
+  }
+  
+  .wl-action-card {
+    min-width: 100%;
+  }
+  
+  .wl-balance-amount {
+    font-size: 32px;
+  }
+  
+  .wl-header h2 {
+    font-size: 16px;
+  }
+  
+  .wl-quick-btn {
+    padding: 12px 16px;
+    font-size: 13px;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  .wl-action-card:hover,
+  .wl-quick-btn:hover,
+  .wl-refresh-btn:hover {
+    transform: none;
+  }
+}

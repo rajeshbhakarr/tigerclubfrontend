@@ -1,0 +1,195 @@
+/* UPI Page - Mobile First + Laptop mein bhi mobile size */
+.upi-page {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #f5f5f5;
+  min-height: 100vh;
+  font-family: 'Arial', sans-serif;
+  position: relative;
+  padding-bottom: 70px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+/* header */
+.upi-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* card */
+.upi-card {
+  margin: 16px;
+  background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  transition: transform 0.2s ease;
+}
+
+.upi-card:active {
+  transform: scale(0.98);
+}
+
+/* blue bar */
+.upi-top-bar {
+  height: 50px;
+  background: linear-gradient(90deg, #2a7de1, #0b3fb3);
+}
+
+/* content */
+.upi-content {
+  padding: 16px;
+  font-size: 14px;
+}
+
+.upi-content p {
+  margin: 6px 0;
+  line-height: 1.4;
+  color: #333;
+}
+
+/* active */
+.upi-active {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.upi-tick {
+  background: #ff5f5f;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 7px;
+  font-size: 11px;
+  font-weight: bold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+}
+
+/* bottom button - Fixed mobile style */
+.upi-add-btn {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  background: #ff5f5f;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  border: none;
+  z-index: 1000;
+  transition: all 0.2s ease;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+}
+
+.upi-add-btn:active {
+  background: #e04e4e;
+  transform: translateX(-50%) scale(0.98);
+}
+
+/* Responsive adjustments */
+@media (max-width: 480px) {
+  .upi-page {
+    max-width: 100%;
+  }
+  
+  .upi-add-btn {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .upi-header {
+    padding: 12px 14px;
+    font-size: 16px;
+    gap: 10px;
+  }
+  
+  .upi-card {
+    margin: 12px;
+    border-radius: 14px;
+  }
+  
+  .upi-content {
+    padding: 12px;
+    font-size: 13px;
+  }
+  
+  .upi-add-btn {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+  
+  .upi-top-bar {
+    height: 42px;
+  }
+}
+
+@media (max-width: 320px) {
+  .upi-header {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+  
+  .upi-content {
+    padding: 10px;
+    font-size: 12px;
+  }
+  
+  .upi-add-btn {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+  
+  .upi-active {
+    gap: 8px;
+  }
+  
+  .upi-tick {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+}
+
+/* Landscape mode */
+@media (max-height: 550px) and (orientation: landscape) {
+  .upi-page {
+    padding-bottom: 60px;
+  }
+  
+  .upi-add-btn {
+    padding: 8px 12px;
+    font-size: 14px;
+  }
+  
+  .upi-header {
+    padding: 8px 12px;
+  }
+  
+  .upi-card {
+    margin: 10px;
+  }
+}
+
+/* Touch feedback */
+.upi-add-btn, .upi-card {
+  -webkit-tap-highlight-color: transparent;
+}

@@ -1,0 +1,358 @@
+/* Mobile-first responsive version - Laptop/Desktop me bhi mobile size dikhega */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #d1d5db;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+/* Main page container */
+.widpage {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  background: #f5f5f5;
+  min-height: auto;
+  padding-bottom: 80px;
+  font-family: Arial, sans-serif;
+}
+
+/* Laptop/Desktop pe bhi mobile size center me */
+@media (min-width: 768px) {
+  body {
+    background: #1a1a2e;
+    padding: 20px;
+  }
+  .widpage {
+    margin: 0 auto;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  }
+}
+
+/* Header */
+.txtdivvvv {
+  display: flex;
+  align-items: center;
+  background: #ff6b5c;
+  padding: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.backBtn {
+  border: none;
+  background: none;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 10px;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.backBtn:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.txtttt {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+  margin-left: 0;
+}
+
+/* Card */
+.card {
+  background: #fff;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Top row */
+.top-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Withdraw tag */
+.tag {
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.tag.red {
+  background: #ff5b5b;
+}
+
+/* Status */
+.status {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status.complete {
+  color: #2bb673;
+}
+
+.status.failed {
+  color: red;
+}
+
+.status.processing {
+  color: orange;
+}
+
+/* Rows */
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.row:last-child {
+  border-bottom: none;
+}
+
+/* Amount */
+.amount {
+  color: #ff8c00;
+  font-weight: bold;
+}
+
+/* Copy box */
+.copy-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.copy-box button {
+  border: none;
+  background: #f0f0f0;
+  cursor: pointer;
+  font-size: 16px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.copy-box button:hover {
+  background: #e0e0e0;
+}
+
+/* Copied msg */
+.copied {
+  color: green;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* Alternative page styles (wh-page) */
+.wh-page {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  background: #f5f5f5;
+  min-height: auto;
+  font-family: Arial, sans-serif;
+}
+
+/* Header */
+.wh-header {
+  display: flex;
+  align-items: center;
+  background: #ff6b5c;
+  padding: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.wh-back {
+  border: none;
+  background: none;
+  font-size: 20px;
+  margin-right: 10px;
+  cursor: pointer;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.wh-back:hover {
+  background: rgba(255,255,255,0.2);
+}
+
+.wh-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #fff;
+}
+
+/* Card */
+.wh-card {
+  background: #fff;
+  margin: 15px;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+/* Top */
+.wh-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Tag */
+.wh-tag {
+  background: #ff5b5b;
+  color: #fff;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: bold;
+}
+
+/* Status */
+.wh-status {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.wh-complete {
+  color: #2bb673;
+}
+
+.wh-failed {
+  color: red;
+}
+
+.wh-processing {
+  color: orange;
+}
+
+.wh-approved {
+  color: #22c55e;
+}
+
+.wh-rejected {
+  color: #ef4444;
+}
+
+.wh-pending {
+  color: #f59e0b;
+}
+
+.wh-completed {
+  color: #22c55e;
+}
+
+/* Rows */
+.wh-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wh-row:last-child {
+  border-bottom: none;
+}
+
+/* Amount */
+.wh-amount {
+  color: #ff8c00;
+  font-weight: bold;
+}
+
+/* Copy */
+.wh-copy {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.wh-copy button {
+  border: none;
+  background: #f0f0f0;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.wh-copy button:hover {
+  background: #e0e0e0;
+}
+
+/* Copied */
+.wh-copied {
+  color: green;
+  margin-top: 10px;
+  font-size: 12px;
+}
+
+/* Small screen adjustments */
+@media (max-width: 380px) {
+  .card, .wh-card {
+    margin: 10px;
+    padding: 12px;
+  }
+  
+  .row, .wh-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .top-row, .wh-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .txtttt, .wh-title {
+    font-size: 18px;
+  }
+}

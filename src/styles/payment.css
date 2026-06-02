@@ -1,0 +1,206 @@
+/* ══════════════════════════════════
+   PAYMENT PAGE - MOBILE RESPONSIVE
+   (Laptop pe bhi mobile jaisa dikhega)
+══════════════════════════════════ */
+
+.pay-container {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  background: #f5f6fa;
+  min-height: 100vh;
+  padding: 20px;
+  padding-bottom: 120px;
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+.pay-container * {
+  box-sizing: border-box;
+}
+
+/* Header */
+.pay-header {
+  display: flex;
+align-items: center;
+  gap: 15px;
+}
+
+.pay-header span {
+  font-size: 20px;
+  cursor: pointer;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Amount Card */
+.amount-card {
+  background: linear-gradient(135deg, #6c8ef5, #8ea6ff);
+  color: white;
+  padding: 20px;
+  border-radius: 15px;
+  margin-top: 20px;
+  font-size: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  word-break: break-word;
+}
+
+.timer {
+  font-size: 16px;
+  white-space: nowrap;
+}
+
+/* Payment Options */
+.pay-options {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.option {
+  flex: 1;
+  min-width: calc(50% - 10px);
+  padding: 15px;
+  background: white;
+  border-radius: 12px;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+}
+
+.option:active {
+  transform: scale(0.98);
+}
+
+/* QR Box */
+.qr-box {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.qr-box img {
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+}
+
+.qrcode {
+  width: 200px;
+  max-width: 80%;
+  height: auto;
+}
+
+/* UPI Box */
+.upi-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 12px;
+  border-radius: 10px;
+  margin-top: 15px;
+  gap: 10px;
+  flex-wrap: wrap;
+  word-break: break-all;
+}
+
+/* UTR Input */
+.utr {
+  width: 100%;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #eee;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.utr:focus {
+  background: #fff;
+  border: 1px solid #6c8ef5;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  margin-top: 20px;
+  padding: 15px;
+  background: linear-gradient(135deg, #6c8ef5, #8ea6ff);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:active {
+  transform: scale(0.98);
+}
+
+.submit-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Extra small devices ke liye fine-tuning */
+@media (max-width: 420px) {
+  .pay-container {
+    padding: 15px;
+    padding-bottom: 120px;
+  }
+  
+  .amount-card {
+    font-size: 20px;
+    padding: 15px;
+  }
+  
+  .timer {
+    font-size: 14px;
+    white-space: normal;
+  }
+  
+  .option {
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  .upi-box {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .submit-btn {
+    padding: 12px;
+    font-size: 14px;
+  }
+}
+
+/* For very small devices */
+@media (max-width: 360px) {
+  .pay-options {
+    flex-direction: column;
+  }
+  
+  .option {
+    min-width: 100%;
+  }
+  
+  .amount-card {
+    flex-direction: column;
+    text-align: center;
+  }
+}
