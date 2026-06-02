@@ -10,7 +10,7 @@ import {
   getMyBets,
   getActiveBet,
   createAviatorStream,
-} from "../api/aviatorApi";
+} from "../api/AviatorApi";
 const API_URL = "http://localhost:5000";
 
 
