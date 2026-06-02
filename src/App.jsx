@@ -9,7 +9,7 @@ import {
 import { useEffect } from "react";
 import { WalletProvider } from "./context/WalletContext";
 
-import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLogin from "./pages/Admin/AdminLogin";
 import AdminPanel from "./pages/Admin/AdminPanel";
 import AdminChat from "./pages/Admin/sections/AdminChat";
 
