@@ -1,5 +1,5 @@
 // src/components/Aviator.jsx
-import "../styles/aviator.css";
+import "../styles/Aviator.css";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
