@@ -18,7 +18,7 @@ import Register from "./pages/Register";
 
 import Home from "./pages/Home";
 import WinGo from "./pages/WinGo";
-import Profile from "./pages/Profile";
+import Profile from "./pages/profile";
 import Activity from "./pages/Activity";
 import BottomNav from "./components/BottomNav";
 import Payment from "./pages/Payment";
