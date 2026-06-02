@@ -5,7 +5,7 @@ import axios from "axios";
 import { useWallet } from "../context/WalletContext";
 
 
-const API = "https://indr-backend-production.up.railway.app";
+const API = "https://indr-backend-production.up.railway.app/api";
 const LoginPage = () => {
 
   const { fetchBalance } = useWallet();
@@ -31,9 +31,9 @@ const LoginPage = () => {
       setLoading(true);
 
       const res = await axios.post(`${API}/auth/login`, {
-        mobile: phone, // ✅ phone → mobile
-        password,
-      });
+  mobile: phone,
+  password,
+});
 
       if (res.data.success) {
   localStorage.setItem("token", res.data.token);
