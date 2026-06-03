@@ -140,7 +140,7 @@ function Dragontiger() {
           flipTimersRef.current = [t1, t2, t3, t4];
         }
       } catch (err) { console.log("State fetch error:", err.message); }
-    }, 1000);
+    }, 2000);
     return () => { clearInterval(interval); clearFlipTimers(); };
   }, []);
 
