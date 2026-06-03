@@ -22,7 +22,7 @@ function AdminLogin() {
     // 🔐 simple rate limit (3 attempts)
     let attempts = localStorage.getItem("loginAttempts") || 0;
 
-    if (attempts >= 3 ) {
+    if (attempts >= 19 ) {
       setError("❌ Too many attempts. Try later");
       return;
     }
