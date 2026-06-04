@@ -4,7 +4,7 @@ import { useWallet } from "../context/WalletContext";
 import "../styles/notification.css";
 import axios from "axios";
 
-const API = "https://indr-backend-77tp.onrender.com
+const API = "https://indr-backend-77tp.onrender.com";
 
 function Notification() {
   const navigate = useNavigate();

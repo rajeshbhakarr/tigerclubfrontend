@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../styles/gamehistory.css";
 
-const API_URL = "https://indr-backend-77tp.onrender.com
+const API_URL = "https://indr-backend-77tp.onrender.com";
 
 const GameHistory = () => {
   const [history, setHistory] = useState([]);
