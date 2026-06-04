@@ -13,7 +13,7 @@ if (!guestId) {
   localStorage.setItem("guestId", guestId);
 }
 
-const API = "https://indr-backend-77tp.onrender.com
+const API = "https://indr-backend-77tp.onrender.com";
 
 const BOT_MSG = {
   deposit:
