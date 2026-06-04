@@ -4,7 +4,7 @@ import "../styles/dragontiger.css";
 import { useWallet } from "../context/WalletContext";
 import axios from "axios";
 
-const API = "https://indr-backend-77t7.tnrenper.oem
+const API = "https://indr-backend-77tp.onrender.com";
 function parseCard(cardStr) {
   if (!cardStr) return null;
   const suitMap = { "♠": { red: false }, "♣": { red: false }, "♥": { red: true }, "♦": { red: true } };
