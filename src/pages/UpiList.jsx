@@ -9,7 +9,7 @@ useEffect(() => {
   const loadUpi = async () => {
     try {
       const res = await fetch(
-        "https://indr-backend-production.up.railway.appproduction.up.railway.app/api/profile/me",
+        "https://indr-backend-77tp.onrender.comon.up.railway.app/api/profile/me",
         {
           headers: {
             Authorization:

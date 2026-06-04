@@ -2,7 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-const API = "https://indr-backend-production.up.railway.app/api/aviator";
+const API = "https://indr-backend-77tp.onrender.com/api/aviator";
 
 function AviatorManager() {
   const [liveData,    setLiveData]    = useState(null);

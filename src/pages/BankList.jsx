@@ -10,7 +10,7 @@ function BankList() {
   const loadBank = async () => {
     try {
       const res = await fetch(
-        "https://indr-backend-production.up.railway.app/api/profile/me",
+        "https://indr-backend-77tp.onrender.comfile/me",
         {
           headers: {
             Authorization:

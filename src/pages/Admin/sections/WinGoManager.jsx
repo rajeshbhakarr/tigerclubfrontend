@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 
-const API = "https://indr-backend-production.up.railway.app/api/admin/wingo";
-const WINGO_API = "https://indr-backend-production.up.railway.app/api/wingo";
+const API = "https://indr-backend-77tp.onrender.com/api/admin/wingo";
+const WINGO_API = "https://indr-backend-77tp.onrender.com/api/wingo";
 
 const token = () => localStorage.getItem("token");
 

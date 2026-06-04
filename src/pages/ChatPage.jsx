@@ -13,7 +13,7 @@ if (!guestId) {
   localStorage.setItem("guestId", guestId);
 }
 
-const API = "https://indr-backend-production.up.railway.app/api";
+const API = "https://indr-backend-77tp.onrender.com
 
 const BOT_MSG = {
   deposit:

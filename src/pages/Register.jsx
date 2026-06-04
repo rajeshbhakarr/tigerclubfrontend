@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import "../styles/register.css";
 import axios from "axios";
 
-const API = "https://indr-backend-production.up.railway.app/api";
+const API = "https://indr-backend-77tp.onrender.com
 
 function Register() {
   const navigate = useNavigate();

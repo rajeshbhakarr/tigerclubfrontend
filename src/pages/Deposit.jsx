@@ -11,7 +11,7 @@ const Deposit = () => {
   }
 
   try {
-    const res = await fetch("https://indr-backend-production.up.railway.app/api/deposit", {
+    const res = await fetch("https://indr-backend-77tp.onrender.comosit", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

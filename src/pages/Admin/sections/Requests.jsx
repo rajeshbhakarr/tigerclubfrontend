@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import "../../../styles/admin/requests.css";
 
-const API = "https://indr-backend-production.up.railway.app/api";
+const API = "https://indr-backend-77tp.onrender.com/api";
 
 function Requests() {
   const [deposits, setDeposits] = useState([]);

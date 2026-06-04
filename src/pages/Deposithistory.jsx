@@ -13,7 +13,7 @@ function DepositHistory() {
   }, []);
 
   const fetchDeposits = async () => {
-    const res = await fetch("https://indr-backend-production.up.railway.app/api/my-deposits", {
+    const res = await fetch("https://indr-backend-77tp.onrender.comdeposits", {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },

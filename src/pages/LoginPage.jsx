@@ -5,7 +5,7 @@ import axios from "axios";
 import { useWallet } from "../context/WalletContext";
 
 
-const API = "https://indr-backend-production.up.railway.app/api";
+const API = "https://indr-backend-77t7.tnrenper.oem
 const LoginPage = () => {
 
   const { fetchBalance } = useWallet();
