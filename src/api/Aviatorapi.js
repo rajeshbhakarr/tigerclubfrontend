@@ -40,9 +40,10 @@ export const getMyBets = async () => {
   return res.json();
 };
 
-export const getRecentCrashes = async () => {
-  const res = await fetch(`${API_URL}/api/aviator/recent-crashes`);
-  return res.json();
+exports.getRecentCrashes = (req, res) => {
+  const { getRoundHistory } = require("../services/aviatorEngine");
+  const history = getRoundHistory();
+  return res.json({ success: true, crashes: history });
 };
 
 export const cancelBet = async (betId) => {
@@ -68,9 +69,17 @@ export const createAviatorStream = (onMessage) => {
 };
 
 
-export const getActiveBet = async () => {
-  const res = await fetch(`${API_URL}/api/aviator/active-bet`, {
-    headers: authHeaders(),
-  });
-  return res.json();
+exports.getActiveBet = async (req, res) => {
+  try {
+    const state = require("../services/aviatorEngine").getState();
+    const bet = await AviatorBet.findOne({
+      user: req.user._id,
+      roundId: state.roundId,
+      result: "pending",
+    }).sort({ createdAt: -1 });
+
+    return res.json({ success: true, bet });
+  } catch (err) {
+    return res.status(500).json({ success: false, message: err.message });
+  }
 };
