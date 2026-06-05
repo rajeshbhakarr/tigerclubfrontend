@@ -16,9 +16,14 @@ function Notification() {
   // ── Notifications fetch karo ──────────────────────────────
   const fetchNotifications = async () => {
     try {
-      const res = await axios.get(`${API}/notification/my`, {
-        headers: { Authorization: "Bearer " + token },
-      });
+      const res = await axios.get(
+  `${API}/api/notification/my`,
+  {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }
+);
       if (res.data.success) {
         setNotifications(res.data.notifications);
       }
@@ -34,11 +39,15 @@ function Notification() {
   // ── Claim karo ────────────────────────────────────────────
   const handleClaim = async (id) => {
     try {
-      const res = await axios.post(
-        `${API}/notification/claim/${id}`,
-        {},
-        { headers: { Authorization: "Bearer " + token } }
-      );
+     const res = await axios.post(
+  `${API}/api/notification/claim/${id}`,
+  {},
+  {
+    headers: {
+      Authorization: "Bearer " + token,
+    },
+  }
+);
 
       if (res.data.success) {
         fetchNotifications(); // refresh
