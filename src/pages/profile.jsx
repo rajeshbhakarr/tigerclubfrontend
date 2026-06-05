@@ -10,7 +10,7 @@ import depositImg from "../assets/deposit.jpeg";
 import withdrawImg from "../assets/withdraw.png";
 import vipImg from "../assets/vipp.jpeg";
 
-const API = "https://indr-backend-77tp.onrender.com";
+const API = "https://indr-backend-77tp.onrender.com/api";
 
 const Profile = () => {
 const { fetchBalance, balance, user } = useWallet();
@@ -22,9 +22,11 @@ const { fetchBalance, balance, user } = useWallet();
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`${API}/profile/me`, {
-          headers: { Authorization: "Bearer " + token },
-        });
+       const res = await axios.get(`${API}/profile/me`, {
+  headers: {
+    Authorization: "Bearer " + token,
+  },
+});
         if (res.data.success) {
           setUserData(res.data.user);
         }
