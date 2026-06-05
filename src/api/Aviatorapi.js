@@ -1,5 +1,5 @@
 // src/api/aviatorApi.js
-const API_URL = "https://indr-backend-77tp.onrender.com";
+const API_URL = "https://indr-backend-production.up.railway.app";
 
 function getToken() {
   return localStorage.getItem("token");
@@ -40,7 +40,10 @@ export const getMyBets = async () => {
   return res.json();
 };
 
-
+export const getRecentCrashes = async () => {
+  const res = await fetch(`${API_URL}/api/aviator/recent-crashes`);
+  return res.json();
+};
 
 export const cancelBet = async (betId) => {
   const res = await fetch(`${API_URL}/api/aviator/cancel-bet`, {
@@ -65,3 +68,9 @@ export const createAviatorStream = (onMessage) => {
 };
 
 
+export const getActiveBet = async () => {
+  const res = await fetch(`${API_URL}/api/aviator/active-bet`, {
+    headers: authHeaders(),
+  });
+  return res.json();
+};
