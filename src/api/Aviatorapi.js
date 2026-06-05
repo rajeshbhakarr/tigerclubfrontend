@@ -1,5 +1,5 @@
 // src/api/aviatorApi.js
-const API_URL = "https://https://indr-backend-77tp.onrender.com";
+const API_URL = "https://indr-backend-77tp.onrender.com";
 
 function getToken() {
   return localStorage.getItem("token");
