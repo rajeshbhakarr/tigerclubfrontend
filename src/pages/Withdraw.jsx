@@ -23,7 +23,7 @@ const withdrawableBalance =
   const loadPaymentData = async () => {
     try {
       const res = await fetch(
-        "https://indr-backend-77tp.onrender.comfile/me",
+        "https://indr-backend-77tp.onrender.com/api/profile/me",
         {
           headers: {
             Authorization:
