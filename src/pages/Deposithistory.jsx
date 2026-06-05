@@ -13,7 +13,7 @@ function DepositHistory() {
   }, []);
 
   const fetchDeposits = async () => {
-    const res = await fetch("https://indr-backend-77tp.onrender.comdeposits", {
+    const res = await fetch("https://indr-backend-77tp.onrender.eposits", {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },

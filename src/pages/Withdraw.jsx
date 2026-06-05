@@ -61,7 +61,7 @@ const withdrawableBalance =
 
     setLoading(true);
     try {
-      const res = await fetch("https://indr-backend-77tp.onrender.comhdraw", {
+      const res = await fetch("https://indr-backend-77tp.onrender.com/api/profile/me", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
