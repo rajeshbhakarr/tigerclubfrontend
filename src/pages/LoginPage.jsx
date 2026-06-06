@@ -174,20 +174,23 @@ const LoginPage = () => {
         </button>
 
         {/* Footer */}
-        <div className="footer-links">
-          <div className="icon-link">
-            <div className="footer-icon">🔒</div>
-            <span>Forgot password</span>
-          </div>
-          <div
-            className="icon-link"
-            onClick={() => navigate("/customersupport")}
-            style={{ cursor: "pointer" }}
-          >
-            <div className="footer-icon">💬</div>
-            <span>Customer Service</span>
-          </div>
-        </div>
+        // Form section ke end mein, footer-links se pehle ye ensure karo ki flex column sahi ho
+
+<div className="form-section">
+  {/* ... sab kuch same ... */}
+  
+  {/* Footer Links - Auto margin top se neeche chala jayega */}
+  <div className="footer-links">
+    <div className="icon-link" onClick={() => navigate("/forgot-password")}>
+      <div className="footer-icon">🔒</div>
+      <span>Forgot password</span>
+    </div>
+    <div className="icon-link" onClick={() => navigate("/customersupport")}>
+      <div className="footer-icon">💬</div>
+      <span>Customer Service</span>
+    </div>
+  </div>
+</div>
       </div>
     </div>
   );
