@@ -31,31 +31,31 @@ const LoginPage = () => {
       setLoading(true);
 
       const res = await axios.post(`${API}/auth/login`, {
-  mobile: phone,
-  password,
-});
+        mobile: phone,
+        password,
+      });
 
       if (res.data.success) {
-  localStorage.setItem("token", res.data.token);
-  
-    localStorage.setItem("lastLoginTime", Date.now()); 
+        localStorage.setItem("token", res.data.token);
 
-  localStorage.setItem("uid", res.data.user.uid);
-localStorage.setItem("mobile", res.data.user.mobile);
-localStorage.setItem("user", JSON.stringify(res.data.user));
-  
-  // ✅ await mat lagao — background mein chalega
-  fetchBalance();
-  
-  if (remember) {
-    localStorage.setItem("savedPhone", phone);
-    localStorage.setItem("savedPassword", password);
-  } else {
-    localStorage.removeItem("savedPhone");
-    localStorage.removeItem("savedPassword");
-  }
-  
-  navigate("/"); // ✅ turant navigate karo
+        localStorage.setItem("lastLoginTime", Date.now());
+
+        localStorage.setItem("uid", res.data.user.uid);
+        localStorage.setItem("mobile", res.data.user.mobile);
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+
+        // ✅ await mat lagao — background mein chalega
+        fetchBalance();
+
+        if (remember) {
+          localStorage.setItem("savedPhone", phone);
+          localStorage.setItem("savedPassword", password);
+        } else {
+          localStorage.removeItem("savedPhone");
+          localStorage.removeItem("savedPassword");
+        }
+
+        navigate("/"); // ✅ turant navigate karo
 
       } else {
         setError(res.data.msg || "Login failed!"); // ✅ message → msg
@@ -179,14 +179,14 @@ localStorage.setItem("user", JSON.stringify(res.data.user));
             <div className="footer-icon">🔒</div>
             <span>Forgot password</span>
           </div>
-         <div
-  className="icon-link"
-  onClick={() => navigate("/customersupport")}
-  style={{ cursor: "pointer" }}
->
-  <div className="footer-icon">💬</div>
-  <span>Customer Service</span>
-</div>
+          <div
+            className="icon-link"
+            onClick={() => navigate("/customersupport")}
+            style={{ cursor: "pointer" }}
+          >
+            <div className="footer-icon">💬</div>
+            <span>Customer Service</span>
+          </div>
         </div>
       </div>
     </div>
