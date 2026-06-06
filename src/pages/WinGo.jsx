@@ -423,11 +423,15 @@ const WinGo = () => {
               <button className="cancel" onClick={() => setShowModal(false)}>Cancel</button>
               <button className="submit" onClick={placeBetHandler}>Total ₹{totalAmount}</button>
             </div>
+
+                  <br /><br />
+
           </div>
+                <br /><br />
+
         </div>
       )}
 
-      <br /><br />
 
     </div>
   );
