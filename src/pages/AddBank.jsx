@@ -6,7 +6,7 @@ function AddBank() {
   const navigate = useNavigate();
 
   const [bankName, setBankName] = useState("");
-  const [name, setName] = useState("RAJESH KUMAR");
+  const [name, setName] = useState("Real Name ");
   const [account, setAccount] = useState("");
   const [phone, setPhone] = useState("");
   const [ifsc, setIfsc] = useState("");
