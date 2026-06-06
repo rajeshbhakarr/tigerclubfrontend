@@ -368,7 +368,6 @@ const WinGo = () => {
       {/* History Tabs */}
       <div className="al">
         <div className={activeTab === "game" ? "main active" : "main"} onClick={() => setActiveTab("game")}><span>GAME HISTORY</span></div>
-        <div className={activeTab === "chart" ? "main active" : "main"} onClick={() => setActiveTab("chart")}><span>Chart</span></div>
         <div className={activeTab === "my" ? "main active" : "main"} onClick={() => setActiveTab("my")}><span>MY HISTORY</span></div>
       </div>
 
