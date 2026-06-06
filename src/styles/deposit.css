@@ -1,30 +1,45 @@
-.deppage{
-
-
-max-width: 420px;
-  margin: auto;
-  background: #ebeaea;
-  min-height: 100vh;
-
-  font-family: sans-serif;
-
-
+/* Reset and base - ensures mobile app behavior */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
+body {
+  background: #ebeaea;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0 !important;
+}
 
+/* Main container - mobile first, fixed width, no gaps */
+.deppage {
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  background: #ebeaea;
+  min-height: 100vh;
+  font-family: sans-serif;
+  position: relative;
+}
+
+/* Header bar */
 .depp {
   background-color: rgb(173, 162, 136);
-  width: 420px;
-  position: relative; /* important */
+  width: 100%;
+  max-width: 420px;
+  position: relative;
   padding: 10px 0;
 }
 
 .dep {
-  
   text-align: center;
   margin: 0;
   font-size: 30px;
-margin-left: 10px;
+  margin-left: 10px;
 }
 
 /* BACK BUTTON */
@@ -37,255 +52,128 @@ margin-left: 10px;
   cursor: pointer;
 }
 
-.depp{
-
-background-color: rgb(173, 162, 136);
-width: 420px;
-
-
-
-
-
-
-}
-
-
-
-
-.chnl{
-position: relative;
-width: 400px;
-height: 130px;
-background-color: white;
-margin-left: 10px;
-border-radius: 12px;
-
-
-
-}
-
-
-.select{
-  position: absolute;
-
-
-
-font-size: 18px;
-margin-top: 10px;
-left: 16px;
-
-}
-
-
-.slt{
-position: absolute;
-width: 160px;
-height: 50px;
-background-color: rgb(232, 73, 73);
-top: 50px;
-left: 16px;
-border-radius: 10px;
-cursor: pointer;
-
-
-
-
-}
-
-
-.slt span{
-
-  position: absolute;
-
-margin-left: 20px;
-top: 8px;
-font-family: 'Times New Roman', Times, serif;
-font-size: 17px;
-font-weight: 700;
-
-
-}
-
-.sltt{
-position: absolute;
-width: 160px;
-height: 50px;
-background-color: rgb(232, 73, 73);
-top: 50px;
-left: 226px;
-border-radius: 10px;
-cursor: pointer;
-
-
-
-
-
-}
-
-
-.sltt span{
-
-
-   position: absolute;
-
-margin-left: 20px;
-top: 8px;
-font-family: 'Times New Roman', Times, serif;
-font-size: 17px;
-font-weight: 700;
-
-
-
-
-}
-
-
-
-.amm{
-
-
-width: 400px;
-height: 340px;
-background-color: #ffffff;
-margin-top: 2%;
-position: relative;
-
-margin-left: 10px;
-border-radius: 10px;
-
-
-}
-
-.amm span{
-  position: absolute;
-
-
-font-family: 'Times New Roman', Times, serif;
-font-size: 22px;
-left: 20px;
-top: 10px;
-font-weight: 600;
-
-
-
-}
-
-
-.ammnt{
-  position: absolute;
-
-
-display: flex;
-gap: 39px;
-top: 60px;
-left: 40px;
-
-
-
-}
-
-
-
-.ammntt{
-  position: absolute;
-
-
-display: flex;
-
-margin-top: 110px;
-gap: 39px;
-left: 40px;
-
-
-
-
-}
-
-
-.ammnttt{
-  position: absolute;
-
-
-display: flex;
-margin-top: 160px;
-
-gap: 39px;
-left: 40px;
-
-
-
-
-
-}
-
-
-.rs{
-
-
+/* Channel selection box */
+.chnl {
   position: relative;
-
- background-color: #eee;width: 100px;
-height: 40px;
-border: solid gray 1px;
-border-radius: 7px;
-right: 30px;
-
-
+  width: calc(100% - 20px);
+  max-width: 400px;
+  height: 130px;
+  background-color: white;
+  margin-left: 10px;
+  border-radius: 12px;
 }
 
+.select {
+  position: absolute;
+  font-size: 18px;
+  margin-top: 10px;
+  left: 16px;
+}
+
+.slt {
+  position: absolute;
+  width: 160px;
+  height: 50px;
+  background-color: rgb(232, 73, 73);
+  top: 50px;
+  left: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.slt span {
+  position: absolute;
+  margin-left: 20px;
+  top: 8px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.sltt {
+  position: absolute;
+  width: 160px;
+  height: 50px;
+  background-color: rgb(232, 73, 73);
+  top: 50px;
+  left: 226px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.sltt span {
+  position: absolute;
+  margin-left: 20px;
+  top: 8px;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+/* Amount selection box */
+.amm {
+  width: calc(100% - 20px);
+  max-width: 400px;
+  height: 340px;
+  background-color: #ffffff;
+  margin-top: 2%;
+  position: relative;
+  margin-left: 10px;
+  border-radius: 10px;
+}
+
+.amm span {
+  position: absolute;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 22px;
+  left: 20px;
+  top: 10px;
+  font-weight: 600;
+}
+
+.ammnt {
+  position: absolute;
+  display: flex;
+  gap: 39px;
+  top: 60px;
+  left: 40px;
+}
+
+.ammntt {
+  position: absolute;
+  display: flex;
+  margin-top: 110px;
+  gap: 39px;
+  left: 40px;
+}
+
+.ammnttt {
+  position: absolute;
+  display: flex;
+  margin-top: 160px;
+  gap: 39px;
+  left: 40px;
+}
+
+.rs {
+  position: relative;
+  background-color: #eee;
+  width: 100px;
+  height: 40px;
+  border: solid gray 1px;
+  border-radius: 7px;
+  right: 30px;
+}
 
 .rs.active {
-  background-color: #ff6a6a;  /* red selected */
+  background-color: #ff6a6a;
   color: white;
 }
 
-
-.rsspn{
-
-
-position: absolute;
-right: 1  0px;
-
-
-}
-
-.rsspnn{
-
-/* position: absolute;
-margin-bottom: 400px; */
-
-
-
-}
-
-.inut{
-
-  width: 380px;
-  height: 40px;
-  border-radius: 20px;
-
-
-position: absolute;
-top: 60px;
-right: 30px;
-
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
+/* Input container - responsive */
 .input-container {
   padding: 20px;
-  background-color: #f4f5f9; /* Light grey background jaisa image mein hai */
+  background-color: #f4f5f9;
 }
 
 .price-wrapper {
@@ -293,18 +181,17 @@ right: 30px;
   display: flex;
   align-items: center;
   background-color: #e2e0e0;
-  border-radius: 50px; /* Pill shape design */
+  border-radius: 50px;
   padding: 12px 20px;
-  width: 380px;
-  max-width: 400px;
+  width: calc(100% - 56px);
+  max-width: 380px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
   top: 50px;
   right: 28px;
-  
 }
 
 .currency-icon {
-  color: #ff5e5e; /* Reddish color for Rupee symbol */
+  color: #ff5e5e;
   font-size: 24px;
   font-weight: bold;
   margin-right: 15px;
@@ -313,7 +200,7 @@ right: 30px;
 .vertical-divider {
   width: 1px;
   height: 30px;
-  background-color: #d1d5db; /* Light grey line */
+  background-color: #d1d5db;
   margin-right: 20px;
 }
 
@@ -322,12 +209,11 @@ right: 30px;
   outline: none;
   font-size: 20px;
   font-weight: 600;
-  color: #ff5e5e; /* Text color matching the icon */
+  color: #ff5e5e;
   flex-grow: 1;
   background: transparent;
 }
 
-/* Chrome, Safari, Edge, Opera se arrows hatane ke liye */
 .amount-input::-webkit-outer-spin-button,
 .amount-input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -355,15 +241,14 @@ right: 30px;
   margin-bottom: 2px;
 }
 
-
-
-
-
+/* Instructions box */
 .instructions-box {
   background: #fff;
   border-radius: 15px;
   padding: 15px;
   margin-top: 20px;
+  width: calc(100% - 20px);
+  margin-left: 10px;
 }
 
 .inst-title {
@@ -379,14 +264,12 @@ right: 30px;
   color: red;
 }
 
-/* CONTENT BOX */
 .inst-content {
   border: 1px solid #eee;
   border-radius: 12px;
   padding: 10px;
 }
 
-/* ITEM */
 .inst-item {
   display: flex;
   align-items: flex-start;
@@ -400,7 +283,6 @@ right: 30px;
   line-height: 1.4;
 }
 
-/* DOT */
 .dot {
   width: 6px;
   height: 6px;
@@ -409,10 +291,7 @@ right: 30px;
   margin-top: 6px;
 }
 
-
-
-
-
+/* Deposit button */
 .depositt {
   width: 140px;
   height: 40px;
@@ -420,43 +299,138 @@ right: 30px;
   top: 290px;
   left: 125px;
   border-radius: 20px;
-  border: 1px solid #000; /* Border ko thoda patla aur blackish rakha hai image jaisa */
-  
-  /* Do colors lagane ke liye gradient code */
+  border: 1px solid #000;
   background: linear-gradient(to bottom, #d4a017 0%, #b8860b 100%);
-  
-  /* Text styling */
   color: #000;
   font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  
-  /* Image jaisa 3D look dene ke liye shadow */
   box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 2px 5px rgba(0,0,0,0.2);
 }
 
-/* Hover effect jab mouse button par jaye */
 .depositt:hover {
   background: linear-gradient(to bottom, #f09000 0%, #d4a017 100%);
 }
 
+/* ===== RESPONSIVE FIXES ===== */
+/* On PC screens: center the mobile card, no gaps, fixed width */
+@media screen and (min-width: 421px) {
+  body {
+    background: #ebeaea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .deppage {
+    max-width: 420px;
+    width: 420px;
+    margin: 0 auto;
+    background: #ebeaea;
+    min-height: 100vh;
+    box-shadow: 0 0 0 0 transparent;
+  }
+  
+  /* Ensure no extra padding or margin on body/html */
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+}
 
+/* For exact mobile screens up to 420px */
+@media screen and (max-width: 420px) {
+  .deppage {
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
+  }
+  
+  .depp {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  .chnl, .amm, .instructions-box {
+    width: calc(100% - 20px);
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+  
+  .price-wrapper {
+    width: calc(100% - 56px);
+    right: 28px;
+  }
+  
+  .slt {
+    width: calc(50% - 20px);
+    min-width: 140px;
+  }
+  
+  .sltt {
+    left: calc(50% + 10px);
+    width: calc(50% - 20px);
+    min-width: 140px;
+  }
+  
+  .depositt {
+    left: calc(50% - 70px);
+  }
+}
 
+/* Small mobile devices */
+@media screen and (max-width: 380px) {
+  .ammnt, .ammntt, .ammnttt {
+    gap: 20px;
+    left: 20px;
+  }
+  
+  .rs {
+    width: 80px;
+    right: 10px;
+  }
+  
+  .slt span, .sltt span {
+    margin-left: 10px;
+    font-size: 14px;
+  }
+  
+  .price-wrapper {
+    padding: 10px 15px;
+  }
+  
+  .currency-icon {
+    font-size: 20px;
+    margin-right: 10px;
+  }
+  
+  .vertical-divider {
+    margin-right: 12px;
+  }
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* Landscape mode fix */
+@media screen and (max-height: 500px) and (orientation: landscape) {
+  .deppage {
+    min-height: auto;
+    padding-bottom: 20px;
+  }
+  
+  .amm {
+    height: auto;
+    padding-bottom: 20px;
+  }
+  
+  .depositt {
+    position: relative;
+    top: auto;
+    margin: 20px auto;
+    left: auto;
+  }
+}
