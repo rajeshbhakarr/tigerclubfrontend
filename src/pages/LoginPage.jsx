@@ -4,12 +4,10 @@ import "./LoginPage.css";
 import axios from "axios";
 import { useWallet } from "../context/WalletContext";
 
-
 const API = "https://indr-backend-77tp.onrender.com/api";
+
 const LoginPage = () => {
-
   const { fetchBalance } = useWallet();
-
   const navigate = useNavigate();
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +27,6 @@ const LoginPage = () => {
 
     try {
       setLoading(true);
-
       const res = await axios.post(`${API}/auth/login`, {
         mobile: phone,
         password,
@@ -37,14 +34,10 @@ const LoginPage = () => {
 
       if (res.data.success) {
         localStorage.setItem("token", res.data.token);
-
         localStorage.setItem("lastLoginTime", Date.now());
-
         localStorage.setItem("uid", res.data.user.uid);
         localStorage.setItem("mobile", res.data.user.mobile);
         localStorage.setItem("user", JSON.stringify(res.data.user));
-
-        // ✅ await mat lagao — background mein chalega
         fetchBalance();
 
         if (remember) {
@@ -54,11 +47,9 @@ const LoginPage = () => {
           localStorage.removeItem("savedPhone");
           localStorage.removeItem("savedPassword");
         }
-
-        navigate("/"); // ✅ turant navigate karo
-
+        navigate("/");
       } else {
-        setError(res.data.msg || "Login failed!"); // ✅ message → msg
+        setError(res.data.msg || "Login failed!");
       }
     } catch (err) {
       setError(err.response?.data?.msg || "Server error! Try again.");
@@ -67,7 +58,6 @@ const LoginPage = () => {
     }
   };
 
-  // Remember password load karo
   React.useEffect(() => {
     const savedPhone = localStorage.getItem("savedPhone");
     const savedPassword = localStorage.getItem("savedPassword");
@@ -80,29 +70,18 @@ const LoginPage = () => {
     <div className="login-container">
       {/* Header */}
       <div className="header">
-        <span className="back-icon" onClick={() => navigate(-1)}>
-          ‹
-        </span>
+        <span className="back-icon" onClick={() => navigate(-1)}>‹</span>
         <div className="header-title">
           <span className="logo-icon">INDR</span>
         </div>
         <div className="lang-selector">🇺🇸 EN</div>
       </div>
 
+      {/* Form Section - Ek baar hi hai */}
       <div className="form-section">
         {/* Error message */}
         {error && (
-          <div
-            style={{
-              background: "#fee2e2",
-              color: "#dc2626",
-              padding: "10px",
-              borderRadius: "8px",
-              marginBottom: "12px",
-              fontSize: "14px",
-              textAlign: "center",
-            }}
-          >
+          <div className="error-message">
             ❌ {error}
           </div>
         )}
@@ -138,11 +117,7 @@ const LoginPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-            <span
-              className="eye-icon"
-              onClick={() => setShowPassword(!showPassword)}
-              style={{ cursor: "pointer" }}
-            >
+            <span className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? "🙈" : "👁️"}
             </span>
           </div>
@@ -160,12 +135,7 @@ const LoginPage = () => {
         </div>
 
         {/* Login Button */}
-        <button
-          className="btn-login"
-          onClick={handleLogin}
-          disabled={loading}
-          style={{ opacity: loading ? 0.7 : 1 }}
-        >
+        <button className="btn-login" onClick={handleLogin} disabled={loading}>
           {loading ? "Logging in..." : "Log in"}
         </button>
 
@@ -173,23 +143,17 @@ const LoginPage = () => {
           Register
         </button>
 
-        {/* Footer */}
-
-<div className="form-section">
-  {/* ... sab kuch same ... */}
-  
-  {/* Footer Links - Auto margin top se neeche chala jayega */}
-  <div className="footer-links">
-    <div className="icon-link" onClick={() => navigate("/forgot-password")}>
-      <div className="footer-icon">🔒</div>
-      <span>Forgot password</span>
-    </div>
-    <div className="icon-link" onClick={() => navigate("/customersupport")}>
-      <div className="footer-icon">💬</div>
-      <span>Customer Service</span>
-    </div>
-  </div>
-</div>
+        {/* Footer Links - Bas yahan ek baar */}
+        <div className="footer-links">
+          <div className="icon-link" onClick={() => navigate("/forgot-password")}>
+            <div className="footer-icon">🔒</div>
+            <span>Forgot password</span>
+          </div>
+          <div className="icon-link" onClick={() => navigate("/customersupport")}>
+            <div className="footer-icon">💬</div>
+            <span>Customer Service</span>
+          </div>
+        </div>
       </div>
     </div>
   );
