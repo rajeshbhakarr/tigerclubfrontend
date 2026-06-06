@@ -1,329 +1,184 @@
-import React, { useState, useRef } from 'react';
-import '../styles/deposit.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "../styles/deposit.css";
 
+const Deposit = () => {
+  const navigate = useNavigate();
+  const [amount, setAmount] = useState(0);
 
-
-import { QrReader } from 'react-qr-reader';
-
-const DepositSystem = () => {
-  const [amount, setAmount] = useState('');
-  const [selectedMethod, setSelectedMethod] = useState('card');
-  const [scanning, setScanning] = useState(false);
-  const [scannedData, setScannedData] = useState(null);
-  const [processing, setProcessing] = useState(false);
-  const [step, setStep] = useState(1); // 1: details, 2: payment, 3: success
-  const [paymentStatus, setPaymentStatus] = useState(null);
-  const fileInputRef = useRef(null);
-
-  // Payment methods
-  const paymentMethods = [
-    { id: 'card', name: 'Credit/Debit Card', icon: '💳', color: '#4361ee' },
-    { id: 'upi', name: 'UPI', icon: '📱', color: '#3b82f6' },
-    { id: 'bank', name: 'Bank Transfer', icon: '🏦', color: '#10b981' },
-    { id: 'crypto', name: 'Cryptocurrency', icon: '₿', color: '#f59e0b' }
-  ];
-
-  // Handle scanner
-  const handleScan = (data) => {
-    if (data) {
-      setScannedData(data.text);
-      setScanning(false);
-    }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-    alert('Scanner error. Please try again.');
-  };
-
-  const startScanner = () => {
-    setScanning(true);
-    setScannedData(null);
-  };
-
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      // Simulate QR code reading from uploaded image
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        // In real app, you'd process the image for QR code
-        setScannedData("UPI_ID@bank: payment_reference_123");
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  // Process payment
-  const processPayment = async () => {
-    if (!amount || amount <= 0) {
-      alert('Please enter a valid amount');
+  const handleDeposit = async () => {
+    if (!amount || amount < 100) {
+      alert("Minimum ₹100 required");
       return;
     }
 
-    setProcessing(true);
-    setPaymentStatus('processing');
+    try {
+      const res = await fetch("https://indr-backend-77tp.onrender.com/api/deposit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+        body: JSON.stringify({
+          amount,
+          txn: "TXN" + Date.now(),
+        }),
+      });
 
-    // Simulate payment processing
-    setTimeout(() => {
-      setPaymentStatus('success');
-      setStep(3);
-      setProcessing(false);
-      
-      // Reset after success
-      setTimeout(() => {
-        resetForm();
-      }, 3000);
-    }, 2000);
-  };
+      const data = await res.json();
 
-  const resetForm = () => {
-    setStep(1);
-    setAmount('');
-    setScannedData(null);
-    setPaymentStatus(null);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (amount && amount > 0) {
-      setStep(2);
+      if (data.success) {
+        navigate("/payment", { state: { amount } });
+      } else {
+        alert(data.message || "Failed");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Server error");
     }
   };
 
-  // Render QR Scanner
-  const renderScanner = () => {
-    if (!scanning) return null;
-    
-    return (
-      <div className="scanner-overlay">
-        <div className="scanner-container">
-          <div className="scanner-header">
-            <h3>Scan QR Code</h3>
-            <button className="close-scanner" onClick={() => setScanning(false)}>✕</button>
-          </div>
-          <div className="qr-reader-wrapper">
-            <QrReader
-              onResult={(result, error) => {
-                if (result) {
-                  handleScan(result);
-                }
-                if (error) {
-                  console.info(error);
-                }
-              }}
-              constraints={{ facingMode: 'environment' }}
-              className="qr-reader"
-            />
-          </div>
-          <div className="scanner-actions">
-            <button onClick={() => fileInputRef.current.click()} className="upload-btn">
-              📁 Upload QR Code
-            </button>
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileUpload}
-              accept="image/*"
-              style={{ display: 'none' }}
-            />
-          </div>
-          {scannedData && (
-            <div className="scanned-data">
-              <p>✓ QR Code Detected</p>
-              <small>{scannedData}</small>
-            </div>
-          )}
-        </div>
-      </div>
-    );
+  const handleClear = () => {
+    setAmount(0);
   };
 
-  // Render Step 1: Deposit Details
-  const renderStep1 = () => (
-    <div className="deposit-step fade-in">
-      <div className="amount-section">
-        <h2>Enter Deposit Amount</h2>
-        <div className="amount-input-wrapper">
-          <span className="currency">₹</span>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            placeholder="0.00"
-            className="amount-input"
-            min="1"
-            step="1"
-          />
-        </div>
-        <div className="quick-amounts">
-          {[500, 1000, 2500, 5000, 10000].map((amt) => (
-            <button
-              key={amt}
-              onClick={() => setAmount(amt)}
-              className="quick-amount-btn"
-            >
-              ₹{amt}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="payment-methods">
-        <h3>Select Payment Method</h3>
-        <div className="methods-grid">
-          {paymentMethods.map((method) => (
-            <button
-              key={method.id}
-              onClick={() => setSelectedMethod(method.id)}
-              className={`method-btn ${selectedMethod === method.id ? 'active' : ''}`}
-              style={{ borderColor: selectedMethod === method.id ? method.color : '#e5e7eb' }}
-            >
-              <span className="method-icon" style={{ background: method.color + '20', color: method.color }}>
-                {method.icon}
-              </span>
-              <span className="method-name">{method.name}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="scanner-section">
-        <button onClick={startScanner} className="scan-btn">
-          📷 Scan QR Code
-        </button>
-        {scannedData && (
-          <div className="scanned-info">
-            ✓ QR Scanned: {scannedData.substring(0, 30)}...
-          </div>
-        )}
-      </div>
-
-      <button onClick={handleSubmit} className="continue-btn" disabled={!amount}>
-        Continue to Payment
-      </button>
-    </div>
-  );
-
-  // Render Step 2: Payment Processing
-  const renderStep2 = () => (
-    <div className="deposit-step fade-in">
-      <div className="payment-summary">
-        <h2>Payment Summary</h2>
-        <div className="summary-card">
-          <div className="summary-row">
-            <span>Amount:</span>
-            <strong>₹{amount}</strong>
-          </div>
-          <div className="summary-row">
-            <span>Payment Method:</span>
-            <strong>{paymentMethods.find(m => m.id === selectedMethod)?.name}</strong>
-          </div>
-          {scannedData && (
-            <div className="summary-row">
-              <span>QR Reference:</span>
-              <small>{scannedData.substring(0, 20)}...</small>
-            </div>
-          )}
-          <div className="summary-row total">
-            <span>Total:</span>
-            <strong>₹{amount}</strong>
-          </div>
-        </div>
-      </div>
-
-      <div className="payment-form">
-        {selectedMethod === 'card' && (
-          <div className="card-details">
-            <input type="text" placeholder="Card Number" className="payment-input" />
-            <div className="card-row">
-              <input type="text" placeholder="MM/YY" className="payment-input half" />
-              <input type="text" placeholder="CVV" className="payment-input half" />
-            </div>
-            <input type="text" placeholder="Card Holder Name" className="payment-input" />
-          </div>
-        )}
-        
-        {selectedMethod === 'upi' && (
-          <div className="upi-details">
-            <input type="text" placeholder="UPI ID (e.g., name@bank)" className="payment-input" />
-            <button className="verify-upi">Verify UPI ID</button>
-          </div>
-        )}
-
-        {selectedMethod === 'bank' && (
-          <div className="bank-details">
-            <select className="payment-input">
-              <option>Select Bank</option>
-              <option>SBI</option>
-              <option>HDFC Bank</option>
-              <option>ICICI Bank</option>
-              <option>Axis Bank</option>
-            </select>
-            <input type="text" placeholder="Account Number" className="payment-input" />
-            <input type="text" placeholder="IFSC Code" className="payment-input" />
-          </div>
-        )}
-
-        {selectedMethod === 'crypto' && (
-          <div className="crypto-details">
-            <select className="payment-input">
-              <option>Select Cryptocurrency</option>
-              <option>Bitcoin (BTC)</option>
-              <option>Ethereum (ETH)</option>
-              <option>USDT (TRC20)</option>
-            </select>
-            <input type="text" placeholder="Wallet Address" className="payment-input" />
-          </div>
-        )}
-
-        <div className="payment-actions">
-          <button onClick={() => setStep(1)} className="back-btn">Back</button>
-          <button onClick={processPayment} className="pay-btn" disabled={processing}>
-            {processing ? 'Processing...' : `Pay ₹${amount}`}
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Render Step 3: Success
-  const renderStep3 = () => (
-    <div className="success-step fade-in">
-      <div className="success-icon">✓</div>
-      <h2>Payment Successful!</h2>
-      <p>Your deposit of ₹{amount} has been processed successfully.</p>
-      <div className="transaction-details">
-        <p>Transaction ID: TXN{Math.random().toString(36).substr(2, 8).toUpperCase()}</p>
-        <p>Date: {new Date().toLocaleString()}</p>
-      </div>
-      <button onClick={() => { setStep(1); resetForm(); }} className="new-deposit-btn">
-        Make Another Deposit
-      </button>
-    </div>
-  );
+  const amounts = [100, 200, 300, 500, 1000, 1500, 2000, 3000, 5000];
+  
+  // Split amounts into rows of 3
+  const row1 = amounts.slice(0, 3);
+  const row2 = amounts.slice(3, 6);
+  const row3 = amounts.slice(6, 9);
 
   return (
-    <div className="deposit-system">
-      {renderScanner()}
-      <div className="deposit-container">
-        <div className="deposit-header">
-          <h1>Deposit Funds</h1>
-          <div className="steps-indicator">
-            <div className={`step ${step >= 1 ? 'active' : ''}`}>1. Amount</div>
-            <div className={`step ${step >= 2 ? 'active' : ''}`}>2. Payment</div>
-            <div className={`step ${step >= 3 ? 'active' : ''}`}>3. Success</div>
+    <div className="deppage">
+      <div className="depp">
+        <span className="back-btn" onClick={() => navigate("/profile")}>
+          ←
+        </span>
+        <p className="dep">Deposit</p>
+      </div>
+
+      <div className="chnl">
+        <p className="select">Select Channel</p>
+        <div className="channel-buttons">
+          <div className="slt" onClick={() => console.log("Phonepe selected")}>
+            <span>📱 Phonepe_QR</span>
+            <span style={{ fontSize: "10px", marginTop: "4px" }}>Balance: 100-50k</span>
+          </div>
+          <div className="sltt" onClick={() => console.log("UPI selected")}>
+            <span>💳 UPI Phonepe_QR</span>
+            <span style={{ fontSize: "10px", marginTop: "4px" }}>Balance: 100-100k</span>
           </div>
         </div>
+      </div>
+
+      <div className="amm">
+        <span>💳 Deposit Amount</span>
         
-        <div className="deposit-content">
-          {step === 1 && renderStep1()}
-          {step === 2 && renderStep2()}
-          {step === 3 && renderStep3()}
+        <div className="amount-rows">
+          <div className="ammnt">
+            {row1.map((amt) => (
+              <div
+                key={amt}
+                className={amount === amt ? "rs active" : "rs"}
+                onClick={() => setAmount(amt)}
+              >
+                <span>₹ {amt}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="ammntt">
+            {row2.map((amt) => (
+              <div
+                key={amt}
+                className={amount === amt ? "rs active" : "rs"}
+                onClick={() => setAmount(amt)}
+              >
+                <span>₹ {amt}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="ammnttt">
+            {row3.map((amt) => (
+              <div
+                key={amt}
+                className={amount === amt ? "rs active" : "rs"}
+                onClick={() => setAmount(amt)}
+              >
+                <span>₹ {amt}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <div className="custom-input-wrapper">
+          <div className="price-wrapper">
+            <span className="currency-icon">₹</span>
+            <div className="vertical-divider"></div>
+            <input
+              type="number"
+              className="amount-input"
+              value={amount || ""}
+              onChange={(e) => setAmount(Number(e.target.value))}
+              placeholder="Enter amount"
+            />
+            {amount > 0 && (
+              <button className="clear-btn" onClick={handleClear}>
+                <span className="close-icon">×</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        <button className="depositt" onClick={handleDeposit}>
+          Deposit
+        </button>
+      </div>
+
+      <div className="instructions-box">
+        <div className="inst-title">
+          <span className="inst-icon">📕</span>
+          Recharge Instructions
+        </div>
+
+        <div className="inst-content">
+          <div className="inst-item">
+            <span className="dot"></span>
+            <p>
+              Please complete your payment within the given time to avoid order
+              cancellation.
+            </p>
+          </div>
+
+          <div className="inst-item">
+            <span className="dot"></span>
+            <p>
+              Make sure the transfer amount matches exactly with your selected
+              amount.
+            </p>
+          </div>
+
+          <div className="inst-item">
+            <span className="dot"></span>
+            <p>
+              Incorrect payments may not be processed, so double-check before
+              sending.
+            </p>
+          </div>
+
+          <div className="inst-item">
+            <span className="dot"></span>
+            <p>
+              After payment, do not refresh or leave the page until
+              confirmation.
+            </p>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default DepositSystem;
+export default Deposit;
