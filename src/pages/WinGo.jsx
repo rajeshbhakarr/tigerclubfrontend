@@ -427,6 +427,8 @@ const WinGo = () => {
         </div>
       )}
 
+      <br /><br />
+
     </div>
   );
 };
