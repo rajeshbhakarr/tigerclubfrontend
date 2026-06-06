@@ -174,7 +174,6 @@ const LoginPage = () => {
         </button>
 
         {/* Footer */}
-        // Form section ke end mein, footer-links se pehle ye ensure karo ki flex column sahi ho
 
 <div className="form-section">
   {/* ... sab kuch same ... */}

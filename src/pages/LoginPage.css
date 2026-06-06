@@ -20,20 +20,28 @@ html, body {
 }
 
 body {
-  background: #f7f8ff;
+  background: #e8e8e8;
   margin: 0;
-  padding: 0 !important;
+  padding: 0;
   min-height: 100vh;
+  /* PC me center karne ke liye */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* Main Container - Mobile Full Screen */
+/* Main Container */
 .login-container {
   width: 100%;
-  min-height: 100vh;
+  max-width: 380px;
   background-color: var(--primary-bg);
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
+  /* PC me rounded corners and shadow */
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
 }
 
 /* Header Section */
@@ -72,7 +80,7 @@ body {
   cursor: pointer;
 }
 
-/* Form Section - Takes remaining space */
+/* Form Section */
 .form-section {
   padding: 24px 20px;
   background: var(--primary-bg);
@@ -230,7 +238,9 @@ body {
   font-size: 22px;
 }
 
-/* Desktop Styles - Mobile size card */
+/* ========== RESPONSIVE ========== */
+
+/* PC / Desktop - Center me dikhega */
 @media screen and (min-width: 421px) {
   body {
     background: #d4d4d8;
@@ -242,32 +252,47 @@ body {
   
   .login-container {
     max-width: 380px;
-    min-height: auto;
+    width: 100%;
     border-radius: 32px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    /* Height auto for PC */
     height: auto;
     max-height: 90vh;
     overflow-y: auto;
   }
   
-  .form-section {
-    padding: 20px;
+  /* Scrollbar styling for PC */
+  .login-container::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .login-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  .login-container::-webkit-scrollbar-thumb {
+    background: var(--header-pink);
+    border-radius: 10px;
   }
 }
 
-/* For small mobile devices - full screen */
+/* Mobile Devices - Full Screen */
 @media screen and (max-width: 420px) {
   body {
     background: var(--primary-bg);
+    display: block;
     padding: 0;
     margin: 0;
   }
   
   .login-container {
     max-width: 100%;
+    width: 100%;
     min-height: 100vh;
     border-radius: 0;
     box-shadow: none;
+    /* Mobile me full height */
+    height: 100%;
   }
   
   .header {
@@ -276,6 +301,7 @@ body {
   
   .form-section {
     padding: 20px 16px;
+    min-height: calc(100vh - 60px);
   }
   
   .btn-login, .btn-register {
@@ -295,7 +321,7 @@ body {
   }
 }
 
-/* Very small devices */
+/* Very small devices (under 350px) */
 @media screen and (max-width: 350px) {
   .form-section {
     padding: 16px 12px;
@@ -323,14 +349,15 @@ body {
   }
 }
 
-/* Landscape mode */
-@media screen and (max-height: 550px) and (orientation: landscape) {
+/* Landscape mode on mobile */
+@media screen and (max-height: 550px) and (orientation: landscape) and (max-width: 420px) {
   .login-container {
     min-height: 100vh;
   }
   
   .form-section {
     padding: 12px 20px;
+    min-height: auto;
   }
   
   .input-group {
