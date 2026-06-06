@@ -362,8 +362,8 @@ const WinGo = () => {
       {/* Big / Small */}
       <div className="big-small">
         <div className="big" onClick={() => openModal("Big")}>Big</div>
-        <div className="small" onClick={() => openModal("Small")}>Small</div>
-      </div>
+        <div className="small"   onClick={() => openModal("Small")}>  <span className="namsmall" >Small</span> </div>
+      </div> 
 
       {/* History Tabs */}
       <div className="al">
