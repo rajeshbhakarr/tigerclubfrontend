@@ -17,13 +17,13 @@ function Notification() {
   const fetchNotifications = async () => {
     try {
       const res = await axios.get(
-  `${API}/api/notification/my`,
-  {
-    headers: {
-      Authorization: "Bearer " + token,
-    },
-  }
-);
+        `${API}/api/notification/my`,
+        {
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        }
+      );
       if (res.data.success) {
         setNotifications(res.data.notifications);
       }
