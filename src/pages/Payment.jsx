@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/payment.css";
 
-import qrCode from "../assets/qrcode.jpeg";
+import scanner from "../assets/qrcode.png";
 
 const Payment = () => {
   const location = useLocation();
