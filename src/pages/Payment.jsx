@@ -46,11 +46,11 @@ const Payment = () => {
 
       {/* Payment Options */}
       <div className="pay-options">
-        <div className="option" onClick={openUPI}>
+        <div className="option">
           📱 PhonePe
         </div>
 
-        <div className="option" onClick={openUPI}>
+        <div className="option">
           💰 Paytm
         </div>
       </div>
