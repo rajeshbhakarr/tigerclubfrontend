@@ -57,12 +57,12 @@ const Payment = () => {
 
       {/* QR Box */}
       <div className="qr-box">
-        <img className="qrcode" src={qrCode} alt="qr" />
+        <img className="qrcode" src={scanner} alt="qr" />
       </div>
 
       {/* UPI */}
       <div className="upi-box">
-        <span>test@upi</span>
+        <span>indr86@freecharge</span>
         <button onClick={copyUPI}>Copy</button>
       </div>
 
