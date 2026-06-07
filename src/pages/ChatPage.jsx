@@ -42,8 +42,7 @@ function ChatPage() {
   useEffect(() => {
     const loadChat = async () => {
       try {
-        const res = await axios.get(`${API}/chat/my/${type}`, {
-         headers: {
+const res = await axios.get(`${API}/api/chat/my/${type}`, {         headers: {
   "guest-id": guestId,
 },
         });
@@ -60,8 +59,7 @@ function ChatPage() {
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
-       const res = await axios.get(`${API}/chat/my/${type}`, {
-  headers: {
+const res = await axios.get(`${API}/api/chat/my/${type}`, {  headers: {
     Authorization: "Bearer " + token,
     "guest-id": guestId,
   },
@@ -127,8 +125,8 @@ function ChatPage() {
         imageUrl = await compressImage(image); // ✅ compress karke bhejo
       }
 
-     const res = await axios.post(
-  `${API}/chat/send/${type}`,
+    const res = await axios.post(
+  `${API}/api/chat/send/${type}`,
   { text: input, imageUrl },
   {
     headers: {
