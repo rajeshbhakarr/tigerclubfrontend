@@ -251,6 +251,30 @@ function AdminChat() {
               >
                 Close Chat
               </button>
+
+              <button
+                onClick={async () => {
+                  if (!window.confirm("Delete chat?")) return;
+
+                  await axios.delete(
+                    `${API}/chat/admin/delete/${activeChat._id}`
+                  );
+
+                  setActiveChat(null);
+                  fetchChats();
+                }}
+                style={{
+                  padding: "4px 12px",
+                  borderRadius: "8px",
+                  border: "none",
+                  background: "#dc2626",
+                  color: "#fff",
+                  cursor: "pointer",
+                }}
+              >
+                Delete
+              </button>
+
             </div>
           </div>
 
