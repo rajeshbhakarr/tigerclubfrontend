@@ -13,7 +13,7 @@ function DepositHistory() {
   }, []);
 
   const fetchDeposits = async () => {
-    const res = await fetch("https://indr-backend-77tp.onrender.com/api/my-deposits", {
+    const res = await fetch("https://tigerclubbackend.onrender.com/api/my-deposits", {
       headers: {
         Authorization: "Bearer " + localStorage.getItem("token"),
       },

@@ -33,7 +33,7 @@ function AddBank() {
 
   try {
     const res = await fetch(
-      "https://indr-backend-77tp.onrender.com/api/profile/save-bank",
+      "https://tigerclubbackend.onrender.com/api/profile/save-bank",
       {
         method: "POST",
         headers: {

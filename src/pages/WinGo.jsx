@@ -6,7 +6,7 @@ import { placeBet, getMyBets } from "../api/wingoApi";
 import { useWallet } from "../context/WalletContext";
 
 const ROUND_DURATION = 30;
-const API_URL = "https://indr-backend-77tp.onrender.com";
+const API_URL = "https://tigerclubbackend.onrender.com";
 
 const WinGo = () => {
   const { balance, setBalance, fetchBalance } = useWallet();

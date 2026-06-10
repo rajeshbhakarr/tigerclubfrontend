@@ -4,7 +4,7 @@ import "./LoginPage.css";
 import axios from "axios";
 import { useWallet } from "../context/WalletContext";
 
-const API = "https://indr-backend-77tp.onrender.com/api";
+const API = "https://tigerclubbackend.onrender.com/api";
 
 const LoginPage = () => {
   const { fetchBalance } = useWallet();

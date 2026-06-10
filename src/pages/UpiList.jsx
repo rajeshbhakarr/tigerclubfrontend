@@ -9,7 +9,7 @@ useEffect(() => {
   const loadUpi = async () => {
     try {
       const res = await fetch(
-        "https://indr-backend-77tp.onrender.com/api/profile/me",
+        "https://tigerclubbackendonrender.com/api/profile/me",
         {
           headers: {
             Authorization:

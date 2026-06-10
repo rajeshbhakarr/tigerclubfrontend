@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../styles/bethistory.css";
 import axios from "axios";
 
-const API = "https://indr-backend-77tp.onrender.com";
+const API = "https://tigerclubbackend.onrender.com";
 
 const authHeader = () => ({
   headers: { Authorization: "Bearer " + localStorage.getItem("token") },

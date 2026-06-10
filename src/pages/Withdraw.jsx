@@ -23,7 +23,7 @@ const withdrawableBalance =
   const loadPaymentData = async () => {
     try {
       const res = await fetch(
-        "https://indr-backend-77tp.onrender.com/api/profile/me",
+        "https://tigerclubbackend.onrender.com/api/profile/me",
         {
           headers: {
             Authorization:
@@ -61,7 +61,7 @@ const withdrawableBalance =
 
     setLoading(true);
     try {
-      const res = await fetch(  "https://indr-backend-77tp.onrender.com/api/withdraw", {
+      const res = await fetch(  "https://tigerclubbackendonrender.com/api/withdraw", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

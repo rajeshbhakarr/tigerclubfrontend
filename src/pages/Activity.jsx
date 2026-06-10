@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
   import { useNavigate } from "react-router-dom";
   import "../styles/activity.css";
 
-  const API = "https://indr-backend-77tp.onrender.com/api";
+  const API = "https://tigerclubbackend.onrender.com/api";
 
   const ATTENDANCE_REWARDS = [
     { day: 1, amount: 8 },

@@ -1,4 +1,4 @@
-const API_URL = "https://indr-backend-77tp.onrender.com";
+const API_URL = "https://tigerclubbackend.onrender.com";
 
 // Bet place karna
 export const placeBet = async (data) => {

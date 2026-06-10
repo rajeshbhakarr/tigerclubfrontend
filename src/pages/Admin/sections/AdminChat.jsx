@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 
-const API = "https://indr-backend-77tp.onrender.com/api";
+const API = "https://tigerclubbackend.onrender.com/api";
 
 function AdminChat() {
   // States add karo upar:

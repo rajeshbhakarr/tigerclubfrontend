@@ -13,7 +13,7 @@ export const WalletProvider = ({ children }) => {
       if (!token) return;
       localStorage.setItem("lastLoginTime", Date.now());
 
-      const res  = await fetch("https://indr-backend-77tp.onrender.com/api/profile/me", {
+      const res  = await fetch("https://tigerclubbackend.onrender.com/api/profile/me", {
         headers: { Authorization: "Bearer " + token },
       });
 

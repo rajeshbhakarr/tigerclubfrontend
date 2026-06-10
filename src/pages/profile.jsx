@@ -10,7 +10,7 @@ import depositImg from "../assets/deposit.jpeg";
 import withdrawImg from "../assets/withdraw.png";
 import vipImg from "../assets/vipp.jpeg";
 
-const API = "https://indr-backend-77tp.onrender.com/api";
+const API = "https://tigerclubbackend.onrender.com/api";
 
 const Profile = () => {
 const { fetchBalance, balance, user } = useWallet();

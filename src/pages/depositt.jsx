@@ -13,7 +13,7 @@ const Deposit = () => {
     }
 
     try {
-      const res = await fetch("https://indr-backend-77tp.onrender.com/api/deposit", {
+      const res = await fetch("https://tigerclubbackendonrender.com/api/deposit", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
