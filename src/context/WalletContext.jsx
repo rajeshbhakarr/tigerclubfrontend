@@ -47,7 +47,7 @@ setNeedToBet(data.user.needToBet || 0);
     const interval = setInterval(() => {
       const t = localStorage.getItem("token");
       if (t) fetchBalance();
-    }, 10000);
+    }, 100000);
 
     return () => clearInterval(interval);
   }, []);
