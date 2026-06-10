@@ -288,7 +288,7 @@ const WinGo = () => {
       <div className="indrr">
         <button onClick={() => navigate(-1)} className="backkk-btnnn">←</button>
         <img src="src/assets/inder.png" className="logg" alt="logo" />
-        <p className="indd">INDR</p>
+        <p className="indd">Tiger ClUB</p>
         <div className="bal">
           <div>
             <p className="wall">WALLET BALANCE</p>
