@@ -62,7 +62,7 @@ const Payment = () => {
 
       {/* UPI */}
       <div className="upi-box">
-        <span>indr86@freecharge</span>
+        <span>Tigerclub86@freecharge</span>
         <button onClick={copyUPI}>Copy</button>
       </div>
 

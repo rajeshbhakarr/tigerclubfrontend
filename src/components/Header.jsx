@@ -3,7 +3,7 @@ import "../styles/header.css";
 function Header() {
   return (
     <div>
-      <div className="in">Indr</div>
+      <div className="in">Tigerclub</div>
 
       <div className="img">
         <img src="/bannerr.png" alt="not found" width={800} height={300} />

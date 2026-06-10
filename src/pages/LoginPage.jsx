@@ -72,7 +72,7 @@ const LoginPage = () => {
       <div className="header">
         <span className="back-icon" onClick={() => navigate(-1)}>‹</span>
         <div className="header-title">
-          <span className="logo-icon">INDR</span>
+          <span className="logo-icon">Tigerclub</span>
         </div>
         <div className="lang-selector">🇺🇸 EN</div>
       </div>
