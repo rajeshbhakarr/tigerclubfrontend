@@ -94,9 +94,13 @@ function Requests() {
   const handleReject = async (id) => {
     await fetch(`${API}/admin/deposit-reject`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token"),
+      },
       body: JSON.stringify({ id }),
     });
+
     fetchRequests();
   };
 
@@ -319,7 +323,7 @@ function Requests() {
                     color: "#94a3b8",
                   }}
                 >
-Order No: {d.txn || d._id}                </p>
+                  Order No: {d.txn || d._id}                </p>
                 <p
                   style={{
                     margin: "2px 0",
