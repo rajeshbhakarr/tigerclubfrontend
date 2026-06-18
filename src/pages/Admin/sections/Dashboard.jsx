@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 
-const API = "https://tigerclubbackendonrender.com/api/admin";
+const API = "https://tigerclubbackend.onrender.com/api/admin";
 const token = () => localStorage.getItem("token");
 const hdr = () => ({ Authorization: "Bearer " + token() });
 
