@@ -61,7 +61,7 @@ const withdrawableBalance =
 
     setLoading(true);
     try {
-      const res = await fetch(  "https://tigerclubbackendonrender.com/api/withdraw", {
+      const res = await fetch(  "https://tigerclubbackend.onrender.com/api/withdraw", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -20,7 +20,7 @@ function Promotion() {
   const fetchPromotionData = async () => {
     try {
       const token = localStorage.getItem("token");
-      const res = await fetch("https://tigerclubbackendonrender.com/api/promotion", {
+      const res = await fetch("https://tigerclubbackend.onrender.com/api/promotion", {
         headers: { Authorization: "Bearer " + token },
       });
       const result = await res.json();
