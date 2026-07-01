@@ -124,9 +124,9 @@ onClick={() => openGame("/dragontiger")}          className="dragon"
 
       {/* INFO */}
       <div className="info-box">
-        <h3>🎮 INDR GAME</h3>
+        <h3>🎮 TIGER CLUB</h3>
         <p>
-          INDR GAME ek fast & exciting online gaming platform hai jahan aap
+          Tiger Club GAME ek fast & exciting online gaming platform hai jahan aap
           WinGo, K3, 5D aur TRX khel sakte ho.
         </p>
         <p>🚀 Play karo aur jeetne ka mauka pao!</p>
