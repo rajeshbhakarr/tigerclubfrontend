@@ -40,6 +40,7 @@ import Vip from "./pages/Vip";
 import Promotion from "./pages/Promotion";
 import Notification from "./pages/Notification";
 import Aviator from "./pages/Aviator";
+import Mines from "./pages/Mines";
 
 // ✅ Agar login nahi hai to login page pe bhejo
 function ProtectedRoute({ children }) {
@@ -219,6 +220,15 @@ function AppContent() {
           element={
             <ProtectedRoute>
               <Dragontiger />
+            </ProtectedRoute>
+          }
+        />
+
+<Route
+          path="/mines"
+          element={
+            <ProtectedRoute>
+              <Mines/>
             </ProtectedRoute>
           }
         />

@@ -43,6 +43,7 @@ function Notification() {
   `${API}/api/notification/claim/${id}`,
   {},
   {
+
     headers: {
       Authorization: "Bearer " + token,
     },

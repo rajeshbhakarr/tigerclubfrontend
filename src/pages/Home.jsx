@@ -86,7 +86,7 @@ const openGame = (path) => {
             alt="wingo"
 onClick={() => openGame("/wingo")}            style={{ cursor: "pointer" }}
           />
-          <img src={minesImg} className="carddd greenn " />
+          <img src={minesImg} className="carddd greenn "     onClick={() => openGame("/mines")}  />
           <img src={aviatorImg} className="carddd orange"    onClick={() => openGame("/aviator")}  />
         </div>
       </div>
