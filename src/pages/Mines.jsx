@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
 import * as minesApi from "../api/minesApi";
 import Swal from "sweetalert2";
-import "./mines.css";
+import "../styles/mines.css";
 
 const Mines = () => {
   const { balance, fetchBalance } = useWallet();
