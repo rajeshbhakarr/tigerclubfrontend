@@ -36,14 +36,19 @@ body {
 }
 
 /* ====== CONTAINER ====== */
+/* ====== CONTAINER ====== */
+
 .mines-container {
   width: 100%;
   max-width: 420px;
-  background: var(--dark-bg);
   min-height: 100vh;
+  background: var(--dark-bg);
+
+  margin: 0 auto;          /* <-- Center */
   display: flex;
   flex-direction: column;
-  padding-bottom: 20px;
+
+  padding-bottom: 90px;    /* Bottom navbar ke upar space */
 }
 
 @media (min-width: 481px) {
@@ -441,12 +446,16 @@ body {
 .mines-loading {
   width: 100%;
   max-width: 420px;
+  margin: 0 auto;
+
   height: 100vh;
   background: var(--dark-bg);
+
   display: flex;
-  align-items: center;
   justify-content: center;
-  color: var(--text-primary);
+  align-items: center;
+
+  color: white;
   font-size: 18px;
 }
 
@@ -506,3 +515,5 @@ body {
     font-size: 13px;
   }
 }
+
+
