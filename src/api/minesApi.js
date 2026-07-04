@@ -1,6 +1,14 @@
 import axios from "axios";
 
 const API = "https://tigerclubbackend.onrender.com/api";
+
+// 🔑 Get latest token
+const authHeaders = () => ({
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+});
+
 // 🎮 Get game state
 export const getGameState = async () => {
   try {
@@ -15,10 +23,15 @@ export const getGameState = async () => {
 // 💸 Place bet
 export const placeBet = async (amount, roundId) => {
   try {
-    const res = await axios.post(`${API}/mines/bet`, {
-      amount,
-      roundId,
-    });
+    const res = await axios.post(
+      `${API}/mines/bet`,
+      {
+        amount,
+        roundId,
+      },
+      authHeaders()
+    );
+
     return res.data;
   } catch (err) {
     console.error("❌ Place bet error:", err.response?.data?.msg || err.message);
@@ -29,10 +42,15 @@ export const placeBet = async (amount, roundId) => {
 // 🎯 Reveal tile
 export const revealTile = async (roundId, tileIndex) => {
   try {
-    const res = await axios.post(`${API}/mines/reveal-tile`, {
-      roundId,
-      tileIndex,
-    });
+    const res = await axios.post(
+      `${API}/mines/reveal-tile`,
+      {
+        roundId,
+        tileIndex,
+      },
+      authHeaders()
+    );
+
     return res.data;
   } catch (err) {
     console.error("❌ Reveal error:", err.response?.data?.msg || err.message);
@@ -43,9 +61,14 @@ export const revealTile = async (roundId, tileIndex) => {
 // 💰 Cashout
 export const cashoutBet = async (roundId) => {
   try {
-    const res = await axios.post(`${API}/mines/cashout`, {
-      roundId,
-    });
+    const res = await axios.post(
+      `${API}/mines/cashout`,
+      {
+        roundId,
+      },
+      authHeaders()
+    );
+
     return res.data;
   } catch (err) {
     console.error("❌ Cashout error:", err.response?.data?.msg || err.message);
@@ -56,7 +79,11 @@ export const cashoutBet = async (roundId) => {
 // 📋 Get bet history
 export const getMyBets = async (limit = 20) => {
   try {
-    const res = await axios.get(`${API}/mines/my-bets?limit=${limit}`);
+    const res = await axios.get(
+      `${API}/mines/my-bets?limit=${limit}`,
+      authHeaders()
+    );
+
     return res.data;
   } catch (err) {
     console.error("❌ Get bets error:", err.response?.data?.msg || err.message);
