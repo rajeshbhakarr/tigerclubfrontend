@@ -1,7 +1,6 @@
 import axios from "axios";
 
-const API = "https://indr-backend-77tp.onrender.com/api";
-
+const API = "https://tigerclubbackend.onrender.com/api";
 // 🎮 Get game state
 export const getGameState = async () => {
   try {
