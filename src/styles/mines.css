@@ -14,31 +14,18 @@
   --mines-gradient-button: linear-gradient(135deg, #FF6B6B 0%, #3B82F6 100%);
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
 
-html, body {
-  background: var(--mines-dark-bg);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  color: var(--mines-text-primary);
-}
-
-body {
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-}
 
 /* ====== CONTAINER ====== */
 .mines-container {
   width: 100%;
   max-width: 420px;
   min-height: 100vh;
-  background: var(--mines-dark-bg);
+ 
+    background:var(--mines-dark-bg);
+    color:var(--mines-text-primary);
+    font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+
   margin: 0 auto;
   display: flex;
   flex-direction: column;
