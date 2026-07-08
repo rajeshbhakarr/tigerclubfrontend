@@ -264,10 +264,13 @@ const Aviator = () => {
       redrawCanvas(true);
 
       // Add to crash history bar
-      setCrashHistory(prev => [
-        { roundId: data.roundId, crashAt: data.multiplier },
-        ...prev
-      ].slice(0, 20));
+     setCrashHistory(prev => [
+  {
+    roundId: data.roundId,
+    crashPoint: data.multiplier,
+  },
+  ...prev
+].slice(0, 20));
 
       // If user still has active bet — they lost
       if (betStateRef.current === "placed") {
@@ -505,8 +508,8 @@ const Aviator = () => {
               {crashHistory.map((h, i) => (
                 <div className="av-hist-row" key={i}>
                   <span className="av-hist-rid">#{h.roundId}</span>
-                  <span className={`av-hist-crash ${getCrashClass(h.crashAt)}`}>
-                    {h.crashAt?.toFixed(2)}x
+<span className={`av-hist-crash ${getCrashClass(h.crashPoint)}`}>
+                      {Number(h.crashPoint).toFixed(2)}x
                   </span>
                 </div>
               ))}
@@ -524,12 +527,12 @@ const Aviator = () => {
 
       {/* Crash history bar */}
       <div className="av-history-bar">
-        {crashHistory.slice(0, 8).map((h, i) => (
-          <span key={i} className={`av-crash-pill ${getCrashClass(h.crashAt)}`}>
-            {h.crashAt?.toFixed(2)}x
-          </span>
-        ))}
-        <button className="av-history-btn" onClick={() => setShowHistory(true)}>
+       {crashHistory.slice(0, 8).map((h, i) => (
+  <span key={i} className={`av-crash-pill ${getCrashClass(h.crashPoint)}`}>
+    {Number(h.crashPoint).toFixed(2)}x
+  </span>
+))}
+        <button className="av-history-btn" >
           🕐
         </button>
       </div>

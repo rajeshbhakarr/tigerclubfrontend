@@ -248,7 +248,7 @@ function AviatorManager() {
               color: h.crashAt >= 3 ? "#9b5de5" : h.crashAt >= 2 ? "#f4b942" : "#ef4444",
               border: `1px solid ${h.crashAt >= 3 ? "rgba(155,93,229,0.3)" : h.crashAt >= 2 ? "rgba(244,185,66,0.3)" : "rgba(239,68,68,0.3)"}`,
             }}>
-              {h.crashAt?.toFixed(2)}x
+              {Number(h.crashPoint).toFixed(2)}x
             </span>
           ))}
           {(!liveData?.history || liveData.history.length === 0) && (
