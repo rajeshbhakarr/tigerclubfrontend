@@ -208,12 +208,12 @@ const Mines = () => {
     <div className="mines-container">
       {/* HEADER */}
       <div className="mines-header">
-        <div className="header-left">
-          <span onClick={() => navigate(-1)} className="back-btn">‹</span>
+        <div className="mines-header-left">
+          <span onClick={() => navigate(-1)} className="mines-back-btn">‹</span>
           <h1>💣 MINES</h1>
         </div>
-        <div className="header-right">
-          <div className="balance-display">₹{balance.toFixed(2)}</div>
+        <div className="mines-header-right">
+          <div className="mines-balance-display">₹{balance.toFixed(2)}</div>
         </div>
       </div>
 
@@ -226,9 +226,9 @@ const Mines = () => {
             .map((_, idx) => (
               <div
                 key={idx}
-                className={`mine-tile ${
-                  tilesRevealed.includes(idx) ? "revealed" : "locked"
-                } ${hitMine && tilesRevealed.includes(idx) ? "hit" : ""}`}
+                className={`mines-tile ${
+                  tilesRevealed.includes(idx) ? "mines-revealed" : "mines-locked"
+                } ${hitMine && tilesRevealed.includes(idx) ? "mines-hit" : ""}`}
                 onClick={() => handleRevealTile(idx)}
                 disabled={loading || !gameActive || tilesRevealed.includes(idx)}
               >
@@ -239,34 +239,34 @@ const Mines = () => {
         </div>
 
         {/* STATS PANEL */}
-        <div className="stats-panel">
-          <div className="stat-box">
-            <div className="stat-label">Tiles Revealed</div>
-            <div className="stat-value">{tilesRevealed.length}</div>
+        <div className="mines-stats-panel">
+          <div className="mines-stat-box">
+            <div className="mines-stat-label">Tiles Revealed</div>
+            <div className="mines-stat-value">{tilesRevealed.length}</div>
           </div>
 
-          <div className="stat-box">
-            <div className="stat-label">Multiplier</div>
-            <div className="stat-value highlight">{currentMultiplier.toFixed(2)}x</div>
+          <div className="mines-stat-box">
+            <div className="mines-stat-label">Multiplier</div>
+            <div className="mines-stat-value mines-highlight">{currentMultiplier.toFixed(2)}x</div>
           </div>
 
-          <div className="stat-box">
-            <div className="stat-label">Current Payout</div>
-            <div className="stat-value gold">₹{currentPayout.toFixed(2)}</div>
+          <div className="mines-stat-box">
+            <div className="mines-stat-label">Current Payout</div>
+            <div className="mines-stat-value mines-gold">₹{currentPayout.toFixed(2)}</div>
           </div>
 
-          <div className="stat-box">
-            <div className="stat-label">Bet Amount</div>
-            <div className="stat-value">₹{betAmount}</div>
+          <div className="mines-stat-box">
+            <div className="mines-stat-label">Bet Amount</div>
+            <div className="mines-stat-value">₹{betAmount}</div>
           </div>
         </div>
       </div>
 
       {/* BET SECTION */}
-      <div className="bet-section">
-        <div className="bet-input-group">
+      <div className="mines-bet-section">
+        <div className="mines-bet-input-group">
           <label>Bet Amount</label>
-          <div className="input-wrapper">
+          <div className="mines-input-wrapper">
             <input
               type="number"
               value={betAmount}
@@ -274,17 +274,17 @@ const Mines = () => {
               min="10"
               max="5000"
               disabled={gameActive}
-              className="bet-input"
+              className="mines-bet-input"
             />
-            <span className="currency">₹</span>
+            <span className="mines-currency">₹</span>
           </div>
         </div>
 
-        <div className="quick-bet-buttons">
+        <div className="mines-quick-bet-buttons">
           {[50, 100, 200, 500].map((amount) => (
             <button
               key={amount}
-              className="quick-bet-btn"
+              className="mines-quick-bet-btn"
               onClick={() => setBetAmount(amount)}
               disabled={gameActive}
             >
@@ -295,10 +295,10 @@ const Mines = () => {
       </div>
 
       {/* ACTION BUTTONS */}
-      <div className="action-buttons">
+      <div className="mines-action-buttons">
         {!gameActive && !gameOver && (
           <button
-            className="btn btn-primary"
+            className="mines-btn mines-btn-primary"
             onClick={handlePlaceBet}
             disabled={loading}
           >
@@ -309,7 +309,7 @@ const Mines = () => {
         {gameActive && (
           <>
             <button
-              className="btn btn-cashout"
+              className="mines-btn mines-btn-cashout"
               onClick={handleCashout}
               disabled={loading}
             >
@@ -319,37 +319,37 @@ const Mines = () => {
         )}
 
         {gameOver && (
-          <button className="btn btn-primary" onClick={handleNewGame}>
+          <button className="mines-btn mines-btn-primary" onClick={handleNewGame}>
             🔄 NEW GAME
           </button>
         )}
       </div>
 
       {/* HISTORY */}
-      <div className="history-section">
+      <div className="mines-history-section">
         <h3>📋 Recent Bets</h3>
         
         {stats && (
-          <div className="stats-summary">
+          <div className="mines-stats-summary">
             <span>Bets: {stats.totalBets}</span>
             <span>Win Rate: {stats.winRate}</span>
             <span>Profit: ₹{stats.totalProfit.toFixed(2)}</span>
           </div>
         )}
 
-        <div className="history-list">
+        <div className="mines-history-list">
           {history.map((bet, idx) => (
-            <div key={idx} className={`history-item ${bet.status}`}>
-              <div className="item-left">
-                <div className="item-amount">₹{bet.amount}</div>
-                <div className="item-tiles">{bet.tilesRevealed} tiles</div>
+            <div key={idx} className={`mines-history-item ${bet.status}`}>
+              <div className="mines-item-left">
+                <div className="mines-item-amount">₹{bet.amount}</div>
+                <div className="mines-item-tiles">{bet.tilesRevealed} tiles</div>
               </div>
-              <div className="item-middle">
-                <div className="item-multiplier">{bet.multiplier.toFixed(2)}x</div>
+              <div className="mines-item-middle">
+                <div className="mines-item-multiplier">{bet.multiplier.toFixed(2)}x</div>
               </div>
-              <div className="item-right">
-                <div className="item-payout">₹{bet.payout.toFixed(2)}</div>
-                <div className={`item-status ${bet.status}`}>
+              <div className="mines-item-right">
+                <div className="mines-item-payout">₹{bet.payout.toFixed(2)}</div>
+                <div className={`mines-item-status ${bet.status}`}>
                   {bet.status === "win" ? "✅ WIN" : "❌ LOSS"}
                 </div>
               </div>
