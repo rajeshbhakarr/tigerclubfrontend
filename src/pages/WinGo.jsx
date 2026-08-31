@@ -6,56 +6,76 @@ import { useNavigate } from "react-router-dom";
 import { placeBet, getMyBets } from "../api/wingoApi";
 import { useWallet } from "../context/WalletContext";
 
+const API_URL = "https://tigerclubbackend.onrender.com";
+
 const ROUND_DURATION_30 = 30;
 const ROUND_DURATION_1MIN = 60;
 
 const WINGO_API = `${API_URL}/api/wingo`;
 const WINGO_1MIN_API = `${API_URL}/api/wingo-1min`;
-const API_URL = "https://tigerclubbackend.onrender.com";
 
 const WinGo = () => {
   const { balance, setBalance, fetchBalance } = useWallet();
   const navigate = useNavigate();
 
-const gameApi =
-  gameMode === "1min"
-    ? WINGO_1MIN_API
-    : WINGO_API;
+  // ── Game mode
+  const [gameMode, setGameMode] = useState("30sec");
 
-const [period, setPeriod] = useState("Loading...");
+  // ── Correct API according to selected game
+  const gameApi =
+    gameMode === "1min"
+      ? WINGO_1MIN_API
+      : WINGO_API;
+
+  const [period, setPeriod] = useState("Loading...");
   const [locked, setLocked] = useState(false);
   const [history, setHistory] = useState([]);
 
-  const timerRef = useRef(ROUND_DURATION);
+  // ── Timer
+  const [timer, setTimer] = useState(
+    gameMode === "1min"
+      ? ROUND_DURATION_1MIN
+      : ROUND_DURATION_30
+  );
+
+  const timerRef = useRef(
+    gameMode === "1min"
+      ? ROUND_DURATION_1MIN
+      : ROUND_DURATION_30
+  );
+
   const clientIntervalRef = useRef(null);
   const lastPeriodRef = useRef(null);
 
   // ── Win/Loss popup state
-  const [popup, setPopup] = useState(null); // null | "win" | "loss"
+  const [popup, setPopup] = useState(null);
   const [winAmount, setWinAmount] = useState(0);
   const [resultNumber, setResultNumber] = useState(null);
   const [resultColor, setResultColor] = useState("");
   const [resultSize, setResultSize] = useState("");
   const popupTimerRef = useRef(null);
 
-  // ── Track pending bet so we know what we bet on
-  const pendingBetRef = useRef(null); // { betValue, betType, amount }
-  // ── Track balance before bet placed
+  // ── Track pending bet
+  const pendingBetRef = useRef(null);
+
+  // ── Track balance before bet
   const balanceBeforeBetRef = useRef(null);
-  // ── Flag: result is pending (round just ended, wait for balance update)
+
+  // ── Track balance
   const lastBalanceRef = useRef(null);
 
-  // Modal state
+  // ── Modal state
   const [showModal, setShowModal] = useState(false);
   const [selected, setSelected] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [amount, setAmount] = useState(1);
   const [multiplier, setMultiplier] = useState(1);
+
   const totalAmount = amount * multiplier * quantity;
 
-  // Tab
+  // ── History tab
   const [activeTab, setActiveTab] = useState("game");
-  const [gameMode, setGameMode] = useState("30sec");
+
   const [myBets, setMyBets] = useState([]);
 
   // ── Close popup (manual + auto)
@@ -106,7 +126,7 @@ const [period, setPeriod] = useState("Loading...");
     const syncWithServer = async () => {
       try {
         const fetchStart = Date.now();
-        const res = await fetch(WINGO_1MIN_API); 
+const res = await fetch(gameApi);
         const data = await res.json();
 
         const fetchEnd = Date.now();
@@ -482,8 +502,9 @@ if (gameMode === "1min") {
           <div className="modal-box">
             <div className="modal-header">
               <div className="back-arrow" onClick={() => setShowModal(false)}><button className="aroo">←</button></div>
-              <p>WinGo 30 sec</p>
-              <div className="selected">Select {selected}</div>
+<p>
+  {gameMode === "1min" ? "WinGo 1 Min" : "WinGo 30 sec"}
+</p>              <div className="selected">Select {selected}</div>
             </div>
             <div className="modal-body">
               <div className="roww">
