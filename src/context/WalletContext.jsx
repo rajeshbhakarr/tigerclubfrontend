@@ -5,7 +5,7 @@ const WalletContext = createContext();
 export const WalletProvider = ({ children }) => {
   const [balance, setBalance] = useState(0);
   const [user, setUser]       = useState(null);
-  const [needToBet, setNeedToBet] = useState(0);
+  const [needToBet, setNeedToBet] = useState(0);   
 
   const fetchBalance = async () => {
     try {
@@ -49,6 +49,7 @@ setNeedToBet(data.user.needToBet || 0);
       if (t) fetchBalance();
     }, 100000);
 
+
     return () => clearInterval(interval);
   }, []);
 
@@ -59,4 +60,4 @@ setNeedToBet(data.user.needToBet || 0);
   );
 };
 
-export const useWallet = () => useContext(WalletContext);
+export const useWallet = () => useContext(WalletContext);   
