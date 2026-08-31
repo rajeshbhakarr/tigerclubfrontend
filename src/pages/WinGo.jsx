@@ -153,9 +153,16 @@ const res = await fetch(gameApi);
             setTimeout(async () => {
               try {
                 // My bets API se latest settled bet check karo
-                const res = await fetch(`${API_URL}/api/wingo/my-bets`, {
-                  headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-                });
+               const betsApi =
+  gameMode === "1min"
+    ? `${WINGO_1MIN_API}/my-bets`
+    : `${WINGO_API}/my-bets`;
+
+const res = await fetch(betsApi, {
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`
+  }
+});
                 const resData = await res.json();
                 const bets = resData.bets || [];
 
