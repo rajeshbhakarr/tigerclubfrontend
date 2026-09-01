@@ -259,6 +259,6 @@ function AviatorManager() {
 
     </div>
   );
-}
+} 
 
 export default AviatorManager;

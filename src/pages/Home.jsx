@@ -17,33 +17,33 @@ import trxImg from "../assets/trxx.png";
 import dragonImg from "../assets/dragon.png";
 
 const Home = () => {
-const { balance, user } = useWallet();  
-const navigate = useNavigate();
-const openGame = (path) => {
-  if ((user?.totalDeposit || 0) < 100) {
-    Swal.fire({
-      icon: "warning",
-      title: "Deposit Required",
-      text: "Minimum ₹100 deposit required",
-      confirmButtonText: "Deposit",
-      width: "260px",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        navigate("/deposit");
-      }
-    });
+  const { balance, user } = useWallet();
+  const navigate = useNavigate();
+  const openGame = (path) => {
+    if ((user?.totalDeposit || 0) < 100) {
+      Swal.fire({
+        icon: "warning",
+        title: "Deposit Required",
+        text: "Minimum ₹100 deposit required",
+        confirmButtonText: "Deposit",
+        width: "260px",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate("/deposit");
+        }
+      });
 
-    return;
-  }
+      return;
+    }
 
-  navigate(path);
-};
+    navigate(path);
+  };
   return (
     <div className="home">
       {/* HEADER */}
       <div className="indr">
         <img src={inderLogo} className="log" alt="logo" />
-        <p className="ind">INDR</p>
+        <p className="ind">RAJA WIN</p>
       </div>
 
       {/* TOP NAV */}
@@ -77,22 +77,22 @@ const openGame = (path) => {
 
       {/* RECOMMENDED */}
       <div className="section">
-        <div className="titlee"  style={{fontSize:"20px"}} >⭐ Recommended Games</div>
+        <div className="titlee" style={{ fontSize: "20px" }} >⭐ Recommended Games</div>
 
         <div className="scroll-roww">
           <img
-           src={wingoImg}
+            src={wingoImg}
             className="ccarddd redd"
             alt="wingo"
-onClick={() => openGame("/wingo")}            style={{ cursor: "pointer" }}
+            onClick={() => openGame("/wingo")} style={{ cursor: "pointer" }}
           />
-          <img src={minesImg} className="carddd greenn "     onClick={() => openGame("/mines")}  />
-          <img src={aviatorImg} className="carddd orange"    onClick={() => openGame("/aviator")}  />
+          <img src={minesImg} className="carddd greenn " onClick={() => openGame("/mines")} />
+          <img src={aviatorImg} className="carddd orange" onClick={() => openGame("/aviator")} />
         </div>
       </div>
 
       {/* LOTTERY */}
-      <div className="section"> 
+      <div className="section">
         <div className="lottery-title">🎱 Lottery</div>
         <p className="sub">Fun, fair and safe</p>
 
@@ -100,7 +100,7 @@ onClick={() => openGame("/wingo")}            style={{ cursor: "pointer" }}
           <div className="game-card">
             <img
               src={wingoooImg}
-onClick={() => openGame("/wingo")}            />
+              onClick={() => openGame("/wingo")} />
           </div>
 
           <div className="game-card">
@@ -118,16 +118,16 @@ onClick={() => openGame("/wingo")}            />
 
         <img
           src={dragonImg}
-onClick={() => openGame("/dragontiger")}          className="dragon"
+          onClick={() => openGame("/dragontiger")} className="dragon"
         />
       </div>
 
       {/* INFO */}
       <div className="info-box">
-        <h3>🎮 TIGER CLUB</h3>
+        <h3>🎮 RAJA WIN</h3>
         <p>
-          Tiger Club GAME ek fast & exciting online gaming platform hai jahan aap
-          WinGo, K3, 5D aur TRX khel sakte ho.
+          RAJA WIN GAME ek fast & exciting online gaming platform hai jahan aap
+          WinGo, AVIATOR, MINES aur SPIN GAME khel sakte ho.
         </p>
         <p>🚀 Play karo aur jeetne ka mauka pao!</p>
       </div>
