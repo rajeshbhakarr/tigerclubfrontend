@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
 import Swal from "sweetalert2";
-import "../styles/aviator.css";
+import "../styles/Aviator.css";
 
 const API = "https://indr-backend-77tp.onrender.com/api";
 
