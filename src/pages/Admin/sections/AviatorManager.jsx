@@ -1,414 +1,264 @@
-import React, { useState, useEffect } from "react";
-const API = "https://indr-backend-77tp.onrender.com/api";
-const ADMIN_KEY = process.env.REACT_APP_ADMIN_KEY || "your-admin-key-here";
+// sections/AviatorManager.jsx
+import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 
-const AviatorManager = () => {
-  const [state, setState] = useState(null);
-  const [liveBets, setLiveBets] = useState([]);
-  const [nextCrash, setNextCrash] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+const API = "https://tigerclubbackend.onrender.com/api/aviator";
 
-  const loadState = async () => {
+function AviatorManager() {
+  const [liveData,    setLiveData]    = useState(null);
+  const [multiplier,  setMultiplier]  = useState(1.0);
+  const [phase,       setPhase]       = useState("waiting");
+  const [roundId,     setRoundId]     = useState(null);
+  const [msg,         setMsg]         = useState({ text: "", type: "" });
+  const [loading,     setLoading]     = useState(false);
+  const esRef = useRef(null);
+
+  // ── SSE — live multiplier real-time
+  useEffect(() => {
+    const es = new EventSource(`${API}/stream`);
+    esRef.current = es;
+
+    es.onmessage = (e) => {
+      try {
+        const data = JSON.parse(e.data);
+        if (data.type === "tick") {
+          setMultiplier(data.multiplier);
+          setPhase("flying");
+          setRoundId(data.roundId);
+        }
+        if (data.type === "state") {
+          setPhase(data.phase);
+          setRoundId(data.roundId);
+          if (data.multiplier) setMultiplier(data.multiplier);
+        }
+        if (data.type === "crashed") {
+          setPhase("crashed");
+          setMultiplier(data.multiplier);
+        }
+      } catch {}
+    };
+
+    return () => es.close();
+  }, []);
+
+  // ── Poll live bets every 2s
+  const fetchLive = async () => {
     try {
-      const res = await fetch(`${API}/aviator/admin/state`, {
-        headers: { "x-admin-key": ADMIN_KEY },
-      });
-      const data = await res.json();
-      if (data.success) {
-        setState(data.state);
-      }
+      const res = await axios.get(`${API}/admin/live-bets`);
+      if (res.data.success) setLiveData(res.data);
     } catch (err) {
-      console.error("Load state error:", err);
-    }
-  };
-
-  const loadLiveBets = async () => {
-    try {
-      const res = await fetch(`${API}/aviator/admin/live-bets`, {
-        headers: { "x-admin-key": ADMIN_KEY },
-      });
-      const data = await res.json();
-      if (data.success) {
-        setLiveBets(data.bets);
-      }
-    } catch (err) {
-      console.error("Load bets error:", err);
+      console.log("live-bets fetch error:", err.message);
     }
   };
 
   useEffect(() => {
-    loadState();
-    loadLiveBets();
-    const interval = setInterval(() => {
-      loadState();
-      loadLiveBets();
-    }, 1000);
-
+    fetchLive();
+    const interval = setInterval(fetchLive, 2000);
     return () => clearInterval(interval);
   }, []);
 
-  // 🔧 Set next crash multiplier
-  const setNextCrashMultiplier = async () => {
-    if (!nextCrash || nextCrash < 1.1 || nextCrash > 1000) {
-      setMessage("❌ Multiplier must be between 1.1 - 1000");
-      return;
+  // ── Force crash
+  const handleCrash = async () => {
+    if (!window.confirm("Plane crash karein? Sab pending bets lost ho jaayengi!")) return;
+    if (phase !== "flying") {
+      showMsg("Plane abhi flying nahi hai!", "error"); return;
     }
-
+    setLoading(true);
     try {
-      setLoading(true);
-      const res = await fetch(`${API}/aviator/admin/set-crash`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-key": ADMIN_KEY,
-        },
-        body: JSON.stringify({ multiplier: parseFloat(nextCrash) }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setMessage(`✅ Next crash set to ${nextCrash}x`);
-        setNextCrash("");
-        setTimeout(() => setMessage(""), 3000);
-      } else {
-        setMessage(`❌ ${data.msg}`);
-      }
+      const res = await axios.post(`${API}/admin/crash`);
+      showMsg(res.data.message || "Force crash triggered!", "success");
+      fetchLive();
     } catch (err) {
-      setMessage(`❌ Error: ${err.message}`);
-    } finally {
-      setLoading(false);
+      showMsg(err.response?.data?.message || "Error!", "error");
     }
+    setLoading(false);
   };
 
-  // 💥 Force crash now
-  const forceCrash = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${API}/aviator/admin/force-crash`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-key": ADMIN_KEY,
-        },
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setMessage("✅ Crash triggered!");
-        setTimeout(() => setMessage(""), 2000);
-      } else {
-        setMessage(`❌ ${data.msg}`);
-      }
-    } catch (err) {
-      setMessage(`❌ Error: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
+  const showMsg = (text, type) => {
+    setMsg({ text, type });
+    setTimeout(() => setMsg({ text: "", type: "" }), 3000);
   };
+
+  // ── Phase color
+  const phaseColor = { waiting: "#f59e0b", flying: "#22c55e", crashed: "#ef4444" }[phase] || "#fff";
+  const phaseLabel = { waiting: "⏳ WAITING", flying: "✈️ FLYING", crashed: "💥 CRASHED" }[phase] || phase;
 
   return (
-    <div className="aviator-manager">
-      <h1>✈️ Aviator Admin Panel</h1>
+    <div style={{ color: "white", padding: "8px", maxWidth: "1000px" }}>
 
-      {/* CURRENT STATE */}
-      {state && (
-        <div className="state-box">
-          <h2>Current Round</h2>
-          <div className="state-row">
-            <span>Round ID:</span>
-            <code>{state.roundId?.slice(-8)}</code>
-          </div>
-          <div className="state-row">
-            <span>Multiplier:</span>
-            <span className="big">{state.multiplier}x</span>
-          </div>
-          <div className="state-row">
-            <span>Status:</span>
-            <span className={`badge ${state.phase}`}>{state.phase.toUpperCase()}</span>
-          </div>
-          <div className="state-row">
-            <span>Has Bets:</span>
-            <span>{state.hasBets ? "🔴 YES" : "🟢 NO"}</span>
-          </div>
-          <div className="state-row">
-            <span>Predicted Crash:</span>
-            <span className="gold">
-              {state.predictedCrash ? `${state.predictedCrash}x` : "Hidden (Bets placed)"}
-            </span>
-          </div>
+      <h2 style={{
+        fontSize: "24px", fontWeight: "700", marginBottom: "20px",
+        background: "linear-gradient(135deg, #FFD700, #FF8C00)",
+        WebkitBackgroundClip: "text", backgroundClip: "text", color: "transparent",
+      }}>✈️ Aviator Manager</h2>
+
+      {/* Message */}
+      {msg.text && (
+        <div style={{
+          background: msg.type === "success" ? "rgba(34,197,94,0.15)" : "rgba(239,68,68,0.15)",
+          border: `1px solid ${msg.type === "success" ? "#22c55e" : "#ef4444"}`,
+          color: msg.type === "success" ? "#22c55e" : "#ef4444",
+          padding: "10px 14px", borderRadius: "8px", marginBottom: "14px", fontSize: "14px",
+        }}>
+          {msg.type === "success" ? "✅" : "❌"} {msg.text}
         </div>
       )}
 
-      {/* LIVE BETS */}
-      <div className="bets-box">
-        <h2>Live Bets ({liveBets.length})</h2>
-        {liveBets.length > 0 ? (
-          <div className="bets-list">
-            {liveBets.map((bet, idx) => (
-              <div key={idx} className="bet-row">
-                <span className="bet-user">{bet.user?.mobile || "Unknown"}</span>
-                <span className="bet-amount">₹{bet.amount}</span>
-                <span className="bet-cashout">{bet.cashoutAt ? `@${bet.cashoutAt.toFixed(2)}x` : "Not set"}</span>
+      {/* Live Monitor Card */}
+      <div style={{
+        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: "14px", padding: "18px", marginBottom: "16px",
+      }}>
+        <h3 style={{ color: "#f59e0b", marginBottom: "14px", fontSize: "15px", fontWeight: "700" }}>
+          📡 Live Monitor
+        </h3>
+
+        {/* Stats grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "10px", marginBottom: "16px" }}>
+          {/* Phase */}
+          <div style={{ background: "rgba(0,0,0,0.35)", padding: "12px", borderRadius: "10px", textAlign: "center" }}>
+            <p style={{ color: "#94a3b8", fontSize: "11px", marginBottom: "6px" }}>PHASE</p>
+            <p style={{ fontSize: "13px", fontWeight: "800", color: phaseColor }}>{phaseLabel}</p>
+          </div>
+
+          {/* Multiplier */}
+          <div style={{ background: "rgba(0,0,0,0.35)", padding: "12px", borderRadius: "10px", textAlign: "center" }}>
+            <p style={{ color: "#94a3b8", fontSize: "11px", marginBottom: "6px" }}>MULTIPLIER</p>
+            <p style={{ fontSize: "22px", fontWeight: "900", color: phase === "crashed" ? "#ef4444" : "#22c55e",
+              fontFamily: "monospace" }}>
+              {multiplier.toFixed(2)}x
+            </p>
+          </div>
+
+          {/* Total Bet */}
+          <div style={{ background: "rgba(0,0,0,0.35)", padding: "12px", borderRadius: "10px", textAlign: "center" }}>
+            <p style={{ color: "#94a3b8", fontSize: "11px", marginBottom: "6px" }}>TOTAL BET</p>
+            <p style={{ fontSize: "17px", fontWeight: "800", color: "#f59e0b" }}>
+              ₹{liveData?.totalBet || "0.00"}
+            </p>
+          </div>
+        </div>
+
+        {/* Round info */}
+        <div style={{
+          display: "flex", justifyContent: "space-between", alignItems: "center",
+          background: "rgba(0,0,0,0.2)", borderRadius: "8px", padding: "8px 12px",
+          marginBottom: "14px", fontSize: "12px", color: "#94a3b8",
+        }}>
+          <span>Round ID: <b style={{ color: "#e2e8f0" }}>#{roundId || "—"}</b></span>
+          <span>Players: <b style={{ color: "#e2e8f0" }}>{liveData?.totalPlayers || 0}</b></span>
+        </div>
+
+        {/* Plane progress bar */}
+        <div style={{ background: "rgba(0,0,0,0.3)", borderRadius: "99px", height: "28px",
+          overflow: "hidden", position: "relative", marginBottom: "14px" }}>
+          <div style={{
+            height: "100%", borderRadius: "99px",
+            background: phase === "crashed"
+              ? "linear-gradient(90deg, #ef4444, #b91c1c)"
+              : "linear-gradient(90deg, #22c55e, #16a34a)",
+            width: phase === "flying"
+              ? `${Math.min(95, ((multiplier - 1) / 9) * 100)}%`
+              : phase === "crashed" ? "100%" : "5%",
+            transition: "width 0.2s linear",
+            opacity: 0.5,
+          }} />
+          <span style={{
+            position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)",
+            fontSize: "16px",
+          }}>
+            {phase === "crashed" ? "💥" : "✈️"}
+          </span>
+        </div>
+
+        {/* Force Crash Button */}
+        <button
+          onClick={handleCrash}
+          disabled={loading || phase !== "flying"}
+          style={{
+            width: "100%", padding: "13px", borderRadius: "10px", border: "none",
+            background: phase === "flying"
+              ? "linear-gradient(135deg, #ef4444, #dc2626)"
+              : "rgba(255,255,255,0.08)",
+            color: phase === "flying" ? "white" : "#64748b",
+            fontWeight: "800", fontSize: "15px", cursor: phase === "flying" ? "pointer" : "not-allowed",
+            letterSpacing: "0.5px", transition: "all 0.2s",
+            boxShadow: phase === "flying" ? "0 4px 20px rgba(239,68,68,0.4)" : "none",
+          }}
+        >
+          {loading ? "Crashing..." : phase === "flying" ? "💥 FORCE CRASH KARO" : phase === "waiting" ? "⏳ Round Start Hone Do..." : "Round Khatam Ho Gaya"}
+        </button>
+      </div>
+
+      {/* Live Bets Table */}
+      <div style={{
+        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: "14px", padding: "16px", marginBottom: "16px",
+      }}>
+        <h3 style={{ color: "#f59e0b", marginBottom: "12px", fontSize: "15px", fontWeight: "700" }}>
+          🎰 Live Bets ({liveData?.totalPlayers || 0})
+        </h3>
+
+        {(!liveData?.bets || liveData.bets.length === 0) ? (
+          <p style={{ color: "#64748b", fontSize: "13px", textAlign: "center", padding: "16px 0" }}>
+            {phase === "waiting" ? "Naya round shuru hone do..." : "Abhi koi active bet nahi"}
+          </p>
+        ) : (
+          <div style={{ borderRadius: "8px", overflow: "hidden" }}>
+            {/* Header */}
+            <div style={{
+              display: "grid", gridTemplateColumns: "2fr 1fr 1fr",
+              padding: "8px 12px", background: "rgba(255,255,255,0.07)",
+              fontSize: "11px", color: "#94a3b8", fontWeight: "600", letterSpacing: "0.5px",
+            }}>
+              <span>USER</span><span>BET</span><span>TYPE</span>
+            </div>
+            {/* Rows */}
+            {liveData.bets.map((bet, i) => (
+              <div key={i} style={{
+                display: "grid", gridTemplateColumns: "2fr 1fr 1fr",
+                padding: "9px 12px", borderBottom: "1px solid rgba(255,255,255,0.05)",
+                fontSize: "13px", alignItems: "center",
+              }}>
+                <span style={{ color: "#e2e8f0" }}>{bet.userId?.username || "User"}</span>
+                <span style={{ color: "#f59e0b", fontWeight: "700" }}>₹{bet.amount}</span>
+                <span style={{ color: "#22c55e", fontSize: "12px" }}>{bet.status}</span>
               </div>
             ))}
           </div>
-        ) : (
-          <p className="empty">No active bets</p>
         )}
       </div>
 
-      {/* CONTROLS */}
-      <div className="controls-box">
-        <h2>🔧 Control Next Round</h2>
-
-        <div className="control-section">
-          <label>Set Crash Multiplier</label>
-          <div className="input-group">
-            <input
-              type="number"
-              value={nextCrash}
-              onChange={(e) => setNextCrash(e.target.value)}
-              placeholder="e.g. 2.5"
-              min="1.1"
-              max="1000"
-              step="0.1"
-              disabled={loading}
-            />
-            <button
-              className="btn-set"
-              onClick={setNextCrashMultiplier}
-              disabled={loading}
-            >
-              {loading ? "Setting..." : "SET CRASH"}
-            </button>
-          </div>
-          <small>Multiplier will crash at this exact value next round</small>
-        </div>
-
-        <div className="control-section">
-          <button
-            className="btn-force"
-            onClick={forceCrash}
-            disabled={loading}
-          >
-            {loading ? "Crashing..." : "💥 FORCE CRASH NOW"}
-          </button>
-          <small>Immediately crash the current flying plane</small>
+      {/* Round History */}
+      <div style={{
+        background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)",
+        borderRadius: "14px", padding: "16px",
+      }}>
+        <h3 style={{ color: "#f59e0b", marginBottom: "12px", fontSize: "15px", fontWeight: "700" }}>
+          📋 Last 20 Rounds
+        </h3>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+          {(liveData?.history || []).map((h, i) => (
+            <span key={i} style={{
+              padding: "4px 12px", borderRadius: "99px", fontSize: "12px", fontWeight: "700",
+              fontFamily: "monospace",
+              background: h.crashAt >= 3
+                ? "rgba(155,93,229,0.15)" : h.crashAt >= 2
+                ? "rgba(244,185,66,0.15)" : "rgba(239,68,68,0.15)",
+              color: h.crashAt >= 3 ? "#9b5de5" : h.crashAt >= 2 ? "#f4b942" : "#ef4444",
+              border: `1px solid ${h.crashAt >= 3 ? "rgba(155,93,229,0.3)" : h.crashAt >= 2 ? "rgba(244,185,66,0.3)" : "rgba(239,68,68,0.3)"}`,
+            }}>
+              {Number(h.crashPoint).toFixed(2)}x
+            </span>
+          ))}
+          {(!liveData?.history || liveData.history.length === 0) && (
+            <p style={{ color: "#64748b", fontSize: "13px" }}>Koi history nahi abhi</p>
+          )}
         </div>
       </div>
 
-      {/* MESSAGE */}
-      {message && (
-        <div className={`message ${message.includes("✅") ? "success" : "error"}`}>
-          {message}
-        </div>
-      )}
-
-      <style jsx>{`
-        .aviator-manager {
-          max-width: 500px;
-          margin: 0 auto;
-          padding: 20px;
-          background: #0f0f23;
-          color: #fff;
-          border-radius: 12px;
-        }
-
-        h1 {
-          text-align: center;
-          margin-bottom: 20px;
-          font-size: 24px;
-        }
-
-        h2 {
-          font-size: 16px;
-          margin: 15px 0 10px 0;
-          border-bottom: 2px solid #7c3aed;
-          padding-bottom: 5px;
-        }
-
-        .state-box,
-        .bets-box,
-        .controls-box {
-          background: #1a1a3e;
-          border: 1px solid #404070;
-          border-radius: 8px;
-          padding: 15px;
-          margin-bottom: 15px;
-        }
-
-        .state-row {
-          display: flex;
-          justify-content: space-between;
-          padding: 8px 0;
-          border-bottom: 1px solid #404070;
-        }
-
-        .state-row:last-child {
-          border: none;
-        }
-
-        .state-row span {
-          font-weight: 600;
-        }
-
-        .big {
-          font-size: 20px;
-          color: #ffd700;
-        }
-
-        .gold {
-          color: #ffd700;
-          font-weight: 700;
-        }
-
-        .badge {
-          padding: 4px 8px;
-          border-radius: 4px;
-          font-size: 12px;
-          font-weight: 700;
-        }
-
-        .badge.waiting {
-          background: #3b82f6;
-        }
-
-        .badge.flying {
-          background: #10b981;
-        }
-
-        .badge.crashed {
-          background: #ff6b6b;
-        }
-
-        .bets-list {
-          max-height: 200px;
-          overflow-y: auto;
-        }
-
-        .bet-row {
-          display: flex;
-          justify-content: space-between;
-          padding: 8px;
-          background: #2d2d5f;
-          border-radius: 4px;
-          margin-bottom: 5px;
-          font-size: 13px;
-        }
-
-        .bet-user {
-          font-weight: 600;
-          color: #b0b0c8;
-        }
-
-        .bet-amount {
-          color: #ffd700;
-          font-weight: 700;
-        }
-
-        .bet-cashout {
-          color: #10b981;
-        }
-
-        .empty {
-          text-align: center;
-          color: #b0b0c8;
-          padding: 10px;
-        }
-
-        .control-section {
-          margin-bottom: 15px;
-        }
-
-        .control-section label {
-          display: block;
-          margin-bottom: 5px;
-          font-weight: 600;
-          font-size: 13px;
-        }
-
-        .input-group {
-          display: flex;
-          gap: 8px;
-        }
-
-        input[type="number"] {
-          flex: 1;
-          padding: 8px;
-          background: #2d2d5f;
-          border: 1px solid #404070;
-          border-radius: 4px;
-          color: #fff;
-        }
-
-        .btn-set,
-        .btn-force {
-          padding: 8px 16px;
-          border: none;
-          border-radius: 4px;
-          font-weight: 700;
-          cursor: pointer;
-          font-size: 12px;
-          transition: all 0.3s;
-        }
-
-        .btn-set {
-          background: #7c3aed;
-          color: white;
-          flex-shrink: 0;
-        }
-
-        .btn-set:hover:not(:disabled) {
-          background: #6d28d9;
-        }
-
-        .btn-force {
-          width: 100%;
-          background: #ff6b6b;
-          color: white;
-        }
-
-        .btn-force:hover:not(:disabled) {
-          background: #dc2626;
-        }
-
-        button:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        small {
-          display: block;
-          margin-top: 5px;
-          color: #b0b0c8;
-          font-size: 11px;
-        }
-
-        .message {
-          padding: 12px;
-          border-radius: 8px;
-          text-align: center;
-          font-weight: 600;
-          margin-top: 15px;
-        }
-
-        .message.success {
-          background: rgba(16, 185, 129, 0.2);
-          color: #10b981;
-          border: 1px solid #10b981;
-        }
-
-        .message.error {
-          background: rgba(255, 107, 107, 0.2);
-          color: #ff6b6b;
-          border: 1px solid #ff6b6b;
-        }
-      `}</style>
     </div>
   );
-};
+}
 
 export default AviatorManager;

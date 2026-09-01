@@ -1,1300 +1,688 @@
-import React, { useEffect, useState } from "react";
+// src/components/Aviator.jsx
+import "../styles/Aviator.css";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
-import Swal from "sweetalert2";
-import "../styles/Aviator.css";
+import {
+  placeBet as placeBetApi,
+  cashout as cashoutApi,
+  cancelBet as cancelBetApi,
+  getMyBets,
+  getActiveBet,
+  createAviatorStream,
+} from "../api/Aviatorapi";
+const API_URL = "https://tigerclubbackend.onrender.com";
 
-const API = "https://indr-backend-77tp.onrender.com/api";
 
+
+// ─── Helpers ──────────────────────────────────────────────────
+function getCrashClass(val) {
+  if (val >= 10) return "mega";
+  if (val >= 3) return "high";
+  if (val >= 2) return "mid";
+  return "low";
+}
+
+// ─── Canvas curve ─────────────────────────────────────────────
+function drawCurve(canvas, points, crashed) {
+  if (!canvas || points.length < 2) return null;
+  const ctx = canvas.getContext("2d");
+  const W = canvas.width;
+  const H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+
+  const pad = { left: 24, bottom: 24, right: 16, top: 16 };
+  const maxX = Math.max(points.length - 1, 1);
+  const maxY = Math.max(...points, 1.5) * 1.15;
+
+  const toX = (i) => pad.left + (i / maxX) * (W - pad.left - pad.right);
+  const toY = (v) => H - pad.bottom - ((v - 1) / Math.max(maxY - 1, 0.01)) * (H - pad.top - pad.bottom);
+
+  const color = crashed ? "#e63946" : "#2dc653";
+  const colorFade = crashed ? "rgba(230,57,70," : "rgba(45,198,83,";
+
+  // Fill gradient
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, colorFade + "0.3)");
+  grad.addColorStop(1, colorFade + "0.0)");
+
+  // Draw path helper
+  const drawPath = () => {
+    ctx.beginPath();
+    ctx.moveTo(toX(0), toY(points[0]));
+    for (let i = 1; i < points.length; i++) {
+      const xc = (toX(i - 1) + toX(i)) / 2;
+      const yc = (toY(points[i - 1]) + toY(points[i])) / 2;
+      ctx.quadraticCurveTo(toX(i - 1), toY(points[i - 1]), xc, yc);
+    }
+    if (points.length >= 2) {
+      ctx.quadraticCurveTo(
+        toX(points.length - 2), toY(points[points.length - 2]),
+        toX(points.length - 1), toY(points[points.length - 1])
+      );
+    }
+  };
+
+  // Fill
+  drawPath();
+  ctx.lineTo(toX(points.length - 1), H - pad.bottom);
+  ctx.lineTo(toX(0), H - pad.bottom);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Stroke
+  drawPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2.5;
+  ctx.shadowBlur = 10;
+  ctx.shadowColor = color;
+  ctx.stroke();
+  ctx.shadowBlur = 0;
+
+  return {
+    x: toX(points.length - 1),
+    y: toY(points[points.length - 1]),
+    W, H,
+  };
+}
+
+// ─── Main Component ───────────────────────────────────────────
 const Aviator = () => {
-  const { balance, fetchBalance } = useWallet();
   const navigate = useNavigate();
+  const { balance, setBalance } = useWallet();
 
-  const [state, setState] = useState(null);
+  // ── Game state
+  const [phase, setPhase] = useState("waiting");
   const [multiplier, setMultiplier] = useState(1.0);
-  const [predictedCrash, setPredictedCrash] = useState(null);
+  const [roundId, setRoundId] = useState(null);
+  const [crashHistory, setCrashHistory] = useState([]); // [{roundId, crashAt}]
+  const [waitCountdown, setWaitCountdown] = useState(5);
 
-  const [betAmount, setBetAmount] = useState(50);
-  const [betPlaced, setBetPlaced] = useState(false);
-  const [activeBet, setActiveBet] = useState(null);
-  const [gameOver, setGameOver] = useState(false);
+  // ── Single bet slot state
+  const [amount, setAmount] = useState(10);
+  const [autoCashoutVal, setAutoCashoutVal] = useState(""); // user input
+  const [betId, setBetId] = useState(null);
+  const [betState, setBetState] = useState("idle"); // idle | placed | cashed
+  const [cashedAt, setCashedAt] = useState(null);
+  const [cashedPayout, setCashedPayout] = useState(null);
 
-  const [history, setHistory] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // ── History modal
+  const [showHistory, setShowHistory] = useState(false);
+  const [histTab, setHistTab] = useState("all");
+  const [allBets, setAllBets] = useState([]); // current round live bets
+  const [myBetsList, setMyBetsList] = useState([]);
 
-  const [activeTab, setActiveTab] = useState("bet");
-  const [historyTab, setHistoryTab] = useState("recent");
+  // ── Toast
+  const [toast, setToast] = useState({ msg: "", type: "", show: false });
 
-  const [autoCashout, setAutoCashout] = useState("");
-  const [toast, setToast] = useState({
-    show: false,
-    type: "info",
-    message: "",
-  });
+  // ── Win popup
+  const [winPopup, setWinPopup] = useState(null); // null | { cashoutAt, payout, amount }
+  const winPopupTimerRef = useRef(null);
 
-  const [showWinPopup, setShowWinPopup] = useState(false);
-  const [winMultiplier, setWinMultiplier] = useState(0);
-  const [winPayout, setWinPayout] = useState(0);
+  // ── Refs
+  const canvasRef = useRef(null);
+  const planeRef = useRef(null);
+  const pointsRef = useRef([1.0]);
+  const phaseRef = useRef("waiting");
+  const betIdRef = useRef(null);
+  const betStateRef = useRef("idle");
+  const autoCORef = useRef("");
+  const multiplierRef = useRef(1.0);
+  const streamRef = useRef(null);
+  const waitRef = useRef(null);
 
-  // ------------------------------------------------------------
-  // TOAST
-  // ------------------------------------------------------------
+  // Keep refs in sync
+  useEffect(() => { betIdRef.current = betId; }, [betId]);
+  useEffect(() => { betStateRef.current = betState; }, [betState]);
+  useEffect(() => { autoCORef.current = autoCashoutVal; }, [autoCashoutVal]);
+  useEffect(() => { multiplierRef.current = multiplier; }, [multiplier]);
 
-  const showToast = (message, type = "info") => {
-    setToast({
-      show: true,
-      type,
-      message,
-    });
+  // ── Toast helper
+  const showToast = useCallback((msg, type = "info") => {
+    setToast({ msg, type, show: true });
+    setTimeout(() => setToast(t => ({ ...t, show: false })), 3000);
+  }, []);
 
-    setTimeout(() => {
-      setToast((prev) => ({
-        ...prev,
-        show: false,
-      }));
-    }, 2200);
-  };
+  // ── Win popup helper — auto close 3s, manual close bhi
+  const showWinPopup = useCallback((cashoutAt, payout, betAmount) => {
+    setWinPopup({ cashoutAt, payout, amount: betAmount });
+    clearTimeout(winPopupTimerRef.current);
+    winPopupTimerRef.current = setTimeout(() => setWinPopup(null), 3000);
+  }, []);
 
-  // ------------------------------------------------------------
-  // LOAD GAME STATE
-  // ------------------------------------------------------------
+  const closeWinPopup = useCallback(() => {
+    clearTimeout(winPopupTimerRef.current);
+    setWinPopup(null);
+  }, []);
 
-  const loadState = async () => {
-    try {
-      const res = await fetch(`${API}/aviator/state`);
-      const data = await res.json();
-
-      if (data.success) {
-        setState(data.state);
-
-        if (data.state.predictedCrash && !data.state.hasBets) {
-          setPredictedCrash(data.state.predictedCrash);
-        } else {
-          setPredictedCrash(null);
-        }
-
-        if (data.state.phase === "waiting") {
-          setGameOver(true);
-        } else if (data.state.phase === "flying") {
-          setGameOver(false);
-        }
-      }
-    } catch (err) {
-      console.error("Load state error:", err);
+  // ── Canvas redraw + plane position
+  const redrawCanvas = useCallback((crashed = false) => {
+    const pos = drawCurve(canvasRef.current, pointsRef.current, crashed);
+    if (pos && planeRef.current && !crashed) {
+      const pctX = Math.min(90, (pos.x / pos.W) * 100);
+      const pctY = Math.min(85, ((pos.H - pos.y) / pos.H) * 100);
+      planeRef.current.style.left = `${pctX}%`;
+      planeRef.current.style.bottom = `${pctY}%`;
     }
-  };
+  }, []);
 
-  // ------------------------------------------------------------
-  // LOAD BET HISTORY
-  // ------------------------------------------------------------
+  // ── Auto cashout — runs client-side as backup (server also handles it)
+  const tryAutoCashout = useCallback(async (currentMult) => {
+    const auto = parseFloat(autoCORef.current);
+    if (!auto || auto < 1.01) return;
+    if (betStateRef.current !== "placed") return;
+    if (!betIdRef.current) return;
+    if (currentMult < auto) return;
 
-  const loadBets = async () => {
+    // Trigger cashout
     try {
-      const res = await fetch(`${API}/aviator/my-bets?limit=10`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setHistory(data.bets || []);
+      const res = await cashoutApi(betIdRef.current);
+      if (res.success) {
+        setBalance(res.balance);
+        setBetId(null);
+        setBetState("cashed");
+        setCashedAt(res.cashoutAt);
+        setCashedPayout(res.payout);
+        showWinPopup(res.cashoutAt, res.payout, amount);  // ✅ WIN POPUP
+        setAllBets(prev => [{
+          user: "You", amount, cashoutAt: res.cashoutAt,
+          payout: res.payout, result: "win",
+        }, ...prev].slice(0, 50));
       }
-    } catch (err) {
-      console.error("Load bets error:", err);
-    }
-  };
+    } catch { }
+  }, [amount, setBalance, showWinPopup]);
 
-  // ------------------------------------------------------------
-  // CHECK ACTIVE BET
-  // ------------------------------------------------------------
+  // ── SSE message handler
+  const handleMsg = useCallback((data) => {
+    // ── state event (phase change)
+    if (data.type === "state") {
+      phaseRef.current = data.phase;
+      setPhase(data.phase);
+      setRoundId(data.roundId);
 
-  const checkActiveBet = async () => {
-    try {
-      const res = await fetch(`${API}/aviator/active-bet`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      if (data.phase === "waiting") {
+        // New round started — reset everything
+        pointsRef.current = [1.0];
+        setMultiplier(1.0);
+        setAllBets([]);
+        // Reset bet only if it wasn't cashed — cashed shows result briefly then reset
+        setBetState(prev => {
+          if (prev === "placed") return "idle"; // lost — reset
+          if (prev === "cashed") {
+            // show cashed message for 2s then idle
+            setTimeout(() => {
+              setBetState("idle");
+              setCashedAt(null);
+              setCashedPayout(null);
+            }, 2500);
+            return "cashed";
+          }
+          return "idle";
+        });
+        setBetId(null);
+        redrawCanvas(false);
 
-      const data = await res.json();
-
-      if (data.success && data.bet) {
-        setActiveBet(data.bet);
-        setBetPlaced(true);
-
-        if (data.bet.amount) {
-          setBetAmount(data.bet.amount);
-        }
-      } else {
-        setBetPlaced(false);
-        setActiveBet(null);
+        // Countdown
+        let c = 12;
+        setWaitCountdown(c);
+        clearInterval(waitRef.current);
+        waitRef.current = setInterval(() => {
+          c--;
+          setWaitCountdown(c);
+          if (c <= 0) clearInterval(waitRef.current);
+        }, 1000);
       }
-    } catch (err) {
-      console.error("Check active bet error:", err);
+
+      if (data.phase === "flying") {
+        clearInterval(waitRef.current);
+        pointsRef.current = [1.0];
+        setMultiplier(1.0);
+      }
     }
-  };
 
-  // ------------------------------------------------------------
-  // SSE CONNECTION
-  // ------------------------------------------------------------
+    // ── history event
+    if (data.type === "history") {
+      setCrashHistory(data.history || []);
+    }
 
+    // ── tick event
+    if (data.type === "tick") {
+      setMultiplier(data.multiplier);
+      multiplierRef.current = data.multiplier;
+      pointsRef.current.push(data.multiplier);
+      if (pointsRef.current.length > 400) pointsRef.current = pointsRef.current.slice(-400);
+      redrawCanvas(false);
+      tryAutoCashout(data.multiplier);
+    }
+
+    // ── crashed event
+    if (data.type === "crashed") {
+      phaseRef.current = "crashed";
+      setPhase("crashed");
+      setMultiplier(data.multiplier);
+      redrawCanvas(true);
+
+      // Add to crash history bar
+     setCrashHistory(prev => [
+  {
+    roundId: data.roundId,
+    crashPoint: data.multiplier,
+  },
+  ...prev
+].slice(0, 20));
+
+      // If user still has active bet — they lost
+      if (betStateRef.current === "placed") {
+        setBetState("idle");
+        setBetId(null);
+        showToast(`💥 Crashed @ ${data.multiplier}x — Bet lost`, "loss");
+        setAllBets(prev => [
+          { user: "You", amount: 0, cashoutAt: null, payout: 0, result: "loss" },
+          ...prev
+        ].slice(0, 50));
+      }
+
+      // Refresh my bets list
+      getMyBets().then(d => setMyBetsList(d.bets || []));
+    }
+
+    // ── server-side auto cashout confirmation
+    if (data.type === "autoCashout") {
+      if (betIdRef.current && betIdRef.current.toString() === data.betId) {
+        setBalance(b => parseFloat((b + data.payout).toFixed(2)));
+        setBetId(null);
+        setBetState("cashed");
+        setCashedAt(data.cashoutAt);
+        setCashedPayout(data.payout);
+        showWinPopup(data.cashoutAt, data.payout, data.payout / data.cashoutAt); // ✅ WIN POPUP
+      }
+    }
+  }, [redrawCanvas, tryAutoCashout, showToast, setBalance]);
+
+  // ── Connect SSE
   useEffect(() => {
-    loadState();
-    loadBets();
-    checkActiveBet();
-
-    const eventSource = new EventSource(`${API}/aviator/stream`);
-
-    eventSource.onmessage = (e) => {
-      try {
-        const data = JSON.parse(e.data);
-
-        if (data.type === "state") {
-          setState(data);
-
-          if (data.predictedCrash && !data.hasBets) {
-            setPredictedCrash(
-              parseFloat(Number(data.predictedCrash).toFixed(2))
-            );
-          } else {
-            setPredictedCrash(null);
-          }
-
-          if (data.phase === "waiting") {
-            setGameOver(true);
-          } else if (data.phase === "flying") {
-            setGameOver(false);
-          }
-        }
-
-        if (data.type === "tick") {
-          const nextMultiplier = parseFloat(data.multiplier);
-
-          setMultiplier(nextMultiplier);
-
-          // Auto cashout
-          if (
-            betPlaced &&
-            autoCashout &&
-            Number(autoCashout) > 1 &&
-            nextMultiplier >= Number(autoCashout)
-          ) {
-            cashout();
-          }
-        }
-
-        if (data.type === "crashed") {
-          const crashMultiplier = parseFloat(data.multiplier);
-
-          setMultiplier(crashMultiplier);
-          setGameOver(true);
-          setBetPlaced(false);
-          setActiveBet(null);
-
-          loadBets();
-        }
-      } catch (err) {
-        console.error("Parse error:", err);
-      }
-    };
-
-    eventSource.onerror = () => {
-      console.error("SSE connection error");
-      eventSource.close();
-    };
-
+    const es = createAviatorStream(handleMsg);
+    streamRef.current = es;
     return () => {
-      eventSource.close();
+      es.close();
+      clearInterval(waitRef.current);
     };
-  }, [betPlaced, autoCashout]);
+  }, []);
 
-  // ------------------------------------------------------------
-  // PLACE BET
-  // ------------------------------------------------------------
-
-  const placeBet = async () => {
-    if (!betAmount || betAmount < 10) {
-      Swal.fire({
-        icon: "warning",
-        title: "Invalid Bet",
-        text: "Minimum ₹10",
-        width: "260px",
-      });
-
-      return;
+  // Reconnect handler on update
+  useEffect(() => {
+    if (streamRef.current) {
+      streamRef.current.onmessage = (e) => {
+        try { handleMsg(JSON.parse(e.data)); } catch { }
+      };
     }
+  }, [handleMsg]);
 
-    if (balance < betAmount) {
-      Swal.fire({
-        icon: "error",
-        title: "Insufficient Balance",
-        text: `You have ₹${balance.toFixed(2)}`,
-        width: "260px",
-      });
+  // ── Canvas resize
+  useEffect(() => {
+    const resize = () => {
+      if (!canvasRef.current) return;
+      const wrap = canvasRef.current.parentElement;
+      canvasRef.current.width = wrap.clientWidth;
+      canvasRef.current.height = wrap.clientHeight;
+      redrawCanvas(phase === "crashed");
+    };
+    resize();
+    window.addEventListener("resize", resize);
+    return () => window.removeEventListener("resize", resize);
+  }, [phase, redrawCanvas]);
 
-      return;
+  // ── My bets load
+  useEffect(() => {
+    if (histTab === "my") getMyBets().then(d => setMyBetsList(d.bets || []));
+  }, [histTab]);
+
+  // ── Place bet
+  const handleBet = async () => {
+    if (phase !== "waiting") {
+      showToast("Wait for next round!", "info"); return;
     }
+    if (amount < 1) { showToast("Min bet ₹1", "info"); return; }
 
     try {
-      setLoading(true);
-
-      const res = await fetch(`${API}/aviator/bet`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          betAmount,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        setBetPlaced(true);
-        setPredictedCrash(null);
-        setActiveBet(data.bet);
-
-        await fetchBalance();
-
-        showToast(`₹${betAmount} bet placed`, "win");
-
-        Swal.fire({
-          icon: "success",
-          title: "Bet Placed!",
-          text: `₹${betAmount} - Cashout before crash!`,
-          width: "260px",
-          timer: 1500,
-          showConfirmButton: false,
-        });
+      const auto = autoCashoutVal ? parseFloat(autoCashoutVal) : null;
+      const res = await placeBetApi({ amount, autoCashout: auto });
+      if (res.success) {
+        setBalance(res.balance);
+        setBetId(res.betId);
+        setBetState("placed");
+        showToast(`✅ Bet ₹${amount} placed!`, "info");
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: data.msg || "Unable to place bet",
-          width: "260px",
-        });
+        showToast(res.message || "Bet failed", "loss");
       }
-    } catch (err) {
-      console.error("Bet error:", err);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Bet failed",
-        width: "260px",
-      });
-    } finally {
-      setLoading(false);
+    } catch {
+      showToast("Network error", "loss");
     }
   };
 
-  // ------------------------------------------------------------
-  // CASHOUT
-  // ------------------------------------------------------------
-
-  const cashout = async () => {
-    if (!state || state.phase !== "flying") {
-      Swal.fire({
-        icon: "warning",
-        title: "Can't Cashout",
-        text: "Game not flying",
-        width: "260px",
-      });
-
-      return;
-    }
-
-    if (!betPlaced) {
-      return;
-    }
-
+  // ── Cancel bet — server pe delete karo, wallet refund lo
+  const handleCancel = async () => {
+    if (!betId) return;
     try {
-      setLoading(true);
-
-      const cashoutMultiplier = multiplier;
-
-      const res = await fetch(`${API}/aviator/cashout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify({
-          roundId: state.roundId,
-          cashoutAt: cashoutMultiplier,
-        }),
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        const payout =
-          Number(betAmount) * Number(cashoutMultiplier);
-
-        setBetPlaced(false);
-        setActiveBet(null);
-        setGameOver(true);
-
-        setWinMultiplier(cashoutMultiplier);
-        setWinPayout(payout);
-        setShowWinPopup(true);
-
-        await fetchBalance();
-        await loadBets();
-
-        showToast(`Won ₹${payout.toFixed(2)}`, "win");
-
-        Swal.fire({
-          icon: "success",
-          title: "🎉 Cashed Out!",
-          text: `Won ₹${payout.toFixed(2)}`,
-          width: "260px",
-          timer: 2000,
-          showConfirmButton: false,
-        });
+      const res = await cancelBetApi(betId);
+      if (res.success) {
+        setBalance(res.balance);           // ✅ wallet update
+        setBetId(null);
+        setBetState("idle");
+        showToast(`✅ Bet cancel! ₹${res.refund} wapas add ho gaye`, "info");
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: data.msg || "Cashout failed",
-          width: "260px",
-        });
+        showToast(res.message || "Cancel nahi hua", "loss");
       }
-    } catch (err) {
-      console.error("Cashout error:", err);
-
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Cashout failed",
-        width: "260px",
-      });
-    } finally {
-      setLoading(false);
+    } catch {
+      // Fallback — sirf state reset karo
+      setBetId(null);
+      setBetState("idle");
+      showToast("Bet cancel ho gaya", "info");
     }
   };
 
-  // ------------------------------------------------------------
-  // QUICK BET
-  // ------------------------------------------------------------
-
-  const setQuickAmount = (amount) => {
-    if (!betPlaced) {
-      setBetAmount(amount);
+  // ── Manual cashout
+  const handleCashout = async () => {
+    if (!betId || betState !== "placed") return;
+    try {
+      const res = await cashoutApi(betId);
+      if (res.success) {
+        setBalance(res.balance);
+        setBetId(null);
+        setBetState("cashed");
+        setCashedAt(res.cashoutAt);
+        setCashedPayout(res.payout);
+        showWinPopup(res.cashoutAt, res.payout, amount);  // ✅ WIN POPUP
+        setAllBets(prev => [{
+          user: "You", amount, cashoutAt: res.cashoutAt,
+          payout: res.payout, result: "win",
+        }, ...prev].slice(0, 50));
+        getMyBets().then(d => setMyBetsList(d.bets || []));
+      } else {
+        showToast(res.message || "Cashout failed", "loss");
+      }
+    } catch {
+      showToast("Network error", "loss");
     }
   };
 
-  // ------------------------------------------------------------
-  // CLOSE WIN POPUP
-  // ------------------------------------------------------------
-
-  const closeWinPopup = () => {
-    setShowWinPopup(false);
+  // ── Render action button
+  const renderActionBtn = () => {
+    if (betState === "placed" && phase === "waiting") {
+      return (
+        <button className="av-action-btn cancel" onClick={handleCancel}>
+          CANCEL BET
+        </button>
+      );
+    }
+    if (betState === "placed" && phase === "flying") {
+      return (
+        <button className="av-action-btn cashout" onClick={handleCashout}>
+          <span className="av-cashout-label">CASHOUT</span>
+          <span className="av-cashout-multi">{multiplier.toFixed(2)}x</span>
+          <span className="av-cashout-amount">₹{(amount * multiplier).toFixed(2)}</span>
+        </button>
+      );
+    }
+    if (betState === "cashed") {
+      return (
+        <button className="av-action-btn cashed" disabled>
+          ✓ CASHED @ {cashedAt}x &nbsp;+₹{cashedPayout}
+        </button>
+      );
+    }
+    // idle
+    return (
+      <button
+        className="av-action-btn bet"
+        disabled={phase === "flying" || phase === "crashed"}
+        onClick={handleBet}
+      >
+        {phase === "waiting" ? `BET  ₹${amount}` : "WAIT NEXT ROUND"}
+      </button>
+    );
   };
 
-  // ------------------------------------------------------------
-  // HISTORY FILTER
-  // ------------------------------------------------------------
-
-  const visibleHistory =
-    historyTab === "wins"
-      ? history.filter((bet) => bet.result === "win")
-      : historyTab === "losses"
-      ? history.filter((bet) => bet.result !== "win")
-      : history;
-
-  // ------------------------------------------------------------
-  // RENDER
-  // ------------------------------------------------------------
-
+  // ─── JSX ──────────────────────────────────────────────────────
   return (
     <div className="aviator-root">
 
-      {/* ======================================================
-          HEADER
-      ====================================================== */}
-
-      <header className="av-header">
-        <button
-          className="av-header-back"
-          onClick={() => navigate(-1)}
-        >
-          ‹
-        </button>
-
-        <div className="av-header-title">
-          ✈ AVIATOR
-        </div>
-
-        <div className="av-header-balance">
-          ₹<span>{Number(balance || 0).toFixed(2)}</span>
-        </div>
-      </header>
-
-      {/* ======================================================
-          CRASH HISTORY BAR
-      ====================================================== */}
-
-      <div className="av-history-bar">
-
-        <span className="av-crash-pill low">
-          1.24x
-        </span>
-
-        <span className="av-crash-pill low">
-          1.67x
-        </span>
-
-        <span className="av-crash-pill mid">
-          2.75x
-        </span>
-
-        <span className="av-crash-pill high">
-          4.21x
-        </span>
-
-        <span className="av-crash-pill low">
-          1.13x
-        </span>
-
-        <span className="av-crash-pill mega">
-          8.92x
-        </span>
-
-        {predictedCrash && !betPlaced && (
-          <span className="av-crash-pill high">
-            {Number(predictedCrash).toFixed(2)}x
-          </span>
-        )}
+      {/* Toast */}
+      <div className={`av-toast ${toast.type} ${toast.show ? "show" : ""}`}>
+        {toast.msg}
       </div>
 
-      {/* ======================================================
-          ROUND INFO
-      ====================================================== */}
-
-      <div className="av-round-bar">
-
-        <div className="av-round-id">
-          Round:{" "}
-          <span>
-            {state?.roundId
-              ? state.roundId.slice(-8)
-              : "--------"}
-          </span>
-        </div>
-
-        <div className="av-ping">
-          ● <span>LIVE</span>
-        </div>
-
-      </div>
-
-      {/* ======================================================
-          GAME CANVAS
-      ====================================================== */}
-
-      <div className="av-canvas-wrap">
-
-        <svg
-          className="av-svg"
-          viewBox="0 0 420 280"
-          preserveAspectRatio="none"
-        >
-          <defs>
-            <linearGradient
-              id="aviatorLineGradient"
-              x1="0"
-              y1="1"
-              x2="1"
-              y2="0"
-            >
-              <stop
-                offset="0%"
-                stopColor="#e63946"
-                stopOpacity="0.15"
-              />
-
-              <stop
-                offset="100%"
-                stopColor="#f4b942"
-                stopOpacity="0.9"
-              />
-            </linearGradient>
-          </defs>
-
-          <path
-            d="M 0 270 C 90 268, 145 250, 205 215 C 265 180, 315 110, 420 20"
-            fill="none"
-            stroke="url(#aviatorLineGradient)"
-            strokeWidth="3"
-          />
-
-          <path
-            d="M 0 270 C 90 268, 145 250, 205 215 C 265 180, 315 110, 420 20 L420 280 L0 280 Z"
-            fill="rgba(230,57,70,0.05)"
-          />
-        </svg>
-
-        {/* Plane */}
-
-        <div
-          className={`av-plane ${
-            gameOver && state?.phase === "crashed"
-              ? "crashed"
-              : ""
-          }`}
-          style={{
-            left:
-              state?.phase === "flying"
-                ? `${Math.min(
-                    92,
-                    15 + multiplier * 7
-                  )}%`
-                : "12%",
-            bottom:
-              state?.phase === "flying"
-                ? `${Math.min(
-                    78,
-                    12 + multiplier * 5
-                  )}%`
-                : "12%",
-          }}
-        >
-          ✈️
-        </div>
-
-        {/* Multiplier */}
-
-        <div
-          className={`av-multiplier ${
-            gameOver && state?.phase === "crashed"
-              ? "crashed"
-              : ""
-          } ${
-            state?.phase === "waiting"
-              ? "waiting"
-              : ""
-          }`}
-        >
-          {state?.phase === "waiting"
-            ? "WAITING FOR NEXT ROUND"
-            : `${Number(multiplier).toFixed(2)}x`}
-        </div>
-
-        {/* Waiting overlay */}
-
-        {state?.phase === "waiting" && (
-          <div className="av-waiting-overlay">
-            <div className="av-waiting-label">
-              NEXT ROUND STARTING
-            </div>
-
-            <div className="av-waiting-countdown">
-              GET READY
-            </div>
-          </div>
-        )}
-
-      </div>
-
-      {/* ======================================================
-          PREDICTION / ACTIVE BET INFO
-      ====================================================== */}
-
-      {!betPlaced && predictedCrash && (
-        <div
-          style={{
-            background: "#111420",
-            padding: "12px 14px",
-            textAlign: "center",
-            borderBottom: "1px solid #252a3a",
-          }}
-        >
-          <div
-            style={{
-              fontSize: "12px",
-              color: "#8892aa",
-              marginBottom: "4px",
-            }}
-          >
-            🎯 PREDICTED CRASH
-          </div>
-
-          <div
-            style={{
-              fontFamily: "Orbitron, monospace",
-              fontSize: "22px",
-              fontWeight: "900",
-              color: "#f4b942",
-            }}
-          >
-            {Number(predictedCrash).toFixed(2)}x
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================
-          BET PANEL
-      ====================================================== */}
-
-      <div className="av-bet-panel">
-
-        {/* Bet Tabs */}
-
-        <div className="av-bet-tabs">
-
-          <div
-            className={`av-bet-tab ${
-              activeTab === "bet"
-                ? "active"
-                : ""
-            }`}
-            onClick={() => setActiveTab("bet")}
-          >
-            BET
-          </div>
-
-          <div
-            className={`av-bet-tab ${
-              activeTab === "auto"
-                ? "active"
-                : ""
-            }`}
-            onClick={() => setActiveTab("auto")}
-          >
-            AUTO
-          </div>
-
-        </div>
-
-        {/* ====================================================
-            BET CONTENT
-        ==================================================== */}
-
-        {activeTab === "bet" && (
-          <div className="av-dual-bets">
-
-            {/* FIRST BET SLOT */}
-
-            <div className="av-bet-slot">
-
-              <div className="av-amount-row">
-
-                <div className="av-amount-ctrl">
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setBetAmount((prev) =>
-                        Math.max(10, Number(prev) - 10)
-                      )
-                    }
-                    disabled={betPlaced}
-                  >
-                    −
-                  </button>
-
-                  <input
-                    type="number"
-                    value={betAmount}
-                    onChange={(e) =>
-                      setBetAmount(
-                        Number(e.target.value)
-                      )
-                    }
-                    min="10"
-                    max="10000"
-                    disabled={betPlaced}
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setBetAmount((prev) =>
-                        Math.min(
-                          10000,
-                          Number(prev) + 10
-                        )
-                      )
-                    }
-                    disabled={betPlaced}
-                  >
-                    +
-                  </button>
-
-                </div>
-
-              </div>
-
-              {/* QUICK AMOUNTS */}
-
-              <div className="av-quick-amounts">
-
-                {[50, 100, 500, 1000].map(
-                  (amount) => (
-                    <button
-                      key={amount}
-                      type="button"
-                      className={`av-quick-btn ${
-                        Number(betAmount) === amount
-                          ? "active"
-                          : ""
-                      }`}
-                      onClick={() =>
-                        setQuickAmount(amount)
-                      }
-                      disabled={betPlaced}
-                    >
-                      ₹{amount}
-                    </button>
-                  )
-                )}
-
-              </div>
-
-              {/* AUTO CASHOUT */}
-
-              <div className="av-auto-row">
-
-                <span className="av-auto-label">
-                  Auto Cashout
-                </span>
-
-                <input
-                  className="av-auto-input"
-                  type="number"
-                  min="1.01"
-                  step="0.01"
-                  placeholder="e.g. 2.00x"
-                  value={autoCashout}
-                  onChange={(e) =>
-                    setAutoCashout(e.target.value)
-                  }
-                  disabled={betPlaced}
-                />
-
-              </div>
-
-              {/* ACTION BUTTON */}
-
-              {!betPlaced && gameOver && (
-                <button
-                  className="av-action-btn bet"
-                  onClick={placeBet}
-                  disabled={loading}
-                >
-                  {loading
-                    ? "PLACING..."
-                    : "🎮 PLACE BET"}
-                </button>
-              )}
-
-              {betPlaced &&
-                state?.phase === "flying" && (
-                  <button
-                    className="av-action-btn cashout"
-                    onClick={cashout}
-                    disabled={loading}
-                  >
-                    💰 CASHOUT @{" "}
-                    {Number(multiplier).toFixed(2)}x
-                  </button>
-                )}
-
-              {betPlaced &&
-                state?.phase === "waiting" && (
-                  <button
-                    className="av-action-btn cancel"
-                    disabled
-                  >
-                    ROUND STARTING...
-                  </button>
-                )}
-
-            </div>
-
-            {/* SECOND SLOT */}
-
-            <div className="av-bet-slot">
-
-              <div
-                style={{
-                  textAlign: "center",
-                  padding: "8px 4px 14px",
-                }}
-              >
-                <div
-                  style={{
-                    color: "#8892aa",
-                    fontSize: "12px",
-                    marginBottom: "8px",
-                  }}
-                >
-                  CURRENT BET
-                </div>
-
-                {betPlaced ? (
-                  <>
-                    <div
-                      style={{
-                        fontFamily:
-                          "Orbitron, monospace",
-                        fontSize: "20px",
-                        fontWeight: "700",
-                        color: "#f0f4ff",
-                      }}
-                    >
-                      ₹{Number(betAmount).toFixed(2)}
-                    </div>
-
-                    <div
-                      style={{
-                        marginTop: "7px",
-                        color: "#2dc653",
-                        fontSize: "12px",
-                      }}
-                    >
-                      BET ACTIVE
-                    </div>
-
-                    <div
-                      style={{
-                        marginTop: "7px",
-                        color: "#f4b942",
-                        fontSize: "13px",
-                      }}
-                    >
-                      Potential: ₹
-                      {(
-                        Number(betAmount) *
-                        Number(multiplier)
-                      ).toFixed(2)}
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div
-                      style={{
-                        fontFamily:
-                          "Orbitron, monospace",
-                        fontSize: "18px",
-                        fontWeight: "700",
-                        color: "#4a5270",
-                      }}
-                    >
-                      NO BET
-                    </div>
-
-                    <div
-                      style={{
-                        marginTop: "8px",
-                        color: "#4a5270",
-                        fontSize: "12px",
-                      }}
-                    >
-                      Place your bet for next round
-                    </div>
-                  </>
-                )}
-              </div>
-
-            </div>
-
-          </div>
-        )}
-
-        {/* ====================================================
-            AUTO TAB
-        ==================================================== */}
-
-        {activeTab === "auto" && (
-          <div className="av-bet-slot">
-
-            <div className="av-auto-row">
-
-              <span className="av-auto-label">
-                Bet Amount
-              </span>
-
-              <input
-                className="av-auto-input"
-                type="number"
-                min="10"
-                max="10000"
-                value={betAmount}
-                onChange={(e) =>
-                  setBetAmount(
-                    Number(e.target.value)
-                  )
-                }
-                disabled={betPlaced}
-              />
-
-            </div>
-
-            <div className="av-auto-row">
-
-              <span className="av-auto-label">
-                Auto Cashout
-              </span>
-
-              <input
-                className="av-auto-input"
-                type="number"
-                min="1.01"
-                step="0.01"
-                placeholder="2.00"
-                value={autoCashout}
-                onChange={(e) =>
-                  setAutoCashout(e.target.value)
-                }
-                disabled={betPlaced}
-              />
-
-            </div>
-
-            {!betPlaced && gameOver && (
-              <button
-                className="av-action-btn bet"
-                onClick={placeBet}
-                disabled={loading}
-              >
-                {loading
-                  ? "PLACING..."
-                  : "🎮 START AUTO BET"}
-              </button>
-            )}
-
-            {betPlaced &&
-              state?.phase === "flying" && (
-                <button
-                  className="av-action-btn cashout"
-                  onClick={cashout}
-                  disabled={loading}
-                >
-                  💰 CASHOUT @{" "}
-                  {Number(multiplier).toFixed(2)}x
-                </button>
-              )}
-
-          </div>
-        )}
-
-      </div>
-
-      {/* ======================================================
-          ACTIVE BET SUMMARY
-      ====================================================== */}
-
-      {betPlaced && activeBet && (
-        <div
-          style={{
-            padding: "10px 14px",
-            background: "#161925",
-            borderBottom: "1px solid #252a3a",
-            textAlign: "center",
-          }}
-        >
-          <div
-            style={{
-              color: "#8892aa",
-              fontSize: "11px",
-              marginBottom: "4px",
-            }}
-          >
-            ACTIVE BET
-          </div>
-
-          <div
-            style={{
-              fontFamily: "Orbitron, monospace",
-              fontSize: "18px",
-              fontWeight: "700",
-              color: "#f0f4ff",
-            }}
-          >
-            ₹{Number(betAmount).toFixed(2)}
-          </div>
-
-          <div
-            style={{
-              marginTop: "5px",
-              fontSize: "12px",
-              color: "#f4b942",
-            }}
-          >
-            Potential Win: ₹
-            {(
-              Number(betAmount) *
-              Number(multiplier)
-            ).toFixed(2)}
-          </div>
-        </div>
-      )}
-
-      {/* ======================================================
-          HISTORY SECTION
-      ====================================================== */}
-
-      <div className="av-history-section">
-
-        <div className="av-hist-tabs">
-
-          <div
-            className={`av-hist-tab ${
-              historyTab === "recent"
-                ? "active"
-                : ""
-            }`}
-            onClick={() =>
-              setHistoryTab("recent")
-            }
-          >
-            RECENT
-          </div>
-
-          <div
-            className={`av-hist-tab ${
-              historyTab === "wins"
-                ? "active"
-                : ""
-            }`}
-            onClick={() =>
-              setHistoryTab("wins")
-            }
-          >
-            WINS
-          </div>
-
-          <div
-            className={`av-hist-tab ${
-              historyTab === "losses"
-                ? "active"
-                : ""
-            }`}
-            onClick={() =>
-              setHistoryTab("losses")
-            }
-          >
-            LOSSES
-          </div>
-
-        </div>
-
-        {/* BET LIST */}
-
-        <div className="av-bet-list">
-
-          <div className="av-bet-row av-bet-row-header">
-            <span>USER</span>
-            <span>BET</span>
-            <span>CASHOUT</span>
-            <span>PAYOUT</span>
-          </div>
-
-          {visibleHistory.length > 0 ? (
-            visibleHistory.map((bet, idx) => {
-
-              const isWon =
-                bet.result === "win";
-
-              const amount =
-                Number(
-                  bet.amount ??
-                  bet.betAmount ??
-                  0
-                );
-
-              const cashoutAt =
-                bet.cashoutAt
-                  ? Number(bet.cashoutAt)
-                  : null;
-
-              const payout =
-                bet.payout
-                  ? Number(bet.payout)
-                  : cashoutAt
-                  ? amount * cashoutAt
-                  : 0;
-
-              return (
-                <div
-                  key={
-                    bet._id ||
-                    bet.id ||
-                    idx
-                  }
-                  className="av-bet-row"
-                >
-
-                  <span className="av-bet-user">
-                    {bet.username ||
-                      bet.user?.username ||
-                      "You"}
-                  </span>
-
-                  <span className="av-bet-amount">
-                    ₹{amount.toFixed(2)}
-                  </span>
-
-                  <span
-                    className={`av-bet-cashout ${
-                      isWon
-                        ? "won"
-                        : cashoutAt
-                        ? "lost"
-                        : "pending"
-                    }`}
-                  >
-                    {cashoutAt
-                      ? `${cashoutAt.toFixed(2)}x`
-                      : "—"}
-                  </span>
-
-                  <span
-                    className={`av-bet-payout ${
-                      isWon
-                        ? "won"
-                        : "lost"
-                    }`}
-                  >
-                    {isWon
-                      ? `₹${payout.toFixed(2)}`
-                      : "₹0.00"}
-                  </span>
-
-                </div>
-              );
-            })
-          ) : (
-            <div
-              style={{
-                padding: "30px 15px",
-                textAlign: "center",
-                color: "#4a5270",
-                fontSize: "13px",
-              }}
-            >
-              No bets found
-            </div>
-          )}
-
-        </div>
-
-      </div>
-
-      {/* ======================================================
-          TOAST
-      ====================================================== */}
-
-      <div
-        className={`av-toast ${
-          toast.show ? "show" : ""
-        } ${toast.type}`}
-      >
-        {toast.message}
-      </div>
-
-      {/* ======================================================
-          WIN POPUP
-      ====================================================== */}
-
-      {showWinPopup && (
-        <div
-          className="av-win-overlay"
-          onClick={closeWinPopup}
-        >
-
-          <div
-            className="av-win-card"
-            onClick={(e) =>
-              e.stopPropagation()
-            }
-          >
-
-            <button
-              className="av-win-close"
-              onClick={closeWinPopup}
-            >
-              ✕
-            </button>
-
+      {/* ── WIN POPUP — manual close + 3s auto close ── */}
+      {winPopup && (
+        <div className="av-win-overlay" onClick={closeWinPopup}>
+          <div className="av-win-card" onClick={e => e.stopPropagation()}>
+            <button className="av-win-close" onClick={closeWinPopup}>✕</button>
+
+            {/* Glow ring */}
             <div className="av-win-glow" />
 
+            {/* Stars */}
             <div className="av-win-stars">
-
-              <span className="av-win-star">
-                ★
-              </span>
-
-              <span className="av-win-star">
-                ★
-              </span>
-
-              <span className="av-win-star">
-                ★
-              </span>
-
-              <span className="av-win-star">
-                ★
-              </span>
-
-              <span className="av-win-star">
-                ★
-              </span>
-
+              {[...Array(6)].map((_, i) => (
+                <span key={i} className="av-win-star" style={{ animationDelay: `${i * 0.15}s` }}>★</span>
+              ))}
             </div>
 
-            <div className="av-win-plane">
-              ✈️
-            </div>
+            {/* Plane icon */}
+            <div className="av-win-plane">✈️</div>
 
-            <div className="av-win-title">
-              CASHOUT SUCCESSFUL
-            </div>
+            {/* Title */}
+            <div className="av-win-title">YOU CASHED OUT!</div>
 
-            <div className="av-win-multi">
-              {Number(winMultiplier).toFixed(2)}x
-            </div>
+            {/* Multiplier */}
+            <div className="av-win-multi">{winPopup.cashoutAt?.toFixed(2)}x</div>
 
+            {/* Payout */}
             <div className="av-win-payout">
-
-              <span className="av-win-payout-label">
-                Your Payout
-              </span>
-
-              <span className="av-win-payout-val">
-                ₹{Number(winPayout).toFixed(2)}
-              </span>
-
+              <span className="av-win-payout-label">Profit</span>
+              <span className="av-win-payout-val">+₹{winPopup.payout?.toFixed(2)}</span>
             </div>
 
+            {/* Auto close bar */}
             <div className="av-win-bar">
               <div className="av-win-bar-fill" />
             </div>
-
-            <div className="av-win-tap">
-              Tap anywhere to close
-            </div>
-
-            <button
-              className="av-auto-clear"
-              onClick={closeWinPopup}
-              style={{
-                marginTop: "10px",
-              }}
-            >
-              CLOSE
-            </button>
-
+            <div className="av-win-tap">Tap anywhere to close</div>
           </div>
-
         </div>
       )}
+
+      {/* History Modal */}
+      {showHistory && (
+        <div className="av-modal-overlay" onClick={() => setShowHistory(false)}>
+          <div className="av-modal" onClick={e => e.stopPropagation()}>
+            <div className="av-modal-header">
+              <span>Round History</span>
+              <button className="av-modal-close" onClick={() => setShowHistory(false)}>✕</button>
+            </div>
+            <div className="av-modal-body">
+              {crashHistory.length === 0 && (
+                <div className="av-modal-empty">No history yet</div>
+              )}
+              {crashHistory.map((h, i) => (
+                <div className="av-hist-row" key={i}>
+                  <span className="av-hist-rid">#{h.roundId}</span>
+<span className={`av-hist-crash ${getCrashClass(h.crashPoint)}`}>
+                      {Number(h.crashPoint).toFixed(2)}x
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Header */}
+      <div className="av-header">
+        <button className="av-header-back" onClick={() => navigate(-1)}>‹</button>
+        <div className="av-header-title">✈ AVIATOR</div>
+        <div className="av-header-balance"  style={{fontSize:"18px"}} >₹{balance?.toFixed(2)}</div>
+      </div>
+
+      {/* Crash history bar */}
+      <div className="av-history-bar">
+       {crashHistory.slice(0, 8).map((h, i) => (
+  <span key={i} className={`av-crash-pill ${getCrashClass(h.crashPoint)}`}>
+    {Number(h.crashPoint).toFixed(2)}x
+  </span>
+))}
+        <button className="av-history-btn" >
+          🕐
+        </button>
+      </div>
+
+      {/* Round ID bar */}
+      <div className="av-round-bar">
+        <div className="av-round-id">Round: <span>#{roundId || "—"}</span></div>
+        <div className="av-ping">Ping: <span>42ms</span></div>
+      </div>
+
+      {/* Game Canvas */}
+      <div className="av-canvas-wrap">
+        <canvas ref={canvasRef} />
+
+        {/* Plane */}
+        {phase === "flying" && (
+          <div ref={planeRef} className="av-plane" style={{ left: "8%", bottom: "8%" }}>
+            ✈️
+          </div>
+        )}
+
+        {/* Waiting overlay */}
+        {phase === "waiting" && (
+          <div className="av-waiting-overlay">
+            <div className="av-waiting-label">NEXT ROUND IN</div>
+            <div className="av-waiting-countdown">{waitCountdown}</div>
+          </div>
+        )}
+
+        {/* Multiplier display */}
+        <div className={`av-multiplier ${phase}`}>
+          {phase === "waiting" && "WAITING..."}
+          {phase === "flying" && `${multiplier.toFixed(2)}x`}
+          {phase === "crashed" && (
+            <>
+              <div className="av-flew">{multiplier.toFixed(2)}x</div>
+              <div className="av-flew-label">FLEW AWAY!</div>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* Bet Panel */}
+      <div className="av-bet-panel">
+        <div className="av-bet-tabs">
+          <div className="av-bet-tab active">Bet</div>
+          <div className="av-bet-tab">Auto</div>
+        </div>
+
+        <div className="av-bet-slot">
+          {/* Amount control */}
+          <div className="av-amount-ctrl">
+            <button onClick={() => setAmount(a => Math.max(1, a - 10))}>−</button>
+            <input
+              type="number"
+              value={amount}
+              onChange={e => setAmount(Math.max(1, parseInt(e.target.value) || 1))}
+            />
+            <button onClick={() => setAmount(a => a + 10)}>+</button>
+          </div>
+
+          {/* Quick amounts */}
+          <div className="av-quick-amounts">
+            {[10, 100, 500, 1000].map(q => (
+              <button
+                key={q}
+                className={`av-quick-btn ${amount === q ? "active" : ""}`}
+                onClick={() => setAmount(q)}
+              >{q}</button>
+            ))}
+          </div>
+
+          {/* Auto cashout */}
+          <div className="av-auto-row">
+            <span className="av-auto-label">Auto ×</span>
+            <input
+              className="av-auto-input"
+              type="number"
+              placeholder="e.g. 2.00"
+              step="0.1"
+              min="1.1"
+              value={autoCashoutVal}
+              onChange={e => setAutoCashoutVal(e.target.value)}
+            />
+            {autoCashoutVal && (
+              <button className="av-auto-clear" onClick={() => setAutoCashoutVal("")}>✕</button>
+            )}
+          </div>
+
+          {/* Action button */}
+          {renderActionBtn()}
+        </div>
+      </div>
+
+      {/* Live bet list */}
+      <div className="av-history-section">
+        <div className="av-hist-tabs">
+          <div className={`av-hist-tab ${histTab === "all" ? "active" : ""}`}
+            onClick={() => setHistTab("all")}>All Bets</div>
+          <div className={`av-hist-tab ${histTab === "my" ? "active" : ""}`}
+            onClick={() => setHistTab("my")}>My Bets</div>
+          <div className={`av-hist-tab ${histTab === "top" ? "active" : ""}`}
+            onClick={() => setHistTab("top")}>Top</div>
+        </div>
+
+        <div className="av-bet-row av-bet-row-header">
+          <span>User</span>
+          <span>Bet</span>
+          <span>×</span>
+          <span>Profit</span>
+        </div>
+
+        <div className="av-bet-list">
+          {histTab === "all" && allBets.map((b, i) => (
+            <div className="av-bet-row" key={i}>
+              <span className="av-bet-user">{b.user}</span>
+              <span className="av-bet-amount"   >₹{b.amount}</span>
+              <span className={`av-bet-cashout ${b.result}`}>
+                {b.cashoutAt ? `${b.cashoutAt}x` : "—"}
+              </span>
+              <span className={`av-bet-payout ${b.result}`}>
+                {b.result === "win" ? `+₹${b.payout?.toFixed(2)}` : b.result === "loss" ? "BUST" : "—"}
+              </span>
+            </div>
+          ))}
+
+          {histTab === "my" && myBetsList.map((b, i) => (
+            <div className="av-bet-row" key={i}>
+              <span className="av-bet-user" style={{ fontSize: 11, color: "var(--text-dim)" }}>
+                #{b.roundId}
+              </span>
+              <span className="av-bet-amount">₹{b.amount}</span>
+              <span className={`av-bet-cashout ${b.result}`}>
+                {b.cashoutAt ? `${b.cashoutAt}x` : b.result === "loss" ? "BUST" : "—"}
+              </span>
+              <span className={`av-bet-payout ${b.result}`}>
+                {b.result === "win" ? `+₹${b.payout?.toFixed(2)}` : b.result === "loss" ? `-₹${b.amount}` : "—"}
+              </span>
+            </div>
+          ))}
+
+          {histTab === "top" && (
+            <div className="av-empty">Top bets coming soon</div>
+          )}
+
+          {histTab !== "top" && allBets.length === 0 && myBetsList.length === 0 && (
+            <div className="av-empty">No bets yet this round</div>
+          )}
+        </div>
+      </div>
 
     </div>
   );
