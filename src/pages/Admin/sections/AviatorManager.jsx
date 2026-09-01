@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../../../styles/admin/aviatorManager.css";
+import "../../../styles/admin/aviatoradmin.css";
 const API = "https://indr-backend-77tp.onrender.com/api";
 const ADMIN_KEY = process.env.REACT_APP_ADMIN_KEY || "your-admin-key-here";
 
