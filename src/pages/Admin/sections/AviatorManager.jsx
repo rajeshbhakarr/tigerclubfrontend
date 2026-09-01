@@ -1,205 +1,332 @@
 import React, { useState, useEffect } from "react";
 import "../../../styles/admin/aviatoradmin.css";
+
 const API = "https://indr-backend-77tp.onrender.com/api";
-const ADMIN_KEY = process.env.REACT_APP_ADMIN_KEY || "your-admin-key-here";
+
+// Get admin key from environment or prompt
+const getAdminKey = () => {
+  let key = localStorage.getItem("aviator-admin-key");
+  if (!key) {
+    key = prompt("Enter admin key:");
+    if (key) localStorage.setItem("aviator-admin-key", key);
+  }
+  return key;
+};
 
 const AviatorManager = () => {
-  const [state, setState] = useState(null);
+  const [state, setGameState] = useState(null);
   const [liveBets, setLiveBets] = useState([]);
-  const [nextCrash, setNextCrash] = useState("");
+  const [nextCrash, setNextCrash] = useState("2.5");
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [adminKey, setAdminKey] = useState(() => getAdminKey() || "");
 
+  const showMessage = (msg, type = "success") => {
+    setMessage(msg);
+    setTimeout(() => setMessage(""), 4000);
+  };
+
+  // Load game state
   const loadState = async () => {
     try {
+      if (!adminKey) {
+        showMessage("❌ Admin key required", "error");
+        return;
+      }
+
       const res = await fetch(`${API}/aviator/admin/state`, {
-        headers: { "x-admin-key": ADMIN_KEY },
+        headers: {
+          "x-admin-key": adminKey,
+          "Content-Type": "application/json",
+        },
       });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          showMessage("❌ Invalid admin key", "error");
+          localStorage.removeItem("aviator-admin-key");
+          setAdminKey("");
+          return;
+        }
+        throw new Error(`HTTP ${res.status}`);
+      }
+
       const data = await res.json();
       if (data.success) {
-        setState(data.state);
+        setGameState(data.state);
+      } else {
+        showMessage(`❌ ${data.msg}`, "error");
       }
     } catch (err) {
       console.error("Load state error:", err);
+      showMessage(`❌ Load failed: ${err.message}`, "error");
     }
   };
 
+  // Load live bets
   const loadLiveBets = async () => {
     try {
+      if (!adminKey) return;
+
       const res = await fetch(`${API}/aviator/admin/live-bets`, {
-        headers: { "x-admin-key": ADMIN_KEY },
+        headers: {
+          "x-admin-key": adminKey,
+          "Content-Type": "application/json",
+        },
       });
+
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
       const data = await res.json();
       if (data.success) {
-        setLiveBets(data.bets);
+        setLiveBets(data.bets || []);
       }
     } catch (err) {
       console.error("Load bets error:", err);
     }
   };
 
+  // Auto-refresh every 2 seconds
   useEffect(() => {
+    if (!adminKey) return;
+
     loadState();
     loadLiveBets();
+
     const interval = setInterval(() => {
       loadState();
       loadLiveBets();
-    }, 1000);
+    }, 2000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [adminKey]);
 
-  // 🔧 Set next crash multiplier
+  // 🔧 Set next crash
   const setNextCrashMultiplier = async () => {
+    if (!adminKey) {
+      showMessage("❌ Admin key required", "error");
+      return;
+    }
+
     if (!nextCrash || nextCrash < 1.1 || nextCrash > 1000) {
-      setMessage("❌ Multiplier must be between 1.1 - 1000");
+      showMessage("❌ Multiplier must be 1.1 - 1000", "error");
       return;
     }
 
     try {
       setLoading(true);
+
       const res = await fetch(`${API}/aviator/admin/set-crash`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-key": ADMIN_KEY,
+          "x-admin-key": adminKey,
         },
         body: JSON.stringify({ multiplier: parseFloat(nextCrash) }),
       });
 
+      if (!res.ok) {
+        if (res.status === 401) {
+          showMessage("❌ Invalid admin key", "error");
+          return;
+        }
+        throw new Error(`HTTP ${res.status}`);
+      }
+
       const data = await res.json();
 
       if (data.success) {
-        setMessage(`✅ Next crash set to ${nextCrash}x`);
+        showMessage(`✅ Next crash set to ${nextCrash}x`);
         setNextCrash("");
-        setTimeout(() => setMessage(""), 3000);
+        await loadState();
       } else {
-        setMessage(`❌ ${data.msg}`);
+        showMessage(`❌ ${data.msg}`, "error");
       }
     } catch (err) {
-      setMessage(`❌ Error: ${err.message}`);
+      console.error("Set crash error:", err);
+      showMessage(`❌ Error: ${err.message}`, "error");
     } finally {
       setLoading(false);
     }
   };
 
-  // 💥 Force crash now
+  // 💥 Force crash
   const forceCrash = async () => {
+    if (!adminKey) {
+      showMessage("❌ Admin key required", "error");
+      return;
+    }
+
     try {
       setLoading(true);
+
       const res = await fetch(`${API}/aviator/admin/force-crash`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-admin-key": ADMIN_KEY,
+          "x-admin-key": adminKey,
         },
       });
+
+      if (!res.ok) {
+        if (res.status === 401) {
+          showMessage("❌ Invalid admin key", "error");
+          return;
+        }
+        throw new Error(`HTTP ${res.status}`);
+      }
 
       const data = await res.json();
 
       if (data.success) {
-        setMessage("✅ Crash triggered!");
-        setTimeout(() => setMessage(""), 2000);
+        showMessage("✅ Crash triggered!");
+        await loadState();
       } else {
-        setMessage(`❌ ${data.msg}`);
+        showMessage(`❌ ${data.msg}`, "error");
       }
     } catch (err) {
-      setMessage(`❌ Error: ${err.message}`);
+      console.error("Force crash error:", err);
+      showMessage(`❌ Error: ${err.message}`, "error");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="aviator-manager">
-      <h1>✈️ Aviator Admin Panel</h1>
+    <div className="aviator-admin">
+      <div className="admin-header">
+        <h1>✈️ Aviator Admin Panel</h1>
+      </div>
 
-      {/* CURRENT STATE */}
-      {state && (
-        <div className="state-box">
-          <h2>Current Round</h2>
-          <div className="state-row">
-            <span>Round ID:</span>
-            <code>{state.roundId?.slice(-8)}</code>
-          </div>
-          <div className="state-row">
-            <span>Multiplier:</span>
-            <span className="big">{state.multiplier}x</span>
-          </div>
-          <div className="state-row">
-            <span>Status:</span>
-            <span className={`badge ${state.phase}`}>{state.phase.toUpperCase()}</span>
-          </div>
-          <div className="state-row">
-            <span>Has Bets:</span>
-            <span>{state.hasBets ? "🔴 YES" : "🟢 NO"}</span>
-          </div>
-          <div className="state-row">
-            <span>Predicted Crash:</span>
-            <span className="gold">
-              {state.predictedCrash ? `${state.predictedCrash}x` : "Hidden (Bets placed)"}
-            </span>
-          </div>
+      {/* Admin Key Section */}
+      {!adminKey && (
+        <div className="admin-key-section">
+          <input
+            type="password"
+            placeholder="Enter admin key"
+            value={adminKey}
+            onChange={(e) => setAdminKey(e.target.value)}
+            className="key-input"
+          />
+          <button className="key-btn" onClick={() => loadState()}>
+            Login
+          </button>
         </div>
       )}
 
-      {/* LIVE BETS */}
-      <div className="bets-box">
-        <h2>Live Bets ({liveBets.length})</h2>
-        {liveBets.length > 0 ? (
-          <div className="bets-list">
-            {liveBets.map((bet, idx) => (
-              <div key={idx} className="bet-row">
-                <span className="bet-user">{bet.user?.mobile || "Unknown"}</span>
-                <span className="bet-amount">₹{bet.amount}</span>
-                <span className="bet-cashout">{bet.cashoutAt ? `@${bet.cashoutAt.toFixed(2)}x` : "Not set"}</span>
+      {adminKey && (
+        <>
+          {/* CURRENT STATE */}
+          {state && (
+            <div className="state-box">
+              <h2>Current Round</h2>
+              <div className="state-grid">
+                <div className="state-item">
+                  <span className="label">Round ID</span>
+                  <code>{state.roundId?.slice(-8) || "..."}</code>
+                </div>
+                <div className="state-item">
+                  <span className="label">Multiplier</span>
+                  <span className="value">{parseFloat(state.multiplier || 1).toFixed(2)}x</span>
+                </div>
+                <div className="state-item">
+                  <span className="label">Status</span>
+                  <span className={`badge ${state.phase}`}>
+                    {state.phase?.toUpperCase()}
+                  </span>
+                </div>
+                <div className="state-item">
+                  <span className="label">Has Bets</span>
+                  <span>{state.hasBets ? "🔴 YES" : "🟢 NO"}</span>
+                </div>
+                {state.predictedCrash && (
+                  <div className="state-item">
+                    <span className="label">Predicted</span>
+                    <span className="value gold">{state.predictedCrash}x</span>
+                  </div>
+                )}
               </div>
-            ))}
+            </div>
+          )}
+
+          {/* LIVE BETS */}
+          <div className="bets-box">
+            <h2>Live Bets ({liveBets.length})</h2>
+            {liveBets.length > 0 ? (
+              <div className="bets-table">
+                <div className="bets-header">
+                  <span>User</span>
+                  <span>Amount</span>
+                  <span>Cashout</span>
+                </div>
+                {liveBets.map((bet, idx) => (
+                  <div key={idx} className="bet-row">
+                    <span className="user">{bet.user?.mobile || "Unknown"}</span>
+                    <span className="amount">₹{bet.amount}</span>
+                    <span className="cashout">
+                      {bet.cashoutAt ? `@${parseFloat(bet.cashoutAt).toFixed(2)}x` : "Not set"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="empty-bets">No active bets</div>
+            )}
           </div>
-        ) : (
-          <p className="empty">No active bets</p>
-        )}
-      </div>
 
-      {/* CONTROLS */}
-      <div className="controls-box">
-        <h2>🔧 Control Next Round</h2>
+          {/* CONTROLS */}
+          <div className="controls-box">
+            <h2>🔧 Control Panel</h2>
 
-        <div className="control-section">
-          <label>Set Crash Multiplier</label>
-          <div className="input-group">
-            <input
-              type="number"
-              value={nextCrash}
-              onChange={(e) => setNextCrash(e.target.value)}
-              placeholder="e.g. 2.5"
-              min="1.1"
-              max="1000"
-              step="0.1"
-              disabled={loading}
-            />
-            <button
-              className="btn-set"
-              onClick={setNextCrashMultiplier}
-              disabled={loading}
-            >
-              {loading ? "Setting..." : "SET CRASH"}
-            </button>
+            <div className="control">
+              <label>Set Next Crash Multiplier</label>
+              <div className="control-group">
+                <input
+                  type="number"
+                  value={nextCrash}
+                  onChange={(e) => setNextCrash(e.target.value)}
+                  placeholder="e.g. 2.5"
+                  min="1.1"
+                  max="1000"
+                  step="0.1"
+                  disabled={loading}
+                  className="crash-input"
+                />
+                <button
+                  className="btn-set"
+                  onClick={setNextCrashMultiplier}
+                  disabled={loading}
+                >
+                  {loading ? "Setting..." : "SET"}
+                </button>
+              </div>
+              <small>Next round will crash at this exact multiplier</small>
+            </div>
+
+            <div className="control">
+              <button
+                className="btn-force"
+                onClick={forceCrash}
+                disabled={loading}
+              >
+                {loading ? "Processing..." : "💥 FORCE CRASH NOW"}
+              </button>
+              <small>Immediately crash the current flying round</small>
+            </div>
           </div>
-          <small>Multiplier will crash at this exact value next round</small>
-        </div>
 
-        <div className="control-section">
+          {/* LOGOUT */}
           <button
-            className="btn-force"
-            onClick={forceCrash}
-            disabled={loading}
+            className="btn-logout"
+            onClick={() => {
+              localStorage.removeItem("aviator-admin-key");
+              setAdminKey("");
+            }}
           >
-            {loading ? "Crashing..." : "💥 FORCE CRASH NOW"}
+            Logout
           </button>
-          <small>Immediately crash the current flying plane</small>
-        </div>
-      </div>
+        </>
+      )}
 
       {/* MESSAGE */}
       {message && (
@@ -209,19 +336,54 @@ const AviatorManager = () => {
       )}
 
       <style jsx>{`
-        .aviator-manager {
+        .aviator-admin {
           max-width: 500px;
           margin: 0 auto;
           padding: 20px;
           background: #0f0f23;
           color: #fff;
           border-radius: 12px;
+          min-height: 100vh;
         }
 
-        h1 {
+        .admin-header {
           text-align: center;
           margin-bottom: 20px;
+        }
+
+        .admin-header h1 {
           font-size: 24px;
+          margin: 0;
+        }
+
+        .admin-key-section {
+          display: flex;
+          gap: 8px;
+          margin-bottom: 20px;
+        }
+
+        .key-input {
+          flex: 1;
+          padding: 10px;
+          background: #2d2d5f;
+          border: 1px solid #404070;
+          border-radius: 8px;
+          color: #fff;
+          font-size: 14px;
+        }
+
+        .key-btn {
+          padding: 10px 20px;
+          background: #7c3aed;
+          border: none;
+          border-radius: 8px;
+          color: white;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .key-btn:hover {
+          background: #6d28d9;
         }
 
         h2 {
@@ -241,35 +403,49 @@ const AviatorManager = () => {
           margin-bottom: 15px;
         }
 
-        .state-row {
+        .state-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 10px;
+        }
+
+        .state-item {
           display: flex;
-          justify-content: space-between;
-          padding: 8px 0;
-          border-bottom: 1px solid #404070;
+          flex-direction: column;
+          gap: 5px;
         }
 
-        .state-row:last-child {
-          border: none;
-        }
-
-        .state-row span {
+        .state-item .label {
+          font-size: 11px;
+          color: #b0b0c8;
           font-weight: 600;
+          text-transform: uppercase;
         }
 
-        .big {
-          font-size: 20px;
+        .state-item code {
+          background: rgba(124, 58, 237, 0.2);
+          padding: 4px 6px;
+          border-radius: 4px;
+          font-family: monospace;
           color: #ffd700;
+          font-size: 13px;
         }
 
-        .gold {
-          color: #ffd700;
+        .state-item .value {
+          font-size: 16px;
           font-weight: 700;
+          color: #fff;
+        }
+
+        .state-item .value.gold {
+          color: #ffd700;
         }
 
         .badge {
+          display: inline-block;
           padding: 4px 8px;
           border-radius: 4px;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 700;
         }
 
@@ -285,74 +461,91 @@ const AviatorManager = () => {
           background: #ff6b6b;
         }
 
-        .bets-list {
+        .bets-table {
+          display: flex;
+          flex-direction: column;
           max-height: 200px;
           overflow-y: auto;
         }
 
-        .bet-row {
-          display: flex;
-          justify-content: space-between;
+        .bets-header {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 10px;
           padding: 8px;
-          background: #2d2d5f;
-          border-radius: 4px;
-          margin-bottom: 5px;
-          font-size: 13px;
+          background: rgba(124, 58, 237, 0.2);
+          border-bottom: 1px solid #404070;
+          font-weight: 600;
+          font-size: 12px;
         }
 
-        .bet-user {
-          font-weight: 600;
+        .bet-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 10px;
+          padding: 8px;
+          border-bottom: 1px solid #404070;
+          font-size: 12px;
+        }
+
+        .bet-row:last-child {
+          border: none;
+        }
+
+        .user {
           color: #b0b0c8;
         }
 
-        .bet-amount {
+        .amount {
           color: #ffd700;
           font-weight: 700;
         }
 
-        .bet-cashout {
+        .cashout {
           color: #10b981;
         }
 
-        .empty {
+        .empty-bets {
           text-align: center;
           color: #b0b0c8;
-          padding: 10px;
+          padding: 15px;
         }
 
-        .control-section {
+        .control {
           margin-bottom: 15px;
         }
 
-        .control-section label {
+        .control label {
           display: block;
-          margin-bottom: 5px;
-          font-weight: 600;
+          margin-bottom: 6px;
           font-size: 13px;
+          font-weight: 600;
         }
 
-        .input-group {
+        .control-group {
           display: flex;
           gap: 8px;
         }
 
-        input[type="number"] {
+        .crash-input {
           flex: 1;
           padding: 8px;
           background: #2d2d5f;
           border: 1px solid #404070;
-          border-radius: 4px;
+          border-radius: 6px;
           color: #fff;
+          font-size: 14px;
         }
 
         .btn-set,
-        .btn-force {
-          padding: 8px 16px;
+        .btn-force,
+        .btn-logout {
+          padding: 10px 16px;
           border: none;
-          border-radius: 4px;
+          border-radius: 6px;
           font-weight: 700;
           cursor: pointer;
-          font-size: 12px;
+          font-size: 13px;
           transition: all 0.3s;
         }
 
@@ -376,6 +569,17 @@ const AviatorManager = () => {
           background: #dc2626;
         }
 
+        .btn-logout {
+          width: 100%;
+          background: #404070;
+          color: white;
+          margin-top: 20px;
+        }
+
+        .btn-logout:hover {
+          background: #505090;
+        }
+
         button:disabled {
           opacity: 0.6;
           cursor: not-allowed;
@@ -389,23 +593,27 @@ const AviatorManager = () => {
         }
 
         .message {
-          padding: 12px;
+          position: fixed;
+          bottom: 20px;
+          left: 20px;
+          right: 20px;
+          padding: 15px;
           border-radius: 8px;
           text-align: center;
           font-weight: 600;
-          margin-top: 15px;
+          z-index: 1000;
         }
 
         .message.success {
           background: rgba(16, 185, 129, 0.2);
           color: #10b981;
-          border: 1px solid #10b981;
+          border: 2px solid #10b981;
         }
 
         .message.error {
           background: rgba(255, 107, 107, 0.2);
           color: #ff6b6b;
-          border: 1px solid #ff6b6b;
+          border: 2px solid #ff6b6b;
         }
       `}</style>
     </div>
