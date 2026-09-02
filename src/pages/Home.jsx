@@ -60,7 +60,7 @@ const Home = () => {
 
       {/* WALLET */}
       <div className="wallet">
-        <div className="wallet-left">
+        <div className="wallettt-left">
           <p>Wallet Balance 🔄</p>
           <h2>₹{balance?.toFixed(2)}</h2>
         </div>
@@ -77,7 +77,7 @@ const Home = () => {
 
       {/* RECOMMENDED */}
       <div className="section">
-        <div className="titlee" style={{ fontSize: "20px" }} >⭐ Recommended Games</div>
+        <div className="tttitlee" style={{ fontSize: "20px" }} >⭐ Recommended Games</div>
 
         <div className="scroll-roww">
           <img
