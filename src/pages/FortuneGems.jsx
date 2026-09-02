@@ -13,16 +13,81 @@ import wildImg from "../assets/fortune-gems/wild.png";
 import jImg from "../assets/fortune-gems/j.png";
 import qImg from "../assets/fortune-gems/q.png";
 
-const SYMBOLS = [
-  { id: "red", type: "image", src: redGem },
-  { id: "purple", type: "image", src: purpleGem },
-  { id: "green", type: "image", src: greenGem },
-  { id: "blue", type: "image", src: blueGem },
-  { id: "wild", type: "image", src: wildImg },
-  { id: "j", type: "image", src: jImg },
-  { id: "q", type: "image", src: qImg },
-  { id: "a", type: "text", value: "A" },
-  { id: "k", type: "text", value: "K" },
+const API_BASE =
+  "https://tigerclubbackend.onrender.com";
+
+const SYMBOL_IMAGES = {
+  RED_GEM: {
+    id: "red",
+    type: "image",
+    src: redGem,
+  },
+
+  PURPLE_GEM: {
+    id: "purple",
+    type: "image",
+    src: purpleGem,
+  },
+
+  GREEN_GEM: {
+    id: "green",
+    type: "image",
+    src: greenGem,
+  },
+
+  BLUE_GEM: {
+    id: "blue",
+    type: "image",
+    src: blueGem,
+  },
+
+  WILD: {
+    id: "wild",
+    type: "image",
+    src: wildImg,
+  },
+
+  J: {
+    id: "j",
+    type: "image",
+    src: jImg,
+  },
+
+  Q: {
+    id: "q",
+    type: "image",
+    src: qImg,
+  },
+
+  A: {
+    id: "a",
+    type: "text",
+    value: "A",
+  },
+
+  K: {
+    id: "k",
+    type: "text",
+    value: "K",
+  },
+};
+
+const INITIAL_REELS = [
+  [
+    SYMBOL_IMAGES.RED_GEM,
+    SYMBOL_IMAGES.BLUE_GEM,
+    SYMBOL_IMAGES.GREEN_GEM,
+  ],
+  [
+    SYMBOL_IMAGES.PURPLE_GEM,
+    SYMBOL_IMAGES.WILD,
+    SYMBOL_IMAGES.Q,
+  ],
+  [
+    SYMBOL_IMAGES.BLUE_GEM,
+    SYMBOL_IMAGES.RED_GEM,
+    SYMBOL_IMAGES.J,
+  ],
 ];
 
 const MULTIPLIERS = ["10x", "5x", "2x"];
@@ -39,26 +104,85 @@ const PAYOUTS = {
   j: 6,
 };
 
-const randomSymbol = () =>
-  SYMBOLS[Math.floor(Math.random() * SYMBOLS.length)];
+const randomSymbol = () => {
+  const values = Object.values(SYMBOL_IMAGES);
+
+  return values[Math.floor(Math.random() * values.length)];
+};
 
 const makeReels = () =>
   Array.from({ length: 3 }, () =>
-    Array.from({ length: 3 }, randomSymbol)
+    Array.from({ length: 3 }, () => randomSymbol())
   );
+
+const getToken = () => {
+  const possibleKeys = [
+    "token",
+    "authToken",
+    "accessToken",
+    "jwt",
+  ];
+
+  for (const key of possibleKeys) {
+    const value = localStorage.getItem(key);
+
+    if (value) {
+      return value;
+    }
+  }
+
+  return null;
+};
+
+const createRequestId = () => {
+  if (
+    typeof crypto !== "undefined" &&
+    typeof crypto.randomUUID === "function"
+  ) {
+    return crypto.randomUUID();
+  }
+
+  return `${Date.now()}-${Math.random()
+    .toString(36)
+    .slice(2)}`;
+};
+
+const convertBackendReels = (backendReels) => {
+  if (!Array.isArray(backendReels)) {
+    return makeReels();
+  }
+
+  return backendReels.map((row) =>
+    Array.isArray(row)
+      ? row.map(
+          (symbol) =>
+            SYMBOL_IMAGES[symbol] || SYMBOL_IMAGES.BLUE_GEM
+        )
+      : []
+  );
+};
 
 const FortuneGems = () => {
   const { balance, fetchBalance } = useWallet();
   const navigate = useNavigate();
 
   const [betAmount, setBetAmount] = useState(10);
-  const [reels, setReels] = useState(makeReels);
+
+  const [reels, setReels] = useState(INITIAL_REELS);
+
   const [multiplier, setMultiplier] = useState("2x");
+
   const [winAmount, setWinAmount] = useState(0);
+
   const [isSpinning, setIsSpinning] = useState(false);
+
   const [turbo, setTurbo] = useState(false);
-  const [showPaytable, setShowPaytable] = useState(false);
+
+  const [showPaytable, setShowPaytable] =
+    useState(false);
+
   const [showRules, setShowRules] = useState(false);
+
   const [autoSpin, setAutoSpin] = useState(0);
 
   const multiplierValue = useMemo(
@@ -67,35 +191,76 @@ const FortuneGems = () => {
   );
 
   const changeBet = (value) => {
-    const next = Math.min(1000, Math.max(1, Number(value) || 1));
+    const next = Math.min(
+      1000,
+      Math.max(1, Number(value) || 1)
+    );
+
     setBetAmount(next);
   };
 
   const renderSymbol = (symbol) => {
+    if (!symbol) {
+      return null;
+    }
+
     if (symbol.type === "image") {
       return (
         <img
           className={`fg-symbol-image fg-symbol-${symbol.id}`}
           src={symbol.src}
           alt=""
+          draggable="false"
         />
       );
     }
 
-    return <span className="fg-letter-symbol">{symbol.value}</span>;
+    return (
+      <span className="fg-letter-symbol">
+        {symbol.value}
+      </span>
+    );
+  };
+
+  const showError = (title, text) => {
+    Swal.fire({
+      icon: "error",
+      title,
+      text,
+      confirmButtonText: "OK",
+      width: 330,
+    });
   };
 
   const spin = async () => {
     if (isSpinning) return;
 
-    if (Number(balance || 0) < betAmount) {
-      Swal.fire({
-        icon: "error",
-        title: "Insufficient Balance",
-        text: `Available balance ₹${Number(balance || 0).toFixed(2)}`,
-        confirmButtonText: "OK",
-        width: 330,
-      });
+    const currentBalance = Number(balance || 0);
+    const amount = Number(betAmount);
+
+    if (!Number.isFinite(amount) || amount < 1) {
+      showError(
+        "Invalid Bet",
+        "Please select a valid bet amount."
+      );
+      return;
+    }
+
+    if (currentBalance < amount) {
+      showError(
+        "Insufficient Balance",
+        `Available balance ₹${currentBalance.toFixed(2)}`
+      );
+      return;
+    }
+
+    const token = getToken();
+
+    if (!token) {
+      showError(
+        "Login Required",
+        "Please login again before playing."
+      );
       return;
     }
 
@@ -103,47 +268,122 @@ const FortuneGems = () => {
     setWinAmount(0);
 
     const duration = turbo ? 650 : 1200;
-    const started = Date.now();
 
-    const timer = setInterval(() => {
+    const animationTimer = setInterval(() => {
       setReels(makeReels());
-
-      if (Date.now() - started >= duration) {
-        clearInterval(timer);
-
-        const finalReels = makeReels();
-
-        const middle = finalReels.map((reel) => reel[1]);
-
-        let baseWin = 0;
-
-        if (
-          middle[0].id === middle[1].id &&
-          middle[1].id === middle[2].id
-        ) {
-          baseWin = PAYOUTS[middle[0].id] || 0;
-        }
-
-        const selectedMultiplier =
-          MULTIPLIERS[
-            Math.floor(Math.random() * MULTIPLIERS.length)
-          ];
-
-        const selectedMultiplierValue =
-          Number.parseInt(selectedMultiplier, 10) || 1;
-
-        const totalWin = baseWin * selectedMultiplierValue;
-
-        setReels(finalReels);
-        setMultiplier(selectedMultiplier);
-        setWinAmount(totalWin);
-        setIsSpinning(false);
-
-        if (typeof fetchBalance === "function") {
-          fetchBalance();
-        }
-      }
     }, turbo ? 45 : 65);
+
+    try {
+      const requestId = createRequestId();
+
+      const response = await fetch(
+        `${API_BASE}/api/fortune-gems/spin`,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+
+          body: JSON.stringify({
+            betAmount: amount,
+            requestId,
+          }),
+        }
+      );
+
+      let data = null;
+
+      try {
+        data = await response.json();
+      } catch {
+        data = null;
+      }
+
+      if (!response.ok || !data?.success) {
+        throw new Error(
+          data?.message ||
+            `Server error (${response.status})`
+        );
+      }
+
+      const spinData = data.spin;
+
+      if (!spinData) {
+        throw new Error(
+          "Invalid response received from server."
+        );
+      }
+
+      const finalReels = convertBackendReels(
+        spinData.reels
+      );
+
+      const finalMultiplier =
+        Number(spinData.multiplier) || 0;
+
+      const finalWin =
+        Number(spinData.winAmount) || 0;
+
+      await new Promise((resolve) =>
+        setTimeout(resolve, duration)
+      );
+
+      clearInterval(animationTimer);
+
+      setReels(finalReels);
+
+      setMultiplier(
+        finalMultiplier > 0
+          ? `${finalMultiplier}x`
+          : "2x"
+      );
+
+      setWinAmount(finalWin);
+
+      if (typeof fetchBalance === "function") {
+        await fetchBalance();
+      }
+
+      if (
+        spinData.result === "WIN" &&
+        finalWin > 0
+      ) {
+        Swal.fire({
+          icon: "success",
+          title: "YOU WIN! 🎉",
+          html: `
+            <div style="font-size:24px;font-weight:800;">
+              ₹${finalWin.toFixed(2)}
+            </div>
+            <div style="margin-top:5px;">
+              ${finalMultiplier}x Multiplier
+            </div>
+          `,
+          confirmButtonText: "Nice!",
+          width: 330,
+        });
+      }
+    } catch (error) {
+      clearInterval(animationTimer);
+
+      console.error(
+        "Fortune Gems spin error:",
+        error
+      );
+
+      setReels(INITIAL_REELS);
+      setWinAmount(0);
+
+      showError(
+        "Spin Failed",
+        error?.message ||
+          "Unable to connect to game server."
+      );
+    } finally {
+      setIsSpinning(false);
+    }
   };
 
   const startAutoSpin = () => {
@@ -151,6 +391,7 @@ const FortuneGems = () => {
 
     setAutoSpin((old) => {
       if (old > 0) return 0;
+
       return 10;
     });
   };
@@ -158,7 +399,9 @@ const FortuneGems = () => {
   return (
     <main
       className="fg-page"
-      style={{ "--fg-bg-image": `url(${templeBg})` }}
+      style={{
+        "--fg-bg-image": `url(${templeBg})`,
+      }}
     >
       <div className="fg-background-overlay" />
 
@@ -176,24 +419,43 @@ const FortuneGems = () => {
           </button>
 
           <div className="fg-brand">
-            <div className="fg-brand-gem">◆</div>
-            <div className="fg-brand-main">FORTUNE</div>
-            <div className="fg-brand-sub">GEMS</div>
+            <div className="fg-brand-gem">
+              ◆
+            </div>
+
+            <div className="fg-brand-main">
+              FORTUNE
+            </div>
+
+            <div className="fg-brand-sub">
+              GEMS
+            </div>
           </div>
 
           <div className="fg-wallet">
-            <span>₹{Number(balance || 0).toFixed(2)}</span>
+            <span>
+              ₹{Number(balance || 0).toFixed(2)}
+            </span>
+
             <small>Balance</small>
-            <button>+</button>
+
+            <button
+              type="button"
+              onClick={() => fetchBalance?.()}
+            >
+              +
+            </button>
           </div>
 
         </header>
+
 
         {/* EX BADGE */}
         <div className="fg-ex-badge">
           <strong>EX</strong>
           <span>↗</span>
         </div>
+
 
         {/* GAME MACHINE */}
         <section className="fg-game-wrapper">
@@ -207,6 +469,7 @@ const FortuneGems = () => {
             <span>5</span>
           </div>
 
+
           {/* REELS */}
           <div className="fg-reel-machine">
 
@@ -215,7 +478,9 @@ const FortuneGems = () => {
               {reels.map((reel, col) => (
                 <div
                   className={`fg-reel ${
-                    isSpinning ? "is-spinning" : ""
+                    isSpinning
+                      ? "is-spinning"
+                      : ""
                   }`}
                   key={col}
                 >
@@ -223,7 +488,9 @@ const FortuneGems = () => {
                   {reel.map((symbol, row) => (
                     <div
                       className={`fg-cell ${
-                        row === 1 ? "payline-cell" : ""
+                        row === 1
+                          ? "payline-cell"
+                          : ""
                       }`}
                       key={row}
                     >
@@ -238,6 +505,7 @@ const FortuneGems = () => {
 
             </div>
 
+
             {/* MULTIPLIER */}
             <aside className="fg-multiplier-panel">
 
@@ -251,7 +519,9 @@ const FortuneGems = () => {
                   type="button"
                   key={value}
                   className={`fg-multiplier ${
-                    value === multiplier ? "selected" : ""
+                    value === multiplier
+                      ? "selected"
+                      : ""
                   } ${
                     value === "10x"
                       ? "purple"
@@ -259,9 +529,11 @@ const FortuneGems = () => {
                       ? "blue"
                       : "green"
                   }`}
-                  onClick={() =>
-                    !isSpinning && setMultiplier(value)
-                  }
+                  onClick={() => {
+                    if (!isSpinning) {
+                      setMultiplier(value);
+                    }
+                  }}
                 >
                   {value}
                 </button>
@@ -271,15 +543,18 @@ const FortuneGems = () => {
 
           </div>
 
+
           {/* WIN BAR */}
           <div className="fg-winbar">
             <span>WIN</span>
+
             <strong>
               ₹{Number(winAmount || 0).toFixed(2)}
             </strong>
           </div>
 
         </section>
+
 
         {/* BET AREA */}
         <section className="fg-control-panel">
@@ -291,7 +566,11 @@ const FortuneGems = () => {
           <div className="fg-bet-row">
 
             <button
-              onClick={() => changeBet(betAmount - 1)}
+              type="button"
+              disabled={isSpinning}
+              onClick={() =>
+                changeBet(betAmount - 1)
+              }
             >
               −
             </button>
@@ -301,71 +580,108 @@ const FortuneGems = () => {
             </div>
 
             <button
-              onClick={() => changeBet(betAmount + 1)}
+              type="button"
+              disabled={isSpinning}
+              onClick={() =>
+                changeBet(betAmount + 1)
+              }
             >
               +
             </button>
 
           </div>
 
+
           <div className="fg-quick">
 
-            {[3, 10, 50, 100].map((amount) => (
-              <button
-                key={amount}
-                className={betAmount === amount ? "selected" : ""}
-                onClick={() => changeBet(amount)}
-              >
-                ₹{amount}
-              </button>
-            ))}
+            {[3, 10, 50, 100].map(
+              (amount) => (
+                <button
+                  type="button"
+                  key={amount}
+                  disabled={isSpinning}
+                  className={
+                    betAmount === amount
+                      ? "selected"
+                      : ""
+                  }
+                  onClick={() =>
+                    changeBet(amount)
+                  }
+                >
+                  ₹{amount}
+                </button>
+              )
+            )}
 
           </div>
 
         </section>
 
+
         {/* ACTION BUTTONS */}
         <section className="fg-actions">
 
           <button
+            type="button"
             className="fg-action"
-            onClick={() => setShowRules(true)}
+            onClick={() =>
+              setShowRules(true)
+            }
           >
             <span>⚙</span>
             <small>OPTIONS</small>
           </button>
 
+
           <button
+            type="button"
             className="fg-action"
-            onClick={() => setShowPaytable(true)}
+            onClick={() =>
+              setShowPaytable(true)
+            }
           >
             <span>ⓘ</span>
             <small>PAYTABLE</small>
           </button>
 
+
           <button
+            type="button"
             className={`fg-spin ${
               isSpinning ? "loading" : ""
             }`}
             onClick={spin}
             disabled={isSpinning}
           >
-            <span>{isSpinning ? "•••" : "SPIN"}</span>
+            <span>
+              {isSpinning
+                ? "•••"
+                : "SPIN"}
+            </span>
           </button>
 
+
           <button
+            type="button"
             className={`fg-action ${
               turbo ? "active" : ""
             }`}
-            onClick={() => setTurbo((v) => !v)}
+            onClick={() =>
+              setTurbo((v) => !v)
+            }
           >
             <span>ϟ</span>
             <small>TURBO</small>
           </button>
 
+
           <button
+            type="button"
             className="fg-action"
-            onClick={() => setShowRules(true)}
+            onClick={() =>
+              setShowRules(true)
+            }
           >
             <span>?</span>
             <small>HELP</small>
@@ -373,11 +689,13 @@ const FortuneGems = () => {
 
         </section>
 
+
         {/* AUTO SPIN */}
         <section className="fg-auto">
 
           <div>
             <b>AUTO SPIN</b>
+
             <span>
               {autoSpin > 0
                 ? `${autoSpin} spins selected`
@@ -386,27 +704,43 @@ const FortuneGems = () => {
           </div>
 
           <button
+            type="button"
+            disabled={isSpinning}
             onClick={startAutoSpin}
-            className={autoSpin > 0 ? "active" : ""}
+            className={
+              autoSpin > 0
+                ? "active"
+                : ""
+            }
           >
-            {autoSpin > 0 ? "STOP" : "START"}
+            {autoSpin > 0
+              ? "STOP"
+              : "START"}
           </button>
 
         </section>
+
 
         {/* PAYTABLE MODAL */}
         {showPaytable && (
           <div
             className="fg-modal-bg"
-            onClick={() => setShowPaytable(false)}
+            onClick={() =>
+              setShowPaytable(false)
+            }
           >
             <div
               className="fg-modal"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) =>
+                e.stopPropagation()
+              }
             >
+
               <button
                 className="fg-modal-close"
-                onClick={() => setShowPaytable(false)}
+                onClick={() =>
+                  setShowPaytable(false)
+                }
               >
                 ×
               </button>
@@ -414,11 +748,13 @@ const FortuneGems = () => {
               <h2>PAYTABLE</h2>
 
               <p>
-                Matching symbols on the highlighted centre
-                payline can produce a result.
+                Matching symbols on the
+                highlighted centre payline
+                can produce a result.
               </p>
 
               <div className="fg-paytable-grid">
+
                 <span>🔴 GEM</span>
                 <b>36x</b>
 
@@ -445,24 +781,34 @@ const FortuneGems = () => {
 
                 <span>J</span>
                 <b>6x</b>
+
               </div>
+
             </div>
           </div>
         )}
+
 
         {/* RULES MODAL */}
         {showRules && (
           <div
             className="fg-modal-bg"
-            onClick={() => setShowRules(false)}
+            onClick={() =>
+              setShowRules(false)
+            }
           >
             <div
               className="fg-modal"
-              onClick={(e) => e.stopPropagation()}
+              onClick={(e) =>
+                e.stopPropagation()
+              }
             >
+
               <button
                 className="fg-modal-close"
-                onClick={() => setShowRules(false)}
+                onClick={() =>
+                  setShowRules(false)
+                }
               >
                 ×
               </button>
@@ -470,21 +816,25 @@ const FortuneGems = () => {
               <h2>GAME OPTIONS</h2>
 
               <p>
-                Use the bet controls to select your stake.
+                Use the bet controls to
+                select your demo stake.
               </p>
 
               <p>
-                Press SPIN to start the reel animation.
+                Press SPIN to start the
+                reel animation.
               </p>
 
               <p>
-                Turbo changes only the visual animation speed.
+                Turbo changes only the
+                visual animation speed.
               </p>
 
               <p>
-                Wallet settlement should be handled by
-                the server-side game system.
+                The game result is generated
+                server-side.
               </p>
+
             </div>
           </div>
         )}
