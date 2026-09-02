@@ -142,7 +142,7 @@ function AppContent() {
     "/loginpage",
     "/register",
     "/aviator",
-    "/ortunegems",
+    "/fortunegems",
 
     "/vip", // ✅ YE ADD KAR
 
@@ -239,13 +239,13 @@ function AppContent() {
 
 
 <Route
-          path="/mines"
-          element={
-            <ProtectedRoute>
-              <FortuneGems/>
-            </ProtectedRoute>
-          }
-        />
+  path="/FortuneGems"
+  element={
+    <ProtectedRoute>
+      <FortuneGems />
+    </ProtectedRoute>
+  }
+/>
 
 
 
