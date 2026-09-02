@@ -142,8 +142,7 @@ function AppContent() {
     "/loginpage",
     "/register",
     "/aviator",
-    "/fortunegems",
-
+"/FortuneGems",
     "/vip", // ✅ YE ADD KAR
 
     "/wallet",
