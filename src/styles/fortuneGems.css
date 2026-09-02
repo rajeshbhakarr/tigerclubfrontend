@@ -1,0 +1,604 @@
+/* ✨ FORTUNE GEMS - DARK THEME STYLING */
+
+:root {
+  --dark-bg: #0a0a14;
+  --dark-card: #1a1a2e;
+  --dark-input: #2d2d4d;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0c8;
+  --accent-gold: #FFD700;
+  --accent-orange: #FF8C00;
+  --accent-purple: #7C3AED;
+  --accent-green: #10B981;
+  --accent-red: #FF6B6B;
+  --border-dark: #404070;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  background: var(--dark-bg);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-primary);
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+}
+
+/* ====== WRAPPER ====== */
+.fortune-gems-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  background: var(--dark-bg);
+  min-height: 100vh;
+  padding: 0;
+}
+
+.fortune-gems-container {
+  width: 100%;
+  max-width: 420px;
+  background: var(--dark-bg);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 20px;
+}
+
+@media (min-width: 481px) {
+  .fortune-gems-container {
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-height: 95vh;
+    overflow-y: auto;
+  }
+}
+
+/* ====== HEADER ====== */
+.fg-header {
+  background: linear-gradient(135deg, #1a0033 0%, #2d0052 50%, #1a0033 100%);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 2px solid var(--border-dark);
+  box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+}
+
+.fg-header h1 {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent-gold);
+  text-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
+  flex: 1;
+  text-align: center;
+}
+
+.fg-back, .fg-welcome {
+  font-size: 16px;
+  cursor: pointer;
+  color: var(--text-secondary);
+}
+
+.fg-back:hover {
+  color: var(--text-primary);
+}
+
+/* ====== GAME AREA ====== */
+.fg-game-area {
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: relative;
+  background: linear-gradient(180deg, #0f0f23 0%, #1a0f2e 100%);
+}
+
+.fg-background {
+  position: relative;
+  height: 280px;
+  background: linear-gradient(180deg, #1a4d7a 0%, #0a1f3e 100%);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 2px solid var(--border-dark);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.temple-bg {
+  font-size: 120px;
+  opacity: 0.8;
+  animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+/* ====== REELS ====== */
+.fg-reels-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-dark);
+}
+
+.fg-reel {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: linear-gradient(135deg, #2d2d5f 0%, #1a1a3e 100%);
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid var(--accent-gold);
+  padding: 4px;
+}
+
+.fg-symbol {
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  background: var(--dark-input);
+  border-radius: 4px;
+  border: 1px solid var(--border-dark);
+  transition: all 0.1s;
+}
+
+.fg-symbol.active {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+  box-shadow: 0 0 12px rgba(255, 215, 0, 0.3);
+  border-color: var(--accent-gold);
+  font-weight: bold;
+}
+
+.fg-symbol.spinning {
+  animation: spin 0.1s linear;
+}
+
+@keyframes spin {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(10px); }
+  100% { transform: translateY(0); }
+}
+
+/* Reel 4 - Special Multiplier */
+.fg-reel-special {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #4a2c5e 0%, #3d1f4d 100%);
+  border-radius: 8px;
+  border: 2px solid var(--accent-purple);
+  padding: 8px;
+  min-height: 120px;
+}
+
+.fg-symbol-special {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--accent-gold);
+  text-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+}
+
+/* ====== WIN DISPLAY ====== */
+.fg-win-display {
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+  padding: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
+  color: #000;
+  font-weight: 800;
+}
+
+.fg-win-label {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.fg-win-amount {
+  font-size: 20px;
+}
+
+/* ====== BALANCE ====== */
+.fg-balance {
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 600;
+  padding: 6px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 6px;
+}
+
+/* ====== BET SECTION ====== */
+.fg-bet-section {
+  background: var(--dark-card);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border-dark);
+}
+
+.fg-bet-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.fg-bet-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.fg-bet-btn {
+  flex: 1;
+  padding: 8px;
+  background: var(--dark-input);
+  border: 1px solid var(--border-dark);
+  color: var(--text-primary);
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.fg-bet-btn:hover {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.fg-bet-input {
+  flex: 2;
+  background: var(--dark-input);
+  border: 1px solid var(--border-dark);
+  color: var(--accent-gold);
+  padding: 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  outline: none;
+}
+
+.fg-bet-input:focus {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 8px rgba(124, 58, 237, 0.3);
+}
+
+.fg-quick-bets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.fg-quick-btn {
+  padding: 8px;
+  background: linear-gradient(135deg, var(--accent-orange) 0%, #FF6B35 100%);
+  border: none;
+  color: white;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.fg-quick-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3);
+}
+
+/* ====== CONTROLS ====== */
+.fg-controls {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 0 16px;
+}
+
+.fg-control-btn {
+  padding: 8px 6px;
+  background: var(--dark-card);
+  border: 1px solid var(--border-dark);
+  color: var(--text-secondary);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.fg-control-btn:hover {
+  background: var(--accent-purple);
+  color: white;
+  border-color: var(--accent-purple);
+}
+
+/* ====== SPIN BUTTON ====== */
+.fg-spin-btn {
+  margin: 12px 16px 0 16px;
+  padding: 14px;
+  background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+  border: none;
+  border-radius: 10px;
+  color: #000;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+}
+
+.fg-spin-btn:hover:not(.disabled) {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+}
+
+.fg-spin-btn.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ====== AUTO SPIN ====== */
+.fg-autospin-section {
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--dark-card);
+  border-radius: 8px;
+  margin: 0 16px;
+  border: 1px solid var(--border-dark);
+}
+
+.fg-autospin-input {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fg-autospin-input label {
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.fg-autospin-input-field {
+  padding: 6px;
+  background: var(--dark-input);
+  border: 1px solid var(--border-dark);
+  color: var(--text-primary);
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.fg-autospin-btn {
+  flex: 1;
+  padding: 8px;
+  background: var(--dark-input);
+  border: 1px solid var(--border-dark);
+  color: var(--text-primary);
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+.fg-autospin-btn:hover {
+  background: var(--accent-purple);
+  border-color: var(--accent-purple);
+}
+
+.fg-autospin-btn.active {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+
+/* ====== HISTORY ====== */
+.fg-history-section {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border-dark);
+}
+
+.fg-history-section h3 {
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: var(--accent-gold);
+}
+
+.fg-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.fg-history-item {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+  background: var(--dark-card);
+  border-radius: 6px;
+  font-size: 12px;
+  border: 1px solid var(--border-dark);
+}
+
+.fg-history-item span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.fg-history-item span.win {
+  color: var(--accent-green);
+}
+
+.fg-history-item span.multiplier {
+  color: var(--accent-gold);
+}
+
+/* ====== MODAL ====== */
+.fg-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.fg-modal {
+  background: var(--dark-card);
+  border: 2px solid var(--border-dark);
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 380px;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.fg-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: var(--accent-red);
+  border: none;
+  color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.fg-modal h2 {
+  color: var(--accent-gold);
+  margin-bottom: 15px;
+  font-size: 18px;
+}
+
+.fg-rules-content {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.fg-rules-content p {
+  margin-bottom: 10px;
+  padding: 10px;
+  background: var(--dark-input);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent-gold);
+}
+
+.fg-rules-content strong {
+  color: var(--accent-gold);
+}
+
+/* ====== RESPONSIVE ====== */
+@media (max-width: 400px) {
+  .fortune-gems-container {
+    max-width: 100%;
+  }
+
+  .fg-header h1 {
+    font-size: 18px;
+  }
+
+  .fg-game-area {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .fg-background {
+    height: 240px;
+  }
+
+  .temple-bg {
+    font-size: 100px;
+  }
+
+  .fg-symbol {
+    font-size: 20px;
+  }
+
+  .fg-symbol-special {
+    font-size: 28px;
+  }
+
+  .fg-spin-btn {
+    padding: 12px;
+    font-size: 14px;
+    margin: 10px 12px 0 12px;
+  }
+
+  .fg-controls {
+    padding: 0 12px;
+  }
+
+  .fg-autospin-section {
+    margin: 0 12px;
+  }
+
+  .fg-history-section {
+    padding: 10px 12px;
+  }
+}
+
+/* Scrollbar styling */
+.fg-history-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.fg-history-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.fg-history-list::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.3);
+  border-radius: 2px;
+}
+
+.fg-modal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.fg-modal::-webkit-scrollbar-thumb {
+  background: rgba(124, 58, 237, 0.3);
+  border-radius: 3px;
+}
