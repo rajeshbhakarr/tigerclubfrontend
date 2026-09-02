@@ -104,7 +104,7 @@ const Home = () => {
           </div>
 
           <div className="game-card">
-            <img src={k3Img} />
+            <img src={k3Img}    onClick={() => openGame("/FortuneGems")}   />
           </div>
 
           <div className="game-card">

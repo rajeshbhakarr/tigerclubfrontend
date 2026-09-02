@@ -41,6 +41,7 @@ import Promotion from "./pages/Promotion";
 import Notification from "./pages/Notification";
 import Aviator from "./pages/Aviator";
 import Mines from "./pages/Mines";
+import FortuneGems from "./pages/FortuneGems";
 
 // ✅ Agar login nahi hai to login page pe bhejo
 function ProtectedRoute({ children }) {
@@ -141,6 +142,7 @@ function AppContent() {
     "/loginpage",
     "/register",
     "/aviator",
+    "/ortunegems",
 
     "/vip", // ✅ YE ADD KAR
 
@@ -232,6 +234,20 @@ function AppContent() {
             </ProtectedRoute>
           }
         />
+
+
+
+
+<Route
+          path="/mines"
+          element={
+            <ProtectedRoute>
+              <FortuneGems/>
+            </ProtectedRoute>
+          }
+        />
+
+
 
         <Route
           path="/wallet"
