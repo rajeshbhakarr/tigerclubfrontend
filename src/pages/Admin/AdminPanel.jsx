@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import "../../styles/admin/adminpanel.css";
 
 import AdminChat from "./sections/AdminChat";
-
 import Dashboard from "./sections/Dashboard";
 import Users from "./sections/Users";
 import Requests from "./sections/Requests";
@@ -11,9 +10,8 @@ import WinGoManager from "./sections/WinGoManager";
 import DragonManager from "./sections/DragonManager";
 import AdminNotification from "./sections/AdminNotification";
 import AviatorManager from "./sections/AviatorManager";
+import FortuneGemsManager from "./sections/FortuneGemsManager";
 import DepositSettings from "./sections/Depositsettings";
-
-
 
 function AdminPanel() {
   const navigate = useNavigate();
@@ -24,41 +22,38 @@ function AdminPanel() {
     switch (activePage) {
       case "dashboard":
         return <Dashboard />;
-      case "aviator":
-        return <AviatorManager />;
-
-      case "notification":
-        return <AdminNotification />;
 
       case "wingo":
         return <WinGoManager />;
 
       case "dragon":
         return <DragonManager />;
-case "game-control":
-  return <GameControl />; 
-  case "depositsettings":
-  return <DepositSettings />; 
+
+      case "aviator":
+        return <AviatorManager />;
+
+      case "fortunegems":
+        return <FortuneGemsManager />;
 
       case "users":
         return <Users />;
 
-     
-
       case "requests":
         return <Requests />;
 
-      
       case "chat":
         return <AdminChat />;
+
+      case "notification":
+        return <AdminNotification />;
+
+      case "depositsettings":
+        return <DepositSettings />;
 
       default:
         return <Dashboard />;
     }
   };
-
-
-
 
   return (
     <div className="adminpanelpage">
@@ -97,6 +92,18 @@ case "game-control":
           Aviator Manager
         </button>
 
+        {/* ✅ Fortune Gems Manager */}
+        <button
+          className={activePage === "fortunegems" ? "active" : ""}
+          onClick={() => setActivePage("fortunegems")}
+          style={{
+            color: activePage === "fortunegems" ? "#fff" : "#f59e0b",
+            fontWeight: "600",
+          }}
+        >
+          💎 Fortune Gems Manager
+        </button>
+
         <button
           className={activePage === "users" ? "active" : ""}
           onClick={() => setActivePage("users")}
@@ -104,15 +111,12 @@ case "game-control":
           Users
         </button>
 
-
         <button
           className={activePage === "requests" ? "active" : ""}
           onClick={() => setActivePage("requests")}
         >
           Requests
         </button>
-
-       
 
         <button
           className={activePage === "chat" ? "active" : ""}
@@ -125,26 +129,12 @@ case "game-control":
           💬 Customer Chat
         </button>
 
-
         <button
           className={activePage === "notification" ? "active" : ""}
           onClick={() => setActivePage("notification")}
         >
           🔔 Notifications
         </button>
-
-
-
-
-{/* <button
-  className={activePage === "depositsettings" ? "active" : ""}
-  onClick={() => setActivePage("depositsettings")}
->
-  Deposit settings
-</button> */}
-
-
-
 
         <button
           className="logout-btn"
@@ -172,12 +162,6 @@ case "game-control":
 
         {renderPage()}
       </div>
-
-
-
-
-
-
     </div>
   );
 }
