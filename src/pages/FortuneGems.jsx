@@ -174,8 +174,7 @@ const FortuneGems = () => {
     const spinDuration = turboMode ? 500 : 1000;
     const startTime = Date.now();
 
-    const spinInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
+const spinInterval = setInterval(async () => {      const elapsed = Date.now() - startTime;
 
       setReels([generateReels(), generateReels(), generateReels()]);
 
