@@ -1,7 +1,7 @@
 import "../styles/wingo.css";
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import GameHistory, { MyHistory } from "./gamehistory";
-import GameHistory1Min from "./gamehistory1min";
+import GameHistory1Min, { MyHistory as MyHistory1Min } from "./gamehistory1min";
 import { useNavigate } from "react-router-dom";
 import { placeBet, getMyBets } from "../api/wingoApi";
 import { useWallet } from "../context/WalletContext";
@@ -64,7 +64,6 @@ const WinGo = () => {
 
   // ── History sub tab: "game" or "my"
   const [activeTab, setActiveTab] = useState("game");
-  const [myBets, setMyBets] = useState([]);
 
   // ── Mode change reset handler
   const handleModeChange = (mode) => {
@@ -212,31 +211,6 @@ const WinGo = () => {
   useEffect(() => {
     lastBalanceRef.current = balance;
   }, [balance]);
-
-  // ── My bets list loader
-  useEffect(() => {
-    if (activeTab !== "my") return;
-
-    const loadMyBets = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const betsApi =
-          gameMode === "1min"
-            ? `${WINGO_1MIN_API}/my-bets`
-            : `${WINGO_API}/my-bets`;
-
-        const res = await fetch(betsApi, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        const data = await res.json();
-        setMyBets(data.bets || []);
-      } catch (err) {
-        console.log("My bets error:", err);
-      }
-    };
-
-    loadMyBets();
-  }, [activeTab, gameMode]);
 
   // ── Place bet
   const placeBetHandler = async () => {
@@ -526,7 +500,7 @@ const WinGo = () => {
         </div>
       </div>
 
-      {/* History Tabs (Game History & My History) */}
+      {/* History Tabs */}
       <div className="al">
         <div
           className={activeTab === "game" ? "main active" : "main"}
@@ -561,12 +535,15 @@ const WinGo = () => {
 
       <br />
 
-      {/* Dynamic History Component rendering */}
+      {/* Dynamic History Table & My History Table */}
       <div className="history-wrapper">
+        {/* Game History (Period results) */}
         {activeTab === "game" &&
           (gameMode === "1min" ? <GameHistory1Min /> : <GameHistory />)}
 
-        {activeTab === "my" && <MyHistory bets={myBets} />}
+        {/* My History (Win / Loss Bet History) */}
+        {activeTab === "my" &&
+          (gameMode === "1min" ? <MyHistory1Min /> : <MyHistory />)}
       </div>
       <br />
 
