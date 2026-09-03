@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
 import Swal from "sweetalert2";
@@ -61,15 +61,19 @@ const createRequestId = () => {
   return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
 };
 
+// Backend reels format conversion [rows][cols] -> [cols][rows] display
 const convertBackendReels = (backendReels) => {
-  if (!Array.isArray(backendReels)) {
-    return makeReels();
+  if (!Array.isArray(backendReels)) return makeReels();
+
+  // Transpose row array to column layout for UI component
+  const grid = [[], [], []];
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 3; c++) {
+      const sym = backendReels[r] && backendReels[r][c] ? backendReels[r][c] : "BLUE_GEM";
+      grid[c][r] = SYMBOL_IMAGES[sym] || SYMBOL_IMAGES.BLUE_GEM;
+    }
   }
-  return backendReels.map((row) =>
-    Array.isArray(row)
-      ? row.map((symbol) => SYMBOL_IMAGES[symbol] || SYMBOL_IMAGES.BLUE_GEM)
-      : []
-  );
+  return grid;
 };
 
 const FortuneGems = () => {
@@ -86,10 +90,13 @@ const FortuneGems = () => {
   const [showRules, setShowRules] = useState(false);
   const [autoSpin, setAutoSpin] = useState(0);
 
-  const multiplierValue = useMemo(
-    () => Number.parseInt(multiplier, 10) || 1,
-    [multiplier]
-  );
+  const animationTimerRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (animationTimerRef.current) clearInterval(animationTimerRef.current);
+    };
+  }, []);
 
   const changeBet = (value) => {
     const next = Math.min(1000, Math.max(1, Number(value) || 1));
@@ -133,10 +140,7 @@ const FortuneGems = () => {
     }
 
     if (currentBalance < amount) {
-      showError(
-        "Insufficient Balance",
-        `Available balance ₹${currentBalance.toFixed(2)}`
-      );
+      showError("Insufficient Balance", `Available balance ₹${currentBalance.toFixed(2)}`);
       return;
     }
 
@@ -146,18 +150,25 @@ const FortuneGems = () => {
       return;
     }
 
-    // 1. UI par turant bet amount deduct karo
+    // 1. Instant deduction from wallet
     setBalance((prev) => parseFloat((Number(prev) - amount).toFixed(2)));
     setIsSpinning(true);
     setWinAmount(0);
 
-    const duration = turbo ? 650 : 1200;
-    const animationTimer = setInterval(() => {
+    // Safety clear
+    if (animationTimerRef.current) clearInterval(animationTimerRef.current);
+    animationTimerRef.current = setInterval(() => {
       setReels(makeReels());
     }, turbo ? 45 : 65);
 
+    const minSpinDuration = turbo ? 600 : 1200;
+    const spinStartTime = Date.now();
+
     try {
       const requestId = createRequestId();
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second strict timeout
+
       const response = await fetch(`${API_BASE}/api/fortune-gems/spin`, {
         method: "POST",
         headers: {
@@ -168,7 +179,10 @@ const FortuneGems = () => {
           betAmount: amount,
           requestId,
         }),
+        signal: controller.signal,
       });
+
+      clearTimeout(timeoutId);
 
       let data = null;
       try {
@@ -178,7 +192,6 @@ const FortuneGems = () => {
       }
 
       if (!response.ok || !data?.success) {
-        // Error aane par deducted paise wapas add karo
         setBalance((prev) => parseFloat((Number(prev) + amount).toFixed(2)));
         throw new Error(data?.message || `Server error (${response.status})`);
       }
@@ -190,35 +203,50 @@ const FortuneGems = () => {
       }
 
       const finalReels = convertBackendReels(spinData.reels);
-      const finalMultiplier = Number(spinData.multiplier) || 0;
+      const finalMultiplier = Number(spinData.multiplier) || 2;
       const finalWin = Number(spinData.winAmount) || 0;
 
-      // Reel animation ka wait karo
-      await new Promise((resolve) => setTimeout(resolve, duration));
+      // Ensure minimum visual animation time
+      const elapsed = Date.now() - spinStartTime;
+      const remainingTime = Math.max(0, minSpinDuration - elapsed);
+      await new Promise((resolve) => setTimeout(resolve, remainingTime));
 
-      clearInterval(animationTimer);
+      // Stop spinning
+      if (animationTimerRef.current) {
+        clearInterval(animationTimerRef.current);
+        animationTimerRef.current = null;
+      }
+
       setReels(finalReels);
-      setMultiplier(finalMultiplier > 0 ? `${finalMultiplier}x` : "2x");
+      setMultiplier(`${finalMultiplier}x`);
       setWinAmount(finalWin);
 
-      // 2. Server se aaye final balance ko update karo
+      // Sync wallet with server final balance
       if (typeof data.balance === "number") {
         setBalance(data.balance);
       } else if (typeof fetchBalance === "function") {
         await fetchBalance();
       }
     } catch (error) {
-      clearInterval(animationTimer);
+      if (animationTimerRef.current) {
+        clearInterval(animationTimerRef.current);
+        animationTimerRef.current = null;
+      }
       console.error("Fortune Gems spin error:", error);
 
       setReels(INITIAL_REELS);
       setWinAmount(0);
 
-      showError(
-        "Spin Failed",
-        error?.message || "Unable to connect to game server."
-      );
+      const msg = error.name === "AbortError" 
+        ? "Server response timed out. Please retry." 
+        : error?.message || "Unable to connect to game server.";
+
+      showError("Spin Failed", msg);
     } finally {
+      if (animationTimerRef.current) {
+        clearInterval(animationTimerRef.current);
+        animationTimerRef.current = null;
+      }
       setIsSpinning(false);
     }
   };
@@ -290,9 +318,7 @@ const FortuneGems = () => {
                 >
                   {reel.map((symbol, row) => (
                     <div
-                      className={`fg-cell ${
-                        row === 1 ? "payline-cell" : ""
-                      }`}
+                      className={`fg-cell ${row === 1 ? "payline-cell" : ""}`}
                       key={row}
                     >
                       <div className="fg-cell-inner">
@@ -453,10 +479,7 @@ const FortuneGems = () => {
 
         {/* PAYTABLE MODAL */}
         {showPaytable && (
-          <div
-            className="fg-modal-bg"
-            onClick={() => setShowPaytable(false)}
-          >
+          <div className="fg-modal-bg" onClick={() => setShowPaytable(false)}>
             <div className="fg-modal" onClick={(e) => e.stopPropagation()}>
               <button
                 className="fg-modal-close"
@@ -465,10 +488,7 @@ const FortuneGems = () => {
                 ×
               </button>
               <h2>PAYTABLE</h2>
-              <p>
-                Matching symbols on the highlighted centre payline can produce
-                a result.
-              </p>
+              <p>Matching symbols on the highlighted centre payline produce a win.</p>
               <div className="fg-paytable-grid">
                 <span>🔴 GEM</span>
                 <b>36x</b>
@@ -504,9 +524,9 @@ const FortuneGems = () => {
                 ×
               </button>
               <h2>GAME OPTIONS</h2>
-              <p>Use the bet controls to select your demo stake.</p>
+              <p>Use the bet controls to select your stake.</p>
               <p>Press SPIN to start the reel animation.</p>
-              <p>Turbo changes only the visual animation speed.</p>
+              <p>Turbo changes visual animation speed.</p>
               <p>The game result is generated server-side.</p>
             </div>
           </div>
