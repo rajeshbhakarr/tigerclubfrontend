@@ -347,7 +347,7 @@ const WinGo = () => {
           ←
         </button>
         <img src="src/assets/inder.png" className="logg" alt="logo" />
-        <p className="indd">Tiger ClUB</p>
+        <p className="indd">RAJA WIN  </p>
         <div className="bal">
           <div>
             <p className="wall">WALLET BALANCE</p>
