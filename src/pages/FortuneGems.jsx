@@ -65,7 +65,6 @@ const createRequestId = () => {
 const convertBackendReels = (backendReels) => {
   if (!Array.isArray(backendReels)) return makeReels();
 
-  // Transpose row array to column layout for UI component
   const grid = [[], [], []];
   for (let r = 0; r < 3; r++) {
     for (let c = 0; c < 3; c++) {
@@ -99,7 +98,13 @@ const FortuneGems = () => {
   }, []);
 
   const changeBet = (value) => {
-    const next = Math.min(1000, Math.max(1, Number(value) || 1));
+    if (value === "") {
+      setBetAmount("");
+      return;
+    }
+    const num = Number(value);
+    if (isNaN(num)) return;
+    const next = Math.min(100000, Math.max(1, num));
     setBetAmount(next);
   };
 
@@ -132,10 +137,10 @@ const FortuneGems = () => {
     if (isSpinning) return;
 
     const currentBalance = Number(balance || 0);
-    const amount = Number(betAmount);
+    const amount = Number(betAmount || 0);
 
     if (!Number.isFinite(amount) || amount < 1) {
-      showError("Invalid Bet", "Please select a valid bet amount.");
+      showError("Invalid Bet", "Please enter a valid bet amount (Min ₹1).");
       return;
     }
 
@@ -167,7 +172,7 @@ const FortuneGems = () => {
     try {
       const requestId = createRequestId();
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second strict timeout
+      const timeoutId = setTimeout(() => controller.abort(), 8000);
 
       const response = await fetch(`${API_BASE}/api/fortune-gems/spin`, {
         method: "POST",
@@ -206,12 +211,10 @@ const FortuneGems = () => {
       const finalMultiplier = Number(spinData.multiplier) || 2;
       const finalWin = Number(spinData.winAmount) || 0;
 
-      // Ensure minimum visual animation time
       const elapsed = Date.now() - spinStartTime;
       const remainingTime = Math.max(0, minSpinDuration - elapsed);
       await new Promise((resolve) => setTimeout(resolve, remainingTime));
 
-      // Stop spinning
       if (animationTimerRef.current) {
         clearInterval(animationTimerRef.current);
         animationTimerRef.current = null;
@@ -221,7 +224,6 @@ const FortuneGems = () => {
       setMultiplier(`${finalMultiplier}x`);
       setWinAmount(finalWin);
 
-      // Sync wallet with server final balance
       if (typeof data.balance === "number") {
         setBalance(data.balance);
       } else if (typeof fetchBalance === "function") {
@@ -377,30 +379,54 @@ const FortuneGems = () => {
             <button
               type="button"
               disabled={isSpinning}
-              onClick={() => changeBet(betAmount - 1)}
+              onClick={() => changeBet(Math.max(1, (Number(betAmount) || 1) - 10))}
             >
               −
             </button>
 
-            <div className="fg-bet-value">₹{betAmount}</div>
+            {/* Editable Input Box */}
+            <div className="fg-bet-value" style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}>
+              <span style={{ fontSize: "16px", marginRight: "2px" }}>₹</span>
+              <input
+                type="number"
+                disabled={isSpinning}
+                value={betAmount}
+                onChange={(e) => changeBet(e.target.value)}
+                onBlur={() => {
+                  if (!betAmount || Number(betAmount) < 1) setBetAmount(10);
+                }}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  outline: "none",
+                  color: "#ffd700",
+                  fontSize: "18px",
+                  fontWeight: "bold",
+                  width: "90px",
+                  textAlign: "center",
+                  fontFamily: "inherit",
+                }}
+              />
+            </div>
 
             <button
               type="button"
               disabled={isSpinning}
-              onClick={() => changeBet(betAmount + 1)}
+              onClick={() => changeBet((Number(betAmount) || 0) + 10)}
             >
               +
             </button>
           </div>
 
+          {/* Quick Amount Select Buttons */}
           <div className="fg-quick">
             {[3, 10, 50, 100].map((amount) => (
               <button
                 type="button"
                 key={amount}
                 disabled={isSpinning}
-                className={betAmount === amount ? "selected" : ""}
-                onClick={() => changeBet(amount)}
+                className={Number(betAmount) === amount ? "selected" : ""}
+                onClick={() => setBetAmount(amount)}
               >
                 ₹{amount}
               </button>
