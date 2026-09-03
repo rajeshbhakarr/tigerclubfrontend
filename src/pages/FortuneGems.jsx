@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
 import Swal from "sweetalert2";
-import "..styles/fortuneGems.css";
+import "../styles/fortuneGems.css";
 
 // 🔥 ADD THIS IMPORT ONLY
 import * as fortuneGemsApi from "../api/fortuneGemsApi";
