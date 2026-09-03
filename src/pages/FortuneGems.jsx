@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useWallet } from "../context/WalletContext";
 import Swal from "sweetalert2";
-import "../styles/fortuneGems.css";
+import "..styles/fortuneGems.css";
 
-// 🔥 ADD THIS IMPORT
+// 🔥 ADD THIS IMPORT ONLY
 import * as fortuneGemsApi from "../api/fortuneGemsApi";
 
 const API_URL = "https://tigerclubbackend.onrender.com";
@@ -147,37 +147,34 @@ const FortuneGems = () => {
     setIsSpinning(true);
     setWinAmount(0);
 
-    // 🔥 STEP 1: DEDUCT BET FROM WALLET
+    // 🔥 CHANGE 1: DEDUCT BET
     try {
-      const betResponse = await fortuneGemsApi.placeBet({ betAmount });
-      console.log("✅ Bet placed:", betResponse);
+      await fortuneGemsApi.placeBet({ betAmount });
       await fetchBalance();
     } catch (err) {
       Swal.fire({
         icon: "error",
         title: "Bet Failed",
-        text: err.response?.data?.message || "Could not place bet",
+        text: err.response?.data?.message || "Invalid spin data",
         width: "280px",
       });
-      console.error("❌ Bet error:", err);
       setIsSpinning(false);
       return;
     }
 
-    // Spin animation
     const spinDuration = turboMode ? 500 : 1000;
     const startTime = Date.now();
 
-const spinInterval = setInterval(async () => {      const elapsed = Date.now() - startTime;
+    const spinInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
 
       setReels([generateReels(), generateReels(), generateReels()]);
 
       if (elapsed >= spinDuration) {
         clearInterval(spinInterval);
 
-        // Final reels
         let finalReels;
-        if (Math.random() < 0.20) {
+        if (Math.random() < 0.2) {
           finalReels = [generateLosingReels(), generateLosingReels(), generateLosingReels()];
         } else {
           finalReels = [generateReels(), generateReels(), generateReels()];
@@ -185,12 +182,10 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
 
         setReels(finalReels);
 
-        // Calculate result
         const result = calculateWin(finalReels[0], betAmount);
         setMultiplier(result.multiplier);
         setWinAmount(result.winAmount);
 
-        // Add to history
         const newBet = {
           bet: betAmount,
           win: result.winAmount,
@@ -200,19 +195,12 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
         setHistory([newBet, ...history.slice(0, 9)]);
 
         if (result.result === "WIN") {
-          // 🔥 STEP 2: SAVE WIN + ADD TO WALLET
-          try {
-            const roundId = Date.now().toString();
-            const spinResponse = await fortuneGemsApi.spinReels({
-              roundId,
-              reels: finalReels[0],
-              winAmount: result.winAmount,
-            });
-            console.log("✅ Win saved:", spinResponse);
-            await fetchBalance();
-          } catch (err) {
-            console.error("❌ Win save error:", err);
-          }
+          // 🔥 CHANGE 2: ADD WIN
+          fortuneGemsApi.spinReels({
+            roundId: Date.now().toString(),
+            reels: finalReels[0],
+            winAmount: result.winAmount,
+          }).then(() => fetchBalance()).catch(err => console.error(err));
 
           Swal.fire({
             icon: "success",
@@ -233,7 +221,6 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
 
         setIsSpinning(false);
 
-        // Auto spin continue
         if (isAutoSpinning && autoSpinCount > 0) {
           setAutoSpinCount(autoSpinCount - 1);
           setTimeout(spinGame, 500);
@@ -254,20 +241,17 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
   return (
     <div className="fortune-gems-wrapper">
       <div className="fortune-gems-container">
-        {/* HEADER */}
         <div className="fg-header">
           <span className="fg-back" onClick={() => navigate(-1)}>‹</span>
           <h1>Fortune Gems</h1>
           <span className="fg-welcome">Welcome</span>
         </div>
 
-        {/* GAME AREA */}
         <div className="fg-game-area">
           <div className="fg-background">
             <div className="temple-bg">🏰</div>
           </div>
 
-          {/* REELS */}
           <div className="fg-reels-container">
             {reels.map((reel, reelIdx) => (
               <div key={reelIdx} className="fg-reel">
@@ -290,23 +274,19 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
               </div>
             ))}
 
-            {/* 4th Reel - Multiplier */}
             <div className="fg-reel-special">
               <div className="fg-symbol-special">{multiplier}x</div>
             </div>
           </div>
 
-          {/* WIN DISPLAY */}
           <div className="fg-win-display">
             <span className="fg-win-label">WIN</span>
             <span className="fg-win-amount">₹{winAmount.toFixed(2)}</span>
           </div>
 
-          {/* BALANCE */}
           <div className="fg-balance">Balance: ₹{balance.toFixed(2)}</div>
         </div>
 
-        {/* BET SECTION */}
         <div className="fg-bet-section">
           <div className="fg-bet-label">Bet Amount</div>
           <div className="fg-bet-controls">
@@ -345,7 +325,6 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
           </div>
         </div>
 
-        {/* CONTROLS */}
         <div className="fg-controls">
           <button className="fg-control-btn" onClick={() => setTurboMode(!turboMode)}>
             ⚡
@@ -358,7 +337,6 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
           <button className="fg-control-btn">📂</button>
         </div>
 
-        {/* SPIN BUTTON */}
         <button
           className={`fg-spin-btn ${isSpinning ? "disabled" : ""}`}
           onClick={spinGame}
@@ -367,7 +345,6 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
           {isSpinning ? "SPINNING..." : "SPIN"}
         </button>
 
-        {/* AUTO SPIN */}
         <div className="fg-autospin-section">
           <div className="fg-autospin-input">
             <label>Auto Spin</label>
@@ -388,7 +365,6 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
           </button>
         </div>
 
-        {/* HISTORY */}
         <div className="fg-history-section">
           <h3>Recent Spins</h3>
           <div className="fg-history-list">
@@ -404,7 +380,6 @@ const spinInterval = setInterval(async () => {      const elapsed = Date.now() -
           </div>
         </div>
 
-        {/* RULES MODAL */}
         {showRules && (
           <div className="fg-modal-overlay" onClick={() => setShowRules(false)}>
             <div className="fg-modal" onClick={(e) => e.stopPropagation()}>
