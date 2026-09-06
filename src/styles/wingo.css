@@ -1391,9 +1391,9 @@ font-weight: 600;
   font-size: 31px !important;
   font-weight: 900 !important;
 
-  color: #e58a00 !important;
+  color: #70272d !important;
   background: none !important;
-  -webkit-text-fill-color: #e58a00 !important;
+  -webkit-text-fill-color: #611824 !important;
 
   filter: drop-shadow(0 2px 3px rgba(180, 110, 0, 0.2)) !important;
 }
@@ -1427,7 +1427,7 @@ font-weight: 600;
   font-weight: 800 !important;
 
   color: #fff !important;
-  background: #e58a00 !important;
+  background: #946d11 !important;
 
   box-shadow: 0 5px 12px rgba(229, 138, 0, 0.28) !important;
 }
@@ -1452,7 +1452,7 @@ font-weight: 600;
   font-weight: 800 !important;
 
   color: #fff !important;
-  background: #e58a00 !important;
+  background: #491810 !important;
 
   box-shadow: 0 5px 12px rgba(229, 138, 0, 0.28) !important;
 }
