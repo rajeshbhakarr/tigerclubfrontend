@@ -6,24 +6,109 @@ function AddBank() {
   const navigate = useNavigate();
 
   const [bankName, setBankName] = useState("");
-  const [name, setName] = useState("Real Name ");
+const [name, setName] = useState("");
   const [account, setAccount] = useState("");
   const [phone, setPhone] = useState("");
   const [ifsc, setIfsc] = useState("");
 
   // 🏦 BANK LIST
-  const banks = [
-    "State Bank of India",
-    "HDFC Bank",
-    "ICICI Bank",
-    "Axis Bank",
-    "Punjab National Bank",
-    "Bank of Baroda",
-    "Kotak Mahindra Bank",
-    "Yes Bank",
-    "Union Bank",
-    "Canara Bank"
-  ];
+  // 🏦 ALL MAJOR BANKS IN INDIA
+const banks = [
+  // A
+  "Airtel Payments Bank"
+  "AU Small Finance Bank",
+  "Axis Bank",
+
+  // B
+  "Bandhan Bank",
+  "Bank of Baroda",
+  "Bank of India",
+  "Bank of Maharashtra",
+
+  // C
+  "Canara Bank",
+  "Central Bank of India",
+  "City Union Bank",
+  "CSB Bank",
+
+  // D
+  "DCB Bank",
+  "Dhanlaxmi Bank",
+
+  // E
+  "Equitas Small Finance Bank",
+  "ESAF Small Finance Bank",
+
+  // F
+  "Federal Bank",
+  "Fino Payments Bank",
+
+  // H
+  "HDFC Bank",
+
+  // I
+  "ICICI Bank",
+  "IDBI Bank",
+  "IDFC FIRST Bank",
+  "Indian Bank",
+  "Indian Overseas Bank",
+  "India Post Payments Bank",
+  "IndusInd Bank",
+
+  // J
+  "Jammu & Kashmir Bank",
+  "Jana Small Finance Bank",
+  "JIO Payments Bank"
+
+  // K
+  "Karnataka Bank",
+  "Karur Vysya Bank",
+  "Kotak Mahindra Bank",
+
+  // N
+  "Nainital Bank",
+  "NSDL Payments Bank",
+
+  // P
+  "Punjab & Sind Bank",
+  "Punjab National Bank",
+  "Paytm Payments Bank",
+
+  // R
+  "RBL Bank",
+
+  // S
+  "Shivalik Small Finance Bank",
+  "South Indian Bank",
+  "State Bank of India",
+  "Suryoday Small Finance Bank",
+
+  // T
+  "Tamilnad Mercantile Bank",
+
+  // U
+  "UCO Bank",
+  "Ujjivan Small Finance Bank",
+  "Union Bank of India",
+  "Unity Small Finance Bank",
+  "Utkarsh Small Finance Bank",
+
+  // Y
+  "Yes Bank",
+
+  // Payments
+  
+];
+
+
+
+const isFormComplete =
+  bankName.trim() !== "" &&
+  name.trim() !== "" &&
+  account.trim() !== "" &&
+  phone.trim() !== "" &&
+  ifsc.trim() !== "";
+
 
  const handleSave = async () => {
   if (!bankName || !name || !account || !phone || !ifsc) {
@@ -97,8 +182,11 @@ function AddBank() {
 
         {/* NAME */}
         <label>Full recipient's name</label>
-        <input value={name} readOnly />
-
+<input
+  placeholder="Enter real name"
+  value={name}
+  onChange={(e) => setName(e.target.value)}
+/>
         {/* ACCOUNT */}
         <label>Bank account number</label>
         <input
@@ -126,9 +214,13 @@ function AddBank() {
       </div>
 
       {/* SAVE */}
-      <button className="ab-save" onClick={handleSave}>
-        Save
-      </button>
+      <button
+  className={`ab-save ${isFormComplete ? "ab-save-active" : ""}`}
+  onClick={handleSave}
+  disabled={!isFormComplete}
+>
+  Save
+</button>
 
     </div>
   );

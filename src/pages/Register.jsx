@@ -76,7 +76,7 @@ function Register() {
       <div className="register-header">
         <div className="top-row">
           <span className="back" onClick={() => navigate("/loginpage")}>←</span>
-          <h2>Tigerclub</h2>
+          <h2>RAJA WIN</h2>
           <span className="lang">EN</span>
         </div>
         <p>Please register by your phone number</p>

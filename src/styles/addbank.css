@@ -93,3 +93,41 @@
     border-radius: 0 0 20px 20px;
   }
 }
+
+
+
+
+
+/* SAVE BUTTON - DEFAULT */
+.ab-save {
+  background: #cfd0d5;
+  color: white;
+  border: none;
+  transition: all 0.3s ease;
+  cursor: not-allowed;
+}
+
+/* SAVE BUTTON - ALL DETAILS FILLED */
+.ab-save.ab-save-active {
+  background: linear-gradient(135deg, #ff9800, #ffcc00);
+  color: #fff;
+  cursor: pointer;
+  box-shadow:
+    0 0 10px rgba(255, 174, 0, 0.7),
+    0 0 25px rgba(255, 174, 0, 0.45);
+  animation: saveGlow 1.5s infinite alternate;
+}
+
+@keyframes saveGlow {
+  from {
+    box-shadow:
+      0 0 8px rgba(255, 174, 0, 0.6),
+      0 0 18px rgba(255, 174, 0, 0.35);
+  }
+
+  to {
+    box-shadow:
+      0 0 16px rgba(255, 174, 0, 0.9),
+      0 0 32px rgba(255, 174, 0, 0.6);
+  }
+}
