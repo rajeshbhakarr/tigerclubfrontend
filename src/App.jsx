@@ -73,7 +73,7 @@ function ProtectedAdminRoute({ children }) {
   const uid = localStorage.getItem("uid");
 
   // ✅ Sirf admin UID allow
-  if (uid !== "100000" && uid !== "100001") {
+ if (uid !== "100001") {
   return <Navigate to="/" replace />;
 }
 
