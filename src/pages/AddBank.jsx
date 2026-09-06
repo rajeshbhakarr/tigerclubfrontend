@@ -15,9 +15,10 @@ const [name, setName] = useState("");
   // 🏦 ALL MAJOR BANKS IN INDIA
 const banks = [
   // A
-  "Airtel Payments Bank"
-  "AU Small Finance Bank",
-  "Axis Bank",
+ 
+"Airtel Payments Bank",
+"AU Small Finance Bank",
+"Axis Bank",
 
   // B
   "Bandhan Bank",
