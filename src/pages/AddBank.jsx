@@ -15,10 +15,9 @@ const [name, setName] = useState("");
   // 🏦 ALL MAJOR BANKS IN INDIA
 const banks = [
   // A
- 
-"Airtel Payments Bank",
-"AU Small Finance Bank",
-"Axis Bank",
+  "Airtel Payments Bank",
+  "AU Small Finance Bank",
+  "Axis Bank",
 
   // B
   "Bandhan Bank",
@@ -59,7 +58,6 @@ const banks = [
   // J
   "Jammu & Kashmir Bank",
   "Jana Small Finance Bank",
-  "JIO Payments Bank"
 
   // K
   "Karnataka Bank",
@@ -71,9 +69,9 @@ const banks = [
   "NSDL Payments Bank",
 
   // P
+  "Paytm Payments Bank",
   "Punjab & Sind Bank",
   "Punjab National Bank",
-  "Paytm Payments Bank",
 
   // R
   "RBL Bank",
@@ -95,12 +93,8 @@ const banks = [
   "Utkarsh Small Finance Bank",
 
   // Y
-  "Yes Bank",
-
-  // Payments
-  
+  "Yes Bank"
 ];
-
 
 
 const isFormComplete =
