@@ -517,7 +517,7 @@ const WinGo = () => {
       </div>
 
       {/* Mode Indicator Badge */}
-      <div style={{ margin: "10px 0 0 12px" }}>
+      {/* <div style={{ margin: "10px 0 0 12px" }}>
         <span
           style={{
             background: "#e4e6ea",
@@ -531,7 +531,7 @@ const WinGo = () => {
         >
           {gameMode === "1min" ? "1 MIN HISTORY" : "30 SEC HISTORY"}
         </span>
-      </div>
+      </div> */}
 
       <br />
 

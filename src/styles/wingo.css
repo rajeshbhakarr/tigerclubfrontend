@@ -1333,31 +1333,30 @@ font-weight: 600;
    Deposit = Right
 ========================================= */
 
+/* ===== RAJA WIN WALLET - SINGLE GOLD THEME ===== */
+
 .bal {
   width: calc(100% - 20px) !important;
   height: 130px !important;
   left: 10px !important;
   top: 70px !important;
-  position: absolute !important;
+
   border-radius: 18px !important;
-  background: linear-gradient(135deg, #ffffff 0%, #fff8ee 100%) !important;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+  background: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(180, 110, 0, 0.18) !important;
 }
 
-/* Center balance section */
+/* Center wallet content */
 .bal > div:first-child {
   position: absolute !important;
   left: 50% !important;
   top: 0 !important;
-  width: 170px !important;
+  width: 180px !important;
   height: 100% !important;
   transform: translateX(-50%) !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
 }
 
-/* WALLET BALANCE - directly above amount */
+/* WALLET BALANCE */
 .bal .wall {
   position: absolute !important;
   top: 18px !important;
@@ -1365,63 +1364,47 @@ font-weight: 600;
   transform: translateX(-50%) !important;
 
   margin: 0 !important;
-  padding: 3px 8px !important;
+  padding: 4px 12px !important;
 
+  white-space: nowrap !important;
   font-family: Arial, sans-serif !important;
   font-size: 11px !important;
   font-weight: 800 !important;
-  white-space: nowrap !important;
 
   border: none !important;
   border-radius: 20px !important;
 
-  color: #7b2cff !important;
-  background: linear-gradient(90deg, #ffe259, #ffa751) !important;
-  box-shadow: 0 3px 10px rgba(255, 167, 81, 0.35) !important;
+  color: #8a4b00 !important;
+  background: #ffe0a3 !important;
 }
 
-/* Big colourful balance */
+/* BIG BALANCE - ONE COLOUR */
 .bal .bl {
   position: absolute !important;
-  top: 48px !important;
+  top: 50px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
 
   white-space: nowrap !important;
+
+  font-family: Arial, sans-serif !important;
   font-size: 31px !important;
   font-weight: 900 !important;
-  font-family: Arial, sans-serif !important;
 
-  background: linear-gradient(
-    90deg,
-    #ff4d4d,
-    #ff8a00,
-    #8e44ff,
-    #00a8ff
-  ) !important;
+  color: #e58a00 !important;
+  background: none !important;
+  -webkit-text-fill-color: #e58a00 !important;
 
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-
-  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15)) !important;
+  filter: drop-shadow(0 2px 3px rgba(180, 110, 0, 0.2)) !important;
 }
 
 /* Refresh icon */
 .bal .vv {
-  font-size: 17px !important;
-  -webkit-text-fill-color: initial !important;
-  background: none !important;
-  filter: none !important;
   margin-left: 4px !important;
-}
-
-/* Button container fills card */
-.bal .btns {
-  position: absolute !important;
-  inset: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+  font-size: 17px !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  filter: none !important;
 }
 
 /* WITHDRAW - LEFT */
@@ -1444,9 +1427,9 @@ font-weight: 600;
   font-weight: 800 !important;
 
   color: #fff !important;
-  background: linear-gradient(135deg, #ff9f00, #e87500) !important;
+  background: #e58a00 !important;
 
-  box-shadow: 0 4px 10px rgba(232, 117, 0, 0.3) !important;
+  box-shadow: 0 5px 12px rgba(229, 138, 0, 0.28) !important;
 }
 
 /* DEPOSIT - RIGHT */
@@ -1469,20 +1452,19 @@ font-weight: 600;
   font-weight: 800 !important;
 
   color: #fff !important;
-  background: linear-gradient(135deg, #ff5252, #e53935) !important;
+  background: #e58a00 !important;
 
-  box-shadow: 0 4px 10px rgba(229, 57, 53, 0.3) !important;
+  box-shadow: 0 5px 12px rgba(229, 138, 0, 0.28) !important;
 }
 
-/* Button press effect */
+/* Button press */
 .bal .rrrr:active,
 .bal .rrrrr:active {
   transform: scale(0.94);
 }
 
-/* Small mobile screens */
+/* Small screen */
 @media (max-width: 360px) {
-
   .bal .rrrr,
   .bal .rrrrr {
     width: 72px !important;
@@ -1500,9 +1482,5 @@ font-weight: 600;
 
   .bal .bl {
     font-size: 27px !important;
-  }
-
-  .bal .wall {
-    font-size: 10px !important;
   }
 }
