@@ -20,7 +20,7 @@ const Home = () => {
   const { balance, user } = useWallet();
   const navigate = useNavigate();
   const openGame = (path) => {
-    if ((user?.totalDeposit || 0) < 100) {
+    if ((user?.totalDeposit || 0) < 0) {
       Swal.fire({
         icon: "warning",
         title: "Deposit Required",
