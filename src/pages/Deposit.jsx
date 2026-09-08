@@ -66,13 +66,12 @@ const Deposit = () => {
         <p className="select">select channel </p>
 
         <div className="slt">
-          {" "}
-          <span>Phonepe_QR Balance:100-50k</span>{" "}
-        </div>
-        <div className="sltt">
-          {" "}
-          <span>upi Phonepe_QR Balance:100-100k </span>{" "}
-        </div>
+  <span>Paytm X QR</span>
+</div>
+
+<div className="sltt">
+  <span>UPI X QR</span>
+</div>
       </div>
 
       <div className="amm">

@@ -1,4 +1,3 @@
-/* Reset and base */
 * {
   margin: 0;
   padding: 0;
@@ -6,192 +5,236 @@
 }
 
 body {
-  background: #ebeaea;
   margin: 0;
   padding: 0 !important;
   min-height: 100vh;
+  background: #2f2923;
+  font-family: Arial, sans-serif;
 }
 
-/* Main container */
 .deppage {
-  max-width: 420px;
   width: 100%;
-  margin: 0 auto;
-  background: #ebeaea;
+  max-width: 420px;
   min-height: 100vh;
-  font-family: sans-serif;
+  margin: 0 auto;
+  background: #f5f5f5;
+  padding-bottom: 25px;
 }
 
-/* Header bar */
+/* ================= HEADER ================= */
+
 .depp {
-  background-color: rgb(173, 162, 136);
-  width: 100%;
+  height: 66px;
+  background: #d8ccb2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  padding: 12px 0;
 }
 
 .dep {
-  text-align: center;
-  margin: 0;
-  font-size: 24px;
+  font-size: 26px;
   font-weight: 500;
+  color: #111;
 }
 
-/* BACK BUTTON */
 .back-btn {
   position: absolute;
-  left: 16px;
+  left: 14px;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 24px;
+  font-size: 28px;
   cursor: pointer;
-  background: none;
-  border: none;
-  padding: 8px;
+  color: #222;
 }
 
-/* Channel selection box */
+/* ================= CHANNEL BOX ================= */
+
 .chnl {
-  background-color: white;
-  margin: 12px 12px 0 12px;
-  border-radius: 12px;
-  padding: 12px;
+  background: #fff;
+  margin: 12px;
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
 }
 
 .select {
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #333;
-}
-
-/* Channel buttons container */
-.chnl {
-  display: flex;
-  flex-direction: column;
-}
-
-/* Channel buttons - flex based layout */
-.channel-buttons {
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.slt, .sltt {
-  flex: 1;
-  min-width: 140px;
-  background-color: rgb(232, 73, 73);
-  border-radius: 10px;
-  cursor: pointer;
-  padding: 12px;
-}
-
-.slt span, .sltt span {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 14px;
+  font-size: 17px;
   font-weight: 700;
-  color: white;
-  display: block;
+  color: #171717;
+  margin-bottom: 12px;
+}
+
+/* TWO PAYMENT CARDS */
+
+.slt,
+.sltt {
+  width: 100%;
+  height: 105px;
+  border-radius: 13px;
+  margin-bottom: 10px;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff;
+  border: 2px solid #dedede;
+
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+
+  transition: 0.2s ease;
+}
+
+.slt span,
+.sltt span {
+  font-family: Arial, sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  color: #555;
   text-align: center;
 }
 
-/* Amount selection box */
+/* Paytm card */
+
+.slt {
+  border-color: #e7e7e7;
+  background: linear-gradient(180deg, #fff, #f8f8f8);
+}
+
+.slt span::before {
+  content: "PAYTM";
+  display: block;
+  font-size: 25px;
+  font-weight: 800;
+  color: #1595e7;
+  margin-bottom: 7px;
+}
+
+/* UPI card */
+
+.sltt {
+  margin-bottom: 0;
+  background: linear-gradient(180deg, #fff, #f8f8f8);
+}
+
+.sltt span::before {
+  content: "UPI";
+  display: block;
+  font-size: 27px;
+  font-weight: 800;
+  color: #555;
+  margin-bottom: 7px;
+}
+
+/* ================= AMOUNT BOX ================= */
+
 .amm {
-  background-color: #ffffff;
-  margin: 12px 12px 0 12px;
-  border-radius: 12px;
+  background: #fff;
+  margin: 12px;
+  border-radius: 14px;
   padding: 16px;
   position: relative;
-  padding-bottom: 80px; /* Space for button */
+  padding-bottom: 82px;
 }
 
 .amm > span:first-child {
-  font-family: 'Times New Roman', Times, serif;
-  font-size: 18px;
-  font-weight: 600;
   display: block;
-  margin-bottom: 16px;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #171717;
+  margin-bottom: 15px;
 }
 
-/* Amount rows - grid layout */
-.amount-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-bottom: 80px;
-}
+/* Amount rows */
 
-.ammnt, .ammntt, .ammnttt {
+.ammnt,
+.ammntt,
+.ammnttt {
   display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 
 .rs {
   flex: 1;
-  min-width: 100px;
-  background-color: #eee;
-  height: 44px;
-  border: 1px solid gray;
-  border-radius: 8px;
-  cursor: pointer;
+  height: 45px;
+
+  background: #f1f1f1;
+  border: 1px solid #c9c9c9;
+  border-radius: 9px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s ease;
+
+  cursor: pointer;
+  transition: 0.15s ease;
 }
 
-.rs span {
-  font-weight: 500;
+.rsspn {
   font-size: 14px;
+  font-weight: 600;
+  color: #222;
 }
 
 .rs.active {
-  background-color: #ff6a6a;
-  color: white;
-  border-color: #ff6a6a;
+  background: #e8a600;
+  border-color: #e8a600;
 }
 
-/* Custom input wrapper */
-.custom-input-wrapper {
-  margin-top: 16px;
-  width: 100%;
+.rs.active .rsspn {
+  color: #fff;
 }
+
+/* ================= INPUT ================= */
 
 .price-wrapper {
+  width: 100%;
+  height: 54px;
+  margin-top: 12px;
+
   display: flex;
   align-items: center;
-  background-color: #e2e0e0;
-  border-radius: 50px;
-  padding: 8px 16px;
-  width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  padding: 0 13px;
+
+  background: #e8e8e8;
+  border-radius: 30px;
 }
 
 .currency-icon {
-  color: #ff5e5e;
-  font-size: 22px;
-  font-weight: bold;
-  margin-right: 12px;
+  font-size: 23px;
+  font-weight: 700;
+  color: #e33;
+  margin-right: 10px;
 }
 
 .vertical-divider {
   width: 1px;
   height: 28px;
-  background-color: #d1d5db;
-  margin-right: 16px;
+  background: #ccc;
+  margin-right: 12px;
 }
 
 .amount-input {
+  flex: 1;
+  width: 100%;
+
   border: none;
   outline: none;
+  background: transparent;
+
   font-size: 18px;
   font-weight: 600;
-  color: #ff5e5e;
-  flex-grow: 1;
-  background: transparent;
+  color: #333;
+}
+
+.amount-input::placeholder {
+  color: #999;
 }
 
 .amount-input::-webkit-outer-spin-button,
@@ -201,146 +244,137 @@ body {
 }
 
 .clear-btn {
-  background: none;
-  border: 1px solid #ccc;
+  width: 27px;
+  height: 27px;
+
   border-radius: 50%;
-  width: 24px;
-  height: 24px;
+  border: 1px solid #ccc;
+  background: #eee;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   cursor: pointer;
-  color: #888;
-  padding: 0;
-  margin-left: 10px;
 }
 
 .close-icon {
-  font-size: 18px;
-  line-height: 1;
+  font-size: 19px;
+  color: #777;
 }
 
-/* Deposit button - fixed positioning inside .amm */
+/* ================= DEPOSIT BUTTON ================= */
+
 .depositt {
-  width: calc(100% - 32px);
-  max-width: 200px;
-  height: 44px;
-  border-radius: 22px;
-  border: 1px solid #000;
-  background: linear-gradient(to bottom, #d4a017 0%, #b8860b 100%);
-  color: #000;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: inset 0 1px 3px rgba(255,255,255,0.3), 0 2px 5px rgba(0,0,0,0.2);
-  margin: 20px auto 0 auto;
   position: absolute;
-  bottom: 20px;
+  bottom: 18px;
   left: 50%;
   transform: translateX(-50%);
+
+  width: calc(100% - 32px);
+  height: 45px;
+
+  border-radius: 25px;
+  border: 1px solid #8c6500;
+
+  background: linear-gradient(
+    to bottom,
+    #f0bd22,
+    #d99a00
+  );
+
+  color: #111;
+  font-size: 16px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    inset 0 1px 2px rgba(255,255,255,.5),
+    0 3px 7px rgba(0,0,0,.18);
 }
 
-.depositt:hover {
-  background: linear-gradient(to bottom, #f09000 0%, #d4a017 100%);
-}
+/* ================= INSTRUCTIONS ================= */
 
-/* Instructions box */
 .instructions-box {
   background: #fff;
-  border-radius: 15px;
-  padding: 16px;
   margin: 12px;
+  padding: 16px;
+  border-radius: 14px;
 }
 
 .inst-title {
-  font-size: 16px;
-  font-weight: 600;
   display: flex;
   align-items: center;
   gap: 8px;
-  margin-bottom: 12px;
-}
 
-.inst-icon {
-  color: red;
-  font-size: 18px;
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
 .inst-content {
   border: 1px solid #eee;
-  border-radius: 12px;
+  border-radius: 11px;
   padding: 12px;
 }
 
 .inst-item {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  gap: 9px;
   margin-bottom: 10px;
+}
+
+.inst-item:last-child {
+  margin-bottom: 0;
 }
 
 .inst-item p {
   font-size: 13px;
-  color: #555;
   line-height: 1.4;
-  margin: 0;
+  color: #555;
 }
 
 .dot {
   width: 6px;
   height: 6px;
-  background: red;
-  border-radius: 50%;
+  min-width: 6px;
   margin-top: 6px;
-  flex-shrink: 0;
+  border-radius: 50%;
+  background: #e0a000;
 }
 
-/* Responsive for smaller screens */
-@media screen and (max-width: 480px) {
-  .rs {
-    min-width: 80px;
-    font-size: 12px;
-  }
-  
-  .ammnt, .ammntt, .ammnttt {
-    gap: 8px;
-  }
-  
-  .slt span, .sltt span {
-    font-size: 12px;
-  }
-  
-  .price-wrapper {
-    padding: 6px 12px;
-  }
-  
-  .currency-icon {
-    font-size: 18px;
-    margin-right: 8px;
-  }
-  
-  .vertical-divider {
-    margin-right: 10px;
-  }
-}
+/* ================= MOBILE ================= */
 
-@media screen and (max-width: 380px) {
+@media (max-width: 380px) {
+
+  .dep {
+    font-size: 24px;
+  }
+
+  .slt,
+  .sltt {
+    height: 95px;
+  }
+
+  .slt span,
+  .sltt span {
+    font-size: 15px;
+  }
+
+  .slt span::before {
+    font-size: 22px;
+  }
+
+  .sltt span::before {
+    font-size: 24px;
+  }
+
   .rs {
-    min-width: 70px;
-    height: 40px;
+    height: 42px;
   }
-  
-  .rs span {
-    font-size: 12px;
-  }
-  
-  .channel-buttons {
-    flex-direction: column;
-  }
-  
-  .slt, .sltt {
-    width: 100%;
+
+  .rsspn {
+    font-size: 13px;
   }
 }
