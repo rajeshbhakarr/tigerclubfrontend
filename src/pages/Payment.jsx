@@ -10,12 +10,25 @@ const Payment = () => {
   const navigate = useNavigate();
 
   const amount = location.state?.amount || 0;
-
-  // Deposit page se selected channel
   const selectedChannel = location.state?.channel || "upi";
 
   const [time, setTime] = useState(300);
   const [utr, setUtr] = useState("");
+
+  const isPaytm = selectedChannel === "paytm";
+
+  // Channel ke hisaab se demo details
+  const currentUPI = isPaytm
+    ? "rajawinn@nyes"
+    : "45rizwan@yesfam";
+
+  const currentQR = isPaytm
+    ? phonepeQR
+    : upiQR;
+
+  const currentQRName = isPaytm
+    ? "PhonePe QR"
+    : "UPI QR";
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,7 +40,7 @@ const Payment = () => {
 
   const copyUPI = () => {
     navigator.clipboard
-      .writeText("45rizwan@yesfam")
+      .writeText(currentUPI)
       .then(() => {
         alert("UPI Copied!");
       })
@@ -44,8 +57,6 @@ const Payment = () => {
 
     navigate("/payment-status");
   };
-
-  const isPaytm = selectedChannel === "paytm";
 
   return (
     <div className="pay-container">
@@ -72,12 +83,13 @@ const Payment = () => {
 
       </div>
 
+
       {/* ================= AMOUNT ================= */}
 
       <div className="pay-amount-card">
 
         <div className="amount-label">
-          💳 Payment Ammount
+          💳 Payment Amount
         </div>
 
         <div className="amount-value">
@@ -93,6 +105,7 @@ const Payment = () => {
         </div>
 
       </div>
+
 
       {/* ================= SELECTED METHOD ================= */}
 
@@ -110,6 +123,7 @@ const Payment = () => {
 
       </div>
 
+
       {/* ================= ONLY SELECTED QR ================= */}
 
       <div className="qr-card">
@@ -122,30 +136,25 @@ const Payment = () => {
 
           <img
             className="main-qr"
-            src={isPaytm ? phonepeQR : upiQR}
-            alt={
-              isPaytm
-                ? "PhonePe QR"
-                : "UPI QR"
-            }
+            src={currentQR}
+            alt={currentQRName}
           />
 
         </div>
 
         <div className="qr-caption">
-          {isPaytm
-            ? "PhonePe QR"
-            : "UPI QR"}
+          {currentQRName}
         </div>
 
       </div>
 
-      {/* ================= UPI DETAILS ================= */}
+
+      {/* ================= CHANNEL UPI ================= */}
 
       <div className="upi-box">
 
         <span>
-          45rizwan@yesfam
+          {currentUPI}
         </span>
 
         <button
@@ -156,6 +165,7 @@ const Payment = () => {
         </button>
 
       </div>
+
 
       {/* ================= TIMER ================= */}
 
@@ -171,6 +181,7 @@ const Payment = () => {
         </strong>
 
       </div>
+
 
       {/* ================= UTR ================= */}
 
@@ -192,6 +203,7 @@ const Payment = () => {
 
       </div>
 
+
       {/* ================= SUBMIT ================= */}
 
       <button
@@ -201,6 +213,7 @@ const Payment = () => {
       >
         Submit Payment
       </button>
+
 
       {/* ================= INFO ================= */}
 
