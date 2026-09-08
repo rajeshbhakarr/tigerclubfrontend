@@ -14,6 +14,39 @@ const ROUND_DURATION_1MIN = 60;
 const WINGO_API = `${API_URL}/api/wingo`;
 const WINGO_1MIN_API = `${API_URL}/api/wingo-1min`;
 
+// ── Web Audio Beep Sound Generator (Zero external files required) ──
+const playCountdownBeep = (secondsLeft) => {
+  try {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContext) return;
+    const ctx = new AudioContext();
+
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    if (secondsLeft === 1 || secondsLeft === 0) {
+      // Final long high beep (Tuuuun)
+      osc.frequency.setValueAtTime(1100, ctx.currentTime);
+      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.6);
+    } else {
+      // 5, 4, 3, 2 second short beep (Tu)
+      osc.frequency.setValueAtTime(750, ctx.currentTime);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      osc.start(ctx.currentTime);
+      osc.stop(ctx.currentTime + 0.15);
+    }
+  } catch (err) {
+    // Silent catch for browser audio policies
+  }
+};
+
 const WinGo = () => {
   const { balance, setBalance, fetchBalance } = useWallet();
   const navigate = useNavigate();
@@ -21,7 +54,6 @@ const WinGo = () => {
   // ── Game mode (30sec or 1min)
   const [gameMode, setGameMode] = useState("30sec");
 
-  // ── Correct API according to selected game
   const gameApi = gameMode === "1min" ? WINGO_1MIN_API : WINGO_API;
 
   const [period, setPeriod] = useState("Loading...");
@@ -39,6 +71,7 @@ const WinGo = () => {
 
   const clientIntervalRef = useRef(null);
   const lastPeriodRef = useRef(null);
+  const lastPlayedSecondRef = useRef(null); // Beep sound duplicate rokne ke liye
 
   // ── Win/Loss popup state
   const [popup, setPopup] = useState(null);
@@ -71,6 +104,7 @@ const WinGo = () => {
     setGameMode(mode);
     setPeriod("Loading...");
     lastPeriodRef.current = null;
+    lastPlayedSecondRef.current = null;
     setHistory([]);
     const defaultSec = mode === "1min" ? ROUND_DURATION_1MIN : ROUND_DURATION_30;
     setTimer(defaultSec);
@@ -95,7 +129,7 @@ const WinGo = () => {
     popupTimerRef.current = setTimeout(() => setPopup(null), 3000);
   }, []);
 
-  // ── Client-side countdown
+  // ── Client-side countdown with 5-second beep trigger ──
   const startClientCountdown = useCallback(
     (startTime) => {
       if (clientIntervalRef.current) {
@@ -110,6 +144,14 @@ const WinGo = () => {
         timerRef.current = remaining;
         setTimer(remaining);
         setLocked(remaining <= 5);
+
+        // ✅ LAST 5 SECONDS VOICE / BEEP SOUND LOGIC
+        if (remaining <= 5 && remaining >= 1) {
+          if (lastPlayedSecondRef.current !== remaining) {
+            lastPlayedSecondRef.current = remaining;
+            playCountdownBeep(remaining);
+          }
+        }
       }, 100);
     },
     [gameMode]
@@ -132,6 +174,7 @@ const WinGo = () => {
         if (isNewRound) {
           const prevPeriod = lastPeriodRef.current;
           lastPeriodRef.current = data.period;
+          lastPlayedSecondRef.current = null; // Reset sound per round
           setPeriod(data.period);
           setHistory(data.history || []);
 
@@ -331,9 +374,7 @@ const WinGo = () => {
 
             <div className="wg-popup-bonus">
               <span className="wg-bonus-label">💰 Bonus Added</span>
-              <span className="wg-bonus-amount">
-                +₹{winAmount?.toFixed(2)}
-              </span>
+              <span className="wg-bonus-amount">+₹{winAmount?.toFixed(2)}</span>
             </div>
 
             <div className="wg-popup-tap">Tap anywhere to close</div>
@@ -347,7 +388,7 @@ const WinGo = () => {
           ←
         </button>
         <img src="src/assets/inder.png" className="logg" alt="logo" />
-        <p className="indd">RAJA WIN  </p>
+        <p className="indd">Tiger ClUB</p>
         <div className="bal">
           <div>
             <p className="wall">WALLET BALANCE</p>
@@ -517,7 +558,7 @@ const WinGo = () => {
       </div>
 
       {/* Mode Indicator Badge */}
-      {/* <div style={{ margin: "10px 0 0 12px" }}>
+      <div style={{ margin: "10px 0 0 12px" }}>
         <span
           style={{
             background: "#e4e6ea",
@@ -531,17 +572,15 @@ const WinGo = () => {
         >
           {gameMode === "1min" ? "1 MIN HISTORY" : "30 SEC HISTORY"}
         </span>
-      </div> */}
+      </div>
 
       <br />
 
       {/* Dynamic History Table & My History Table */}
       <div className="history-wrapper">
-        {/* Game History (Period results) */}
         {activeTab === "game" &&
           (gameMode === "1min" ? <GameHistory1Min /> : <GameHistory />)}
 
-        {/* My History (Win / Loss Bet History) */}
         {activeTab === "my" &&
           (gameMode === "1min" ? <MyHistory1Min /> : <MyHistory />)}
       </div>
