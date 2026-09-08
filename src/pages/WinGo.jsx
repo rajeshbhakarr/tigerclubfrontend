@@ -14,36 +14,59 @@ const ROUND_DURATION_1MIN = 60;
 const WINGO_API = `${API_URL}/api/wingo`;
 const WINGO_1MIN_API = `${API_URL}/api/wingo-1min`;
 
-// ── Web Audio Beep Sound Generator (Zero external files required) ──
-const playCountdownBeep = (secondsLeft) => {
+// ── Realistic Casino Countdown Sound Synthesizer ──
+const playCountdownSound = (sec) => {
   try {
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    const ctx = new AudioContext();
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
 
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
+    if (sec > 1) {
+      // 5, 4, 3, 2 seconds: Sharp Casino Countdown Tick/Bell
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
+      const gain = ctx.createGain();
 
-    osc.connect(gain);
-    gain.connect(ctx.destination);
+      osc1.type = "sine";
+      osc2.type = "triangle";
 
-    if (secondsLeft === 1 || secondsLeft === 0) {
-      // Final long high beep (Tuuuun)
-      osc.frequency.setValueAtTime(1100, ctx.currentTime);
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.6);
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.6);
+      osc1.frequency.setValueAtTime(880, ctx.currentTime);      // A5
+      osc1.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.12);
+
+      osc2.frequency.setValueAtTime(1760, ctx.currentTime);     // A6 shimmer
+      osc2.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.08);
+
+      gain.gain.setValueAtTime(0.35, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.14);
+
+      osc1.connect(gain);
+      osc2.connect(gain);
+      gain.connect(ctx.destination);
+
+      osc1.start(ctx.currentTime);
+      osc2.start(ctx.currentTime);
+      osc1.stop(ctx.currentTime + 0.15);
+      osc2.stop(ctx.currentTime + 0.15);
     } else {
-      // 5, 4, 3, 2 second short beep (Tu)
-      osc.frequency.setValueAtTime(750, ctx.currentTime);
-      gain.gain.setValueAtTime(0.25, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+      // 1 or 0 second: High-pitched Game Result Climax Gong / Tone
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+
+      osc.type = "sine";
+      osc.frequency.setValueAtTime(1318.5, ctx.currentTime); // E6 long chime
+      osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.7);
+
+      gain.gain.setValueAtTime(0.4, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.75);
+
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
       osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.15);
+      osc.stop(ctx.currentTime + 0.8);
     }
-  } catch (err) {
-    // Silent catch for browser audio policies
+  } catch (e) {
+    // browser auto-play policy guard
   }
 };
 
@@ -54,6 +77,7 @@ const WinGo = () => {
   // ── Game mode (30sec or 1min)
   const [gameMode, setGameMode] = useState("30sec");
 
+  // ── Correct API according to selected game
   const gameApi = gameMode === "1min" ? WINGO_1MIN_API : WINGO_API;
 
   const [period, setPeriod] = useState("Loading...");
@@ -71,7 +95,7 @@ const WinGo = () => {
 
   const clientIntervalRef = useRef(null);
   const lastPeriodRef = useRef(null);
-  const lastPlayedSecondRef = useRef(null); // Beep sound duplicate rokne ke liye
+  const lastPlayedSecRef = useRef(null);
 
   // ── Win/Loss popup state
   const [popup, setPopup] = useState(null);
@@ -104,7 +128,7 @@ const WinGo = () => {
     setGameMode(mode);
     setPeriod("Loading...");
     lastPeriodRef.current = null;
-    lastPlayedSecondRef.current = null;
+    lastPlayedSecRef.current = null;
     setHistory([]);
     const defaultSec = mode === "1min" ? ROUND_DURATION_1MIN : ROUND_DURATION_30;
     setTimer(defaultSec);
@@ -129,7 +153,7 @@ const WinGo = () => {
     popupTimerRef.current = setTimeout(() => setPopup(null), 3000);
   }, []);
 
-  // ── Client-side countdown with 5-second beep trigger ──
+  // ── Client-side countdown with sound trigger
   const startClientCountdown = useCallback(
     (startTime) => {
       if (clientIntervalRef.current) {
@@ -145,11 +169,11 @@ const WinGo = () => {
         setTimer(remaining);
         setLocked(remaining <= 5);
 
-        // ✅ LAST 5 SECONDS VOICE / BEEP SOUND LOGIC
+        // 🔊 Real Casino sound countdown for 5, 4, 3, 2, 1
         if (remaining <= 5 && remaining >= 1) {
-          if (lastPlayedSecondRef.current !== remaining) {
-            lastPlayedSecondRef.current = remaining;
-            playCountdownBeep(remaining);
+          if (lastPlayedSecRef.current !== remaining) {
+            lastPlayedSecRef.current = remaining;
+            playCountdownSound(remaining);
           }
         }
       }, 100);
@@ -174,7 +198,7 @@ const WinGo = () => {
         if (isNewRound) {
           const prevPeriod = lastPeriodRef.current;
           lastPeriodRef.current = data.period;
-          lastPlayedSecondRef.current = null; // Reset sound per round
+          lastPlayedSecRef.current = null;
           setPeriod(data.period);
           setHistory(data.history || []);
 
@@ -374,7 +398,9 @@ const WinGo = () => {
 
             <div className="wg-popup-bonus">
               <span className="wg-bonus-label">💰 Bonus Added</span>
-              <span className="wg-bonus-amount">+₹{winAmount?.toFixed(2)}</span>
+              <span className="wg-bonus-amount">
+                +₹{winAmount?.toFixed(2)}
+              </span>
             </div>
 
             <div className="wg-popup-tap">Tap anywhere to close</div>
@@ -388,7 +414,7 @@ const WinGo = () => {
           ←
         </button>
         <img src="src/assets/inder.png" className="logg" alt="logo" />
-        <p className="indd">Tiger ClUB</p>
+        <p className="indd">RAJA WIN  </p>
         <div className="bal">
           <div>
             <p className="wall">WALLET BALANCE</p>
@@ -555,23 +581,6 @@ const WinGo = () => {
         >
           <span>MY HISTORY</span>
         </div>
-      </div>
-
-      {/* Mode Indicator Badge */}
-      <div style={{ margin: "10px 0 0 12px" }}>
-        <span
-          style={{
-            background: "#e4e6ea",
-            color: "#333",
-            padding: "5px 12px",
-            borderRadius: "6px",
-            fontWeight: "bold",
-            fontSize: "13px",
-            display: "inline-block",
-          }}
-        >
-          {gameMode === "1min" ? "1 MIN HISTORY" : "30 SEC HISTORY"}
-        </span>
       </div>
 
       <br />
