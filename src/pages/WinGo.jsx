@@ -5,6 +5,7 @@ import GameHistory1Min, { MyHistory as MyHistory1Min } from "./gamehistory1min";
 import { useNavigate } from "react-router-dom";
 import { placeBet, getMyBets } from "../api/wingoApi";
 import { useWallet } from "../context/WalletContext";
+import countdownAudio from "../assets/audio/countdown.mp3";
 
 const API_URL = "https://tigerclubbackend.onrender.com";
 
@@ -16,59 +17,18 @@ const WINGO_1MIN_API = `${API_URL}/api/wingo-1min`;
 
 // ── Realistic Casino Countdown Sound Synthesizer ──
 // ── Video Match Exact Digital Countdown Audio Engine ──
+// Preload the real audio file
+const realAudio = typeof Audio !== "undefined" ? new Audio(countdownAudio) : null;
+
 const playCountdownSound = (sec) => {
   try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-
-    if (sec > 1) {
-      // 5, 4, 3, 2 second: Quick High Digital "Tuk"
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = "sine";
-      // Exact frequency curve for the short beep
-      osc.frequency.setValueAtTime(820, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(780, ctx.currentTime + 0.08);
-
-      gain.gain.setValueAtTime(0.4, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc.start(ctx.currentTime);
-      osc.stop(ctx.currentTime + 0.09);
-    } else {
-      // 1 second: Long Dual-Chime "Tuuuun..." Ending Tone
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc1.type = "sine";
-      osc2.type = "triangle";
-
-      osc1.frequency.setValueAtTime(1046.5, ctx.currentTime); // High C
-      osc1.frequency.exponentialRampToValueAtTime(523.25, ctx.currentTime + 0.65);
-
-      osc2.frequency.setValueAtTime(1318.5, ctx.currentTime); // E harmonic
-      osc2.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.65);
-
-      gain.gain.setValueAtTime(0.45, ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.7);
-
-      osc1.connect(gain);
-      osc2.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc1.start(ctx.currentTime);
-      osc2.start(ctx.currentTime);
-      osc1.stop(ctx.currentTime + 0.72);
-      osc2.stop(ctx.currentTime + 0.72);
-    }
-  } catch (e) {
-    // Autoplay policy fallback
+    if (!realAudio) return;
+    realAudio.currentTime = 0; // Har second start se play karega
+    realAudio.play().catch((e) => {
+      // Browser autoplay policy guard
+    });
+  } catch (err) {
+    console.error("Audio error:", err);
   }
 };
 
