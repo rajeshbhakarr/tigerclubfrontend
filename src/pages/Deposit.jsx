@@ -80,7 +80,7 @@ const Deposit = () => {
 
         <button
           className="rw-history-button"
-          onClick={() => navigate("/deposit-history")}
+          onClick={() => navigate("/deposithistory")}
         >
           History
         </button>
