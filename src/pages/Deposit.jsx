@@ -3,214 +3,332 @@ import { useNavigate } from "react-router-dom";
 import "../styles/deposit.css";
 
 const Deposit = () => {
+  const navigate = useNavigate();
+
+  const [amount, setAmount] = useState(0);
+  const [selectedChannel, setSelectedChannel] = useState("paytm");
+  const [value, setValue] = useState("");
 
   const handleDeposit = async () => {
-  if (!amount || amount < 100) {
-    alert("Minimum ₹100 required");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://tigerclubbackend.onrender.com/api/deposit", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + localStorage.getItem("token"),
-      },
-      body: JSON.stringify({
-        amount,
-        txn: "TXN" + Date.now(), // dummy txn
-      }),
-    });
-
-    const data = await res.json();
-
-    if (data.success) {
-      navigate("/payment", { state: { amount } });
-    } else {
-      alert(data.message || "Failed");
+    if (!amount || amount < 100) {
+      alert("Minimum ₹100 required");
+      return;
     }
-  } catch (err) {
-    console.log(err);
-    alert("Server error");
-  }
-};
-    
-  const navigate = useNavigate();
-  const [value, setValue] = useState("3000");
-  const [amount, setAmount] = useState(0);
 
-  const handleClear = () => {
+    try {
+      const res = await fetch(
+        "https://tigerclubbackend.onrender.com/api/deposit",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization:
+              "Bearer " + localStorage.getItem("token"),
+          },
+          body: JSON.stringify({
+            amount,
+            txn: "TXN" + Date.now(),
+          }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (data.success) {
+        navigate("/payment", {
+          state: {
+            amount,
+            channel: selectedChannel,
+          },
+        });
+      } else {
+        alert(data.message || "Failed");
+      }
+    } catch (err) {
+      console.log(err);
+      alert("Server error");
+    }
+  };
+
+  const selectAmount = (value) => {
+    setAmount(value);
+    setValue(String(value));
+  };
+
+  const clearAmount = () => {
+    setAmount(0);
     setValue("");
   };
 
-  const amounts = [100, 200, 300, 500, 1000, 1100, 2000, 3000, 5000];
-
-  const format = (val) => {
-    if (val >= 1000) return val / 1000 + "K";
-    return val;
-  };
   return (
-    <div className="deppage">
-      <div className="depp">
-        <span className="back-btn" onClick={() => navigate("/profile")}>
+    <div className="rw-deposit-page">
+
+      {/* ================= HEADER ================= */}
+
+      <header className="rw-deposit-header">
+
+        <button
+          className="rw-back-button"
+          onClick={() => navigate("/profile")}
+        >
           ←
-        </span>
+        </button>
 
-        <p className="dep">Deposit</p>
-      </div>
+        <h1 className="rw-deposit-title">
+          Deposit
+        </h1>
 
-      <br />
+        <button
+          className="rw-history-button"
+          onClick={() => navigate("/deposit-history")}
+        >
+          History
+        </button>
 
-      <div className="chnl">
-        <p className="select">select channel </p>
+      </header>
 
-        <div className="slt">
-  <span>Paytm X QR</span>
-</div>
+      {/* ================= BALANCE CARD ================= */}
 
-<div className="sltt">
-  <span>UPI X QR</span>
-</div>
-      </div>
+      <section className="rw-balance-card">
 
-      <div className="amm">
-        <span>💳 Deposit Ammount</span>
+        <div className="rw-balance-top">
+          <span className="rw-wallet-icon">
+            💳
+          </span>
 
-        <div className="ammnt">
-          <div
-            className={amount === 100 ? "rs active" : "rs"}
-            onClick={() => setAmount(100)}
-          >
-            <span className="rsspn">₹ 100</span>
-          </div>
-          <div
-            className={amount === 200 ? "rs active" : "rs"}
-            onClick={() => setAmount(200)}
-          >
-            <span className="rsspn">₹ 200</span>
-          </div>
-          <div
-            className={amount === 300 ? "rs active" : "rs"}
-            onClick={() => setAmount(300)}
-          >
-            <span className="rsspn">₹ 300</span>
-          </div>
+          <span>
+            Wallet Balance
+          </span>
         </div>
 
-        <div className="ammntt">
-          <div
-            className={amount === 500 ? "rs active" : "rs"}
-            onClick={() => setAmount(500)}
-          >
-            <span className="rsspn">₹ 500</span>
-          </div>
-          <div
-            className={amount === 1000 ? "rs active" : "rs"}
-            onClick={() => setAmount(1000)}
-          >
-            <span className="rsspn">₹ 1000</span>
-          </div>
-          <div
-            className={amount === 1500 ? "rs active" : "rs"}
-            onClick={() => setAmount(1500)}
-          >
-            <span className="rsspn">₹ 1500</span>
-          </div>
+        <div className="rw-balance-amount">
+          ₹{amount > 0 ? amount.toFixed(2) : "0.00"}
+
+          <span className="rw-refresh">
+            ↻
+          </span>
         </div>
 
-        <div className="ammnttt">
-          <div
-            className={amount === 2000 ? "rs active" : "rs"}
-            onClick={() => setAmount(2000)}
-          >
-            <span className="rsspn">₹ 2000</span>
-          </div>
-          <div
-            className={amount === 3000 ? "rs active" : "rs"}
-            onClick={() => setAmount(3000)}
-          >
-            <span className="rsspn">₹ 3000</span>
-          </div>
-          <div
-            className={amount === 5000 ? "rs active" : "rs"}
-            onClick={() => setAmount(5000)}
-          >
-            <span className="rsspn">₹ 5000</span>
-          </div>
+      </section>
 
-          {/* <input   className="inut" type="ammount" /> */}
+      {/* ================= BONUS INFO ================= */}
 
-          <div className="price-wrapper">
-            <span className="currency-icon">₹</span>
-            <div className="vertical-divider"></div>
-            <input
-              type="number"
-              className="amount-input"
-              value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
-              placeholder="0"
-            />
-            {value && (
-              <button className="clear-btn" onClick={handleClear}>
-                <span className="close-icon">×</span>
+      <section className="rw-bonus-card">
+
+        <div className="rw-bonus-icon">
+          🎁
+        </div>
+
+        <div className="rw-bonus-text">
+          <strong>
+            Deposit Bonus
+          </strong>
+
+          <span>
+            Select an amount to continue
+          </span>
+        </div>
+
+        <div className="rw-bonus-arrow">
+          ›
+        </div>
+
+      </section>
+
+      {/* ================= PAYMENT METHOD ================= */}
+
+      <section className="rw-method-section">
+
+        <div className="rw-section-heading">
+          <span className="rw-heading-icon">
+            💳
+          </span>
+
+          <span>
+            Select Payment Method
+          </span>
+        </div>
+
+        <div className="rw-method-grid">
+
+          {/* PAYTM */}
+
+          <button
+            type="button"
+            className={
+              selectedChannel === "paytm"
+                ? "rw-method-card rw-method-active"
+                : "rw-method-card"
+            }
+            onClick={() =>
+              setSelectedChannel("paytm")
+            }
+          >
+
+            <div className="rw-paytm-logo">
+              paytm
+            </div>
+
+            <div className="rw-method-placeholder">
+              QR
+            </div>
+
+            <div className="rw-method-label">
+              Paytm X QR
+            </div>
+
+          </button>
+
+          {/* UPI */}
+
+          <button
+            type="button"
+            className={
+              selectedChannel === "upi"
+                ? "rw-method-card rw-method-active"
+                : "rw-method-card"
+            }
+            onClick={() =>
+              setSelectedChannel("upi")
+            }
+          >
+
+            <div className="rw-upi-logo">
+              UPI
+            </div>
+
+            <div className="rw-method-placeholder">
+              QR
+            </div>
+
+            <div className="rw-method-label">
+              UPI X QR
+            </div>
+
+          </button>
+
+        </div>
+
+      </section>
+
+      {/* ================= AMOUNT ================= */}
+
+      <section className="rw-amount-section">
+
+        <div className="rw-section-heading">
+          <span className="rw-heading-icon">
+            🪙
+          </span>
+
+          <span>
+            Deposit Amount
+          </span>
+        </div>
+
+        <div className="rw-amount-grid">
+
+          {[100, 200, 300, 500, 1000, 1500, 2000, 3000, 5000].map(
+            (item) => (
+              <button
+                key={item}
+                type="button"
+                className={
+                  amount === item
+                    ? "rw-amount-button rw-amount-selected"
+                    : "rw-amount-button"
+                }
+                onClick={() => selectAmount(item)}
+              >
+                ₹ {item}
               </button>
-            )}
-          </div>
+            )
+          )}
+
         </div>
 
-<div  >
+        {/* CUSTOM AMOUNT */}
 
-<button className="depositt" onClick={handleDeposit}>
-  Deposit
-</button>
+        <div className="rw-custom-amount">
 
+          <span className="rw-rupee-symbol">
+            ₹
+          </span>
 
+          <span className="rw-input-divider"></span>
 
-</div>
+          <input
+            type="number"
+            value={value}
+            placeholder="Enter amount"
+            onChange={(e) => {
+              const val = e.target.value;
+              setValue(val);
+              setAmount(
+                val === "" ? 0 : Number(val)
+              );
+            }}
+          />
 
-      </div>
+          <button
+            type="button"
+            className="rw-clear-amount"
+            onClick={clearAmount}
+          >
+            ×
+          </button>
 
-      <div className="instructions-box">
-        <div className="inst-title">
-          <span className="inst-icon">📕</span>
-          Recharge Instructions
         </div>
 
-        <div className="inst-content">
-          <div className="inst-item">
-            <span className="dot"></span>
-            <p>
-              Please complete your payment within the given time to avoid order
-              cancellation.
-            </p>
-          </div>
+        {/* DEPOSIT BUTTON */}
 
-          <div className="inst-item">
-            <span className="dot"></span>
-            <p>
-              Make sure the transfer amount matches exactly with your selected
-              amount.
-            </p>
-          </div>
+        <button
+          type="button"
+          className="rw-main-deposit-button"
+          onClick={handleDeposit}
+        >
+          Deposit
+        </button>
 
-          <div className="inst-item">
-            <span className="dot"></span>
-            <p>
-              Incorrect payments may not be processed, so double-check before
-              sending.
-            </p>
-          </div>
+      </section>
 
-          <div className="inst-item">
-            <span className="dot"></span>
-            <p>
-              After payment, do not refresh or leave the page until
-              confirmation.
-            </p>
-          </div>
+      {/* ================= INSTRUCTIONS ================= */}
+
+      <section className="rw-instruction-section">
+
+        <div className="rw-instruction-heading">
+          📕 Recharge Instructions
         </div>
-      </div>
+
+        <div className="rw-instruction-list">
+
+          <div className="rw-instruction-row">
+            <span>•</span>
+            <p>
+              Please complete your payment within
+              the given time to avoid cancellation.
+            </p>
+          </div>
+
+          <div className="rw-instruction-row">
+            <span>•</span>
+            <p>
+              Make sure the transfer amount matches
+              your selected amount.
+            </p>
+          </div>
+
+          <div className="rw-instruction-row">
+            <span>•</span>
+            <p>
+              Double-check your payment details
+              before continuing.
+            </p>
+          </div>
+
+        </div>
+
+      </section>
+
     </div>
   );
 };

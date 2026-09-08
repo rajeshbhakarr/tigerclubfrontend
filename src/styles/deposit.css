@@ -1,3 +1,8 @@
+/* =====================================================
+   RAJA WIN DEPOSIT PAGE
+   Unique prefix: rw-
+===================================================== */
+
 * {
   margin: 0;
   padding: 0;
@@ -7,249 +12,490 @@
 body {
   margin: 0;
   padding: 0 !important;
-  min-height: 100vh;
-  background: #2f2923;
-  font-family: Arial, sans-serif;
+  background: #302a24;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.deppage {
+/* ================= MAIN PAGE ================= */
+
+.rw-deposit-page {
   width: 100%;
   max-width: 420px;
   min-height: 100vh;
   margin: 0 auto;
+
   background: #f5f5f5;
-  padding-bottom: 25px;
+
+  padding-bottom: 28px;
 }
 
 /* ================= HEADER ================= */
 
-.depp {
+.rw-deposit-header {
   height: 66px;
+
   background: #d8ccb2;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   position: relative;
 }
 
-.dep {
+.rw-deposit-title {
+  margin: 0;
+
   font-size: 26px;
   font-weight: 500;
+
   color: #111;
 }
 
-.back-btn {
+.rw-back-button {
   position: absolute;
   left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 28px;
-  cursor: pointer;
+
+  width: 38px;
+  height: 38px;
+
+  border: none;
+  background: transparent;
+
+  font-size: 29px;
   color: #222;
+
+  cursor: pointer;
 }
 
-/* ================= CHANNEL BOX ================= */
+.rw-history-button {
+  position: absolute;
+  right: 14px;
 
-.chnl {
-  background: #fff;
+  border: none;
+  background: transparent;
+
+  font-size: 14px;
+  color: #222;
+
+  cursor: pointer;
+}
+
+/* ================= BALANCE ================= */
+
+.rw-balance-card {
   margin: 12px;
+
+  height: 130px;
+
+  padding: 18px 20px;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f4b51c,
+      #e79a00
+    );
+
+  box-shadow:
+    0 6px 16px rgba(0,0,0,.14);
+
+  color: white;
+
+  overflow: hidden;
+}
+
+.rw-balance-top {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.rw-wallet-icon {
+  font-size: 19px;
+}
+
+.rw-balance-amount {
+  margin-top: 8px;
+
+  font-size: 36px;
+  font-weight: 900;
+
+  letter-spacing: .3px;
+}
+
+.rw-refresh {
+  margin-left: 8px;
+
+  font-size: 27px;
+  font-weight: 400;
+}
+
+/* ================= BONUS ================= */
+
+.rw-bonus-card {
+  margin: 0 12px 12px;
+
+  min-height: 67px;
+
+  padding: 10px 13px;
+
   border-radius: 14px;
-  padding: 14px;
+
+  background: #fff9e9;
+
+  display: flex;
+  align-items: center;
+
+  border: 1px solid #f1dfb1;
+}
+
+.rw-bonus-icon {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  background: #ffe7a9;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+
+  flex-shrink: 0;
+}
+
+.rw-bonus-text {
+  flex: 1;
+
+  margin-left: 11px;
+
   display: flex;
   flex-direction: column;
+
+  gap: 3px;
 }
 
-.select {
-  font-size: 17px;
-  font-weight: 700;
-  color: #171717;
-  margin-bottom: 12px;
+.rw-bonus-text strong {
+  font-size: 15px;
+  color: #8a5a10;
 }
 
-/* TWO PAYMENT CARDS */
+.rw-bonus-text span {
+  font-size: 11px;
+  color: #8b8b8b;
+}
 
-.slt,
-.sltt {
-  width: 100%;
-  height: 105px;
-  border-radius: 13px;
-  margin-bottom: 10px;
-  cursor: pointer;
+.rw-bonus-arrow {
+  width: 34px;
+  height: 34px;
+
+  border-radius: 50%;
+
+  background: #f9dfab;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
+  font-size: 23px;
+  color: #9a670e;
+}
+
+/* ================= PAYMENT METHOD ================= */
+
+.rw-method-section {
+  margin: 0 12px 12px;
+
+  padding: 14px;
+
+  border-radius: 15px;
+
   background: #fff;
-  border: 2px solid #dedede;
 
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-
-  transition: 0.2s ease;
+  box-shadow:
+    0 3px 10px rgba(0,0,0,.05);
 }
 
-.slt span,
-.sltt span {
-  font-family: Arial, sans-serif;
-  font-size: 17px;
-  font-weight: 700;
-  color: #555;
-  text-align: center;
-}
-
-/* Paytm card */
-
-.slt {
-  border-color: #e7e7e7;
-  background: linear-gradient(180deg, #fff, #f8f8f8);
-}
-
-.slt span::before {
-  content: "PAYTM";
-  display: block;
-  font-size: 25px;
-  font-weight: 800;
-  color: #1595e7;
-  margin-bottom: 7px;
-}
-
-/* UPI card */
-
-.sltt {
-  margin-bottom: 0;
-  background: linear-gradient(180deg, #fff, #f8f8f8);
-}
-
-.sltt span::before {
-  content: "UPI";
-  display: block;
-  font-size: 27px;
-  font-weight: 800;
-  color: #555;
-  margin-bottom: 7px;
-}
-
-/* ================= AMOUNT BOX ================= */
-
-.amm {
-  background: #fff;
-  margin: 12px;
-  border-radius: 14px;
-  padding: 16px;
-  position: relative;
-  padding-bottom: 82px;
-}
-
-.amm > span:first-child {
-  display: block;
-  font-family: Arial, sans-serif;
-  font-size: 18px;
-  font-weight: 700;
-  color: #171717;
-  margin-bottom: 15px;
-}
-
-/* Amount rows */
-
-.ammnt,
-.ammntt,
-.ammnttt {
+.rw-section-heading {
   display: flex;
+  align-items: center;
+
   gap: 8px;
-  margin-bottom: 8px;
+
+  margin-bottom: 12px;
+
+  font-size: 17px;
+  font-weight: 800;
+
+  color: #171717;
 }
 
-.rs {
-  flex: 1;
-  height: 45px;
+.rw-heading-icon {
+  font-size: 19px;
+}
 
-  background: #f1f1f1;
-  border: 1px solid #c9c9c9;
+/* ================= METHOD GRID ================= */
+
+.rw-method-grid {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 10px;
+}
+
+.rw-method-card {
+  min-height: 158px;
+
+  border-radius: 14px;
+
+  border: 2px solid #e0e0e0;
+
+  background: #fff;
+
+  padding: 9px;
+
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+
+  transition: .18s ease;
+}
+
+.rw-method-card:hover {
+  transform: translateY(-1px);
+}
+
+.rw-method-active {
+  border-color: #e5a400;
+
+  box-shadow:
+    0 4px 13px rgba(229,164,0,.22);
+}
+
+/* ================= LOGOS ================= */
+
+.rw-paytm-logo {
+  font-size: 27px;
+
+  font-weight: 900;
+
+  color: #1495e5;
+
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+}
+
+.rw-upi-logo {
+  font-size: 28px;
+
+  font-weight: 900;
+
+  color: #555;
+
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+}
+
+/* ================= QR PLACEHOLDER ================= */
+
+.rw-method-placeholder {
+  width: 82px;
+  height: 82px;
+
   border-radius: 9px;
 
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #eeeeee,
+      #eeeeee 3px,
+      #ffffff 3px,
+      #ffffff 6px
+    );
+
+  border: 1px solid #ddd;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  cursor: pointer;
-  transition: 0.15s ease;
+  font-size: 13px;
+  font-weight: 800;
+
+  color: #777;
 }
 
-.rsspn {
+.rw-method-label {
+  width: 100%;
+
+  padding: 7px 3px;
+
+  border-radius: 8px;
+
+  text-align: center;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #555;
+}
+
+.rw-method-active .rw-method-label {
+  background: #e5a400;
+  color: white;
+}
+
+/* ================= AMOUNT ================= */
+
+.rw-amount-section {
+  margin: 0 12px 12px;
+
+  padding: 15px;
+
+  border-radius: 15px;
+
+  background: #fff;
+
+  position: relative;
+
+  padding-bottom: 78px;
+}
+
+.rw-amount-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 8px;
+}
+
+.rw-amount-button {
+  height: 43px;
+
+  border-radius: 9px;
+
+  border: 1px solid #cccccc;
+
+  background: #f1f1f1;
+
+  color: #222;
+
   font-size: 14px;
   font-weight: 600;
-  color: #222;
+
+  cursor: pointer;
+
+  transition: .15s ease;
 }
 
-.rs.active {
-  background: #e8a600;
-  border-color: #e8a600;
+.rw-amount-button:active {
+  transform: scale(.96);
 }
 
-.rs.active .rsspn {
-  color: #fff;
+.rw-amount-selected {
+  background: #e5a400;
+
+  border-color: #e5a400;
+
+  color: white;
+
+  box-shadow:
+    0 3px 8px rgba(229,164,0,.25);
 }
 
-/* ================= INPUT ================= */
+/* ================= CUSTOM INPUT ================= */
 
-.price-wrapper {
+.rw-custom-amount {
   width: 100%;
-  height: 54px;
+  height: 53px;
+
   margin-top: 12px;
+
+  border-radius: 30px;
+
+  background: #e9e9e9;
 
   display: flex;
   align-items: center;
 
-  padding: 0 13px;
-
-  background: #e8e8e8;
-  border-radius: 30px;
+  padding: 0 12px;
 }
 
-.currency-icon {
-  font-size: 23px;
-  font-weight: 700;
-  color: #e33;
+.rw-rupee-symbol {
+  font-size: 22px;
+  font-weight: 800;
+
+  color: #e13d3d;
+
   margin-right: 10px;
 }
 
-.vertical-divider {
+.rw-input-divider {
   width: 1px;
-  height: 28px;
-  background: #ccc;
-  margin-right: 12px;
+  height: 27px;
+
+  background: #d0d0d0;
+
+  margin-right: 11px;
 }
 
-.amount-input {
+.rw-custom-amount input {
   flex: 1;
-  width: 100%;
+
+  min-width: 0;
 
   border: none;
   outline: none;
+
   background: transparent;
 
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
+
   color: #333;
 }
 
-.amount-input::placeholder {
+.rw-custom-amount input::placeholder {
   color: #999;
 }
 
-.amount-input::-webkit-outer-spin-button,
-.amount-input::-webkit-inner-spin-button {
+.rw-custom-amount input::-webkit-outer-spin-button,
+.rw-custom-amount input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-.clear-btn {
-  width: 27px;
-  height: 27px;
+.rw-clear-amount {
+  width: 28px;
+  height: 28px;
 
   border-radius: 50%;
+
   border: 1px solid #ccc;
+
   background: #eee;
+
+  color: #777;
+
+  font-size: 19px;
 
   display: flex;
   align-items: center;
@@ -258,123 +504,145 @@ body {
   cursor: pointer;
 }
 
-.close-icon {
-  font-size: 19px;
-  color: #777;
-}
+/* ================= MAIN BUTTON ================= */
 
-/* ================= DEPOSIT BUTTON ================= */
-
-.depositt {
+.rw-main-deposit-button {
   position: absolute;
-  bottom: 18px;
+
+  bottom: 17px;
+
   left: 50%;
+
   transform: translateX(-50%);
 
-  width: calc(100% - 32px);
+  width: calc(100% - 30px);
+
   height: 45px;
 
   border-radius: 25px;
-  border: 1px solid #8c6500;
 
-  background: linear-gradient(
-    to bottom,
-    #f0bd22,
-    #d99a00
-  );
+  border: 1px solid #9a7000;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #f2bd22,
+      #d99b00
+    );
 
   color: #111;
+
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 800;
 
   cursor: pointer;
 
   box-shadow:
-    inset 0 1px 2px rgba(255,255,255,.5),
-    0 3px 7px rgba(0,0,0,.18);
+    inset 0 1px 2px rgba(255,255,255,.45),
+    0 3px 8px rgba(0,0,0,.16);
+}
+
+.rw-main-deposit-button:active {
+  transform:
+    translateX(-50%)
+    scale(.98);
 }
 
 /* ================= INSTRUCTIONS ================= */
 
-.instructions-box {
+.rw-instruction-section {
+  margin: 0 12px;
+
+  padding: 15px;
+
+  border-radius: 15px;
+
   background: #fff;
-  margin: 12px;
-  padding: 16px;
-  border-radius: 14px;
 }
 
-.inst-title {
+.rw-instruction-heading {
+  font-size: 16px;
+  font-weight: 800;
+
+  margin-bottom: 11px;
+}
+
+.rw-instruction-list {
+  border: 1px solid #eeeeee;
+
+  border-radius: 11px;
+
+  padding: 11px;
+}
+
+.rw-instruction-row {
   display: flex;
-  align-items: center;
+
   gap: 8px;
 
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 12px;
+  margin-bottom: 9px;
 }
 
-.inst-content {
-  border: 1px solid #eee;
-  border-radius: 11px;
-  padding: 12px;
-}
-
-.inst-item {
-  display: flex;
-  gap: 9px;
-  margin-bottom: 10px;
-}
-
-.inst-item:last-child {
+.rw-instruction-row:last-child {
   margin-bottom: 0;
 }
 
-.inst-item p {
-  font-size: 13px;
-  line-height: 1.4;
-  color: #555;
+.rw-instruction-row > span {
+  color: #e0a000;
+
+  font-size: 18px;
+
+  line-height: 16px;
 }
 
-.dot {
-  width: 6px;
-  height: 6px;
-  min-width: 6px;
-  margin-top: 6px;
-  border-radius: 50%;
-  background: #e0a000;
+.rw-instruction-row p {
+  margin: 0;
+
+  font-size: 12px;
+
+  line-height: 1.45;
+
+  color: #666;
 }
 
-/* ================= MOBILE ================= */
+/* ================= SMALL MOBILE ================= */
 
 @media (max-width: 380px) {
 
-  .dep {
+  .rw-deposit-title {
     font-size: 24px;
   }
 
-  .slt,
-  .sltt {
-    height: 95px;
+  .rw-balance-card {
+    height: 120px;
+
+    padding: 15px 17px;
   }
 
-  .slt span,
-  .sltt span {
-    font-size: 15px;
+  .rw-balance-amount {
+    font-size: 32px;
   }
 
-  .slt span::before {
-    font-size: 22px;
+  .rw-method-card {
+    min-height: 145px;
   }
 
-  .sltt span::before {
-    font-size: 24px;
+  .rw-method-placeholder {
+    width: 72px;
+    height: 72px;
   }
 
-  .rs {
-    height: 42px;
+  .rw-paytm-logo,
+  .rw-upi-logo {
+    font-size: 23px;
   }
 
-  .rsspn {
+  .rw-method-label {
+    font-size: 12px;
+  }
+
+  .rw-amount-button {
+    height: 41px;
     font-size: 13px;
   }
 }
