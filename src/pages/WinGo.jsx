@@ -15,21 +15,23 @@ const ROUND_DURATION_1MIN = 60;
 const WINGO_API = `${API_URL}/api/wingo`;
 const WINGO_1MIN_API = `${API_URL}/api/wingo-1min`;
 
-// ── Realistic Casino Countdown Sound Synthesizer ──
-// ── Video Match Exact Digital Countdown Audio Engine ──
-// Preload the real audio file
+// ── Preload original audio instance ──
 const realAudio = typeof Audio !== "undefined" ? new Audio(countdownAudio) : null;
 
-const playCountdownSound = (sec) => {
+const playFullCountdownAudio = () => {
   try {
     if (!realAudio) return;
-    realAudio.currentTime = 0; // Har second start se play karega
-    realAudio.play().catch((e) => {
-      // Browser autoplay policy guard
-    });
-  } catch (err) {
-    console.error("Audio error:", err);
-  }
+    realAudio.currentTime = 0;
+    realAudio.play().catch(() => {});
+  } catch (err) {}
+};
+
+const stopCountdownAudio = () => {
+  try {
+    if (!realAudio) return;
+    realAudio.pause();
+    realAudio.currentTime = 0;
+  } catch (err) {}
 };
 
 const WinGo = () => {
@@ -57,7 +59,7 @@ const WinGo = () => {
 
   const clientIntervalRef = useRef(null);
   const lastPeriodRef = useRef(null);
-  const lastPlayedSecRef = useRef(null);
+  const hasPlayedCountdownRef = useRef(false); // Audio ko round me sirf 1 baar chalane ke liye
 
   // ── Win/Loss popup state
   const [popup, setPopup] = useState(null);
@@ -87,10 +89,11 @@ const WinGo = () => {
   // ── Mode change reset handler
   const handleModeChange = (mode) => {
     if (mode === gameMode) return;
+    stopCountdownAudio();
+    hasPlayedCountdownRef.current = false;
     setGameMode(mode);
     setPeriod("Loading...");
     lastPeriodRef.current = null;
-    lastPlayedSecRef.current = null;
     setHistory([]);
     const defaultSec = mode === "1min" ? ROUND_DURATION_1MIN : ROUND_DURATION_30;
     setTimer(defaultSec);
@@ -115,7 +118,7 @@ const WinGo = () => {
     popupTimerRef.current = setTimeout(() => setPopup(null), 3000);
   }, []);
 
-  // ── Client-side countdown with sound trigger
+  // ── Client-side countdown with single-trigger sound
   const startClientCountdown = useCallback(
     (startTime) => {
       if (clientIntervalRef.current) {
@@ -131,12 +134,15 @@ const WinGo = () => {
         setTimer(remaining);
         setLocked(remaining <= 5);
 
-        // 🔊 Real Casino sound countdown for 5, 4, 3, 2, 1
-        if (remaining <= 5 && remaining >= 1) {
-          if (lastPlayedSecRef.current !== remaining) {
-            lastPlayedSecRef.current = remaining;
-            playCountdownSound(remaining);
-          }
+        // ✅ Theek 5 par aate hi audio 1 baar naturally chalega (5-4-3-2-1 track)
+        if (remaining === 5 && !hasPlayedCountdownRef.current) {
+          hasPlayedCountdownRef.current = true;
+          playFullCountdownAudio();
+        }
+
+        // ✅ 0 par aate hi audio stop/finish ho jayegi
+        if (remaining <= 0) {
+          stopCountdownAudio();
         }
       }, 100);
     },
@@ -160,7 +166,11 @@ const WinGo = () => {
         if (isNewRound) {
           const prevPeriod = lastPeriodRef.current;
           lastPeriodRef.current = data.period;
-          lastPlayedSecRef.current = null;
+
+          // New round start hote hi sound trigger reset aur audio stop
+          hasPlayedCountdownRef.current = false;
+          stopCountdownAudio();
+
           setPeriod(data.period);
           setHistory(data.history || []);
 
@@ -232,6 +242,7 @@ const WinGo = () => {
     const syncInterval = setInterval(syncWithServer, 2500);
     return () => {
       clearInterval(syncInterval);
+      stopCountdownAudio();
       if (clientIntervalRef.current) clearInterval(clientIntervalRef.current);
     };
   }, [gameApi, gameMode, startClientCountdown, showPopup, fetchBalance]);
