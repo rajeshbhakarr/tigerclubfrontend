@@ -14,12 +14,31 @@ const ROUND_DURATION_1MIN = 60;
 const WINGO_API = `${API_URL}/api/wingo`;
 const WINGO_1MIN_API = `${API_URL}/api/wingo-1min`;
 
+// ── Global Audio Context Tracker ──
+let activeAudioCtx = null;
+
+const stopAllWingoSounds = () => {
+  try {
+    if (activeAudioCtx && activeAudioCtx.state !== "closed") {
+      activeAudioCtx.close();
+      activeAudioCtx = null;
+    }
+  } catch (e) {}
+};
+
 // ── 91 Club Style Deep Heavy Mechanical Audio Engine ──
 const play91ClubSound = (sec) => {
+  if (typeof document !== "undefined" && document.hidden) return;
+
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtx) return;
-    const ctx = new AudioCtx();
+
+    if (activeAudioCtx && activeAudioCtx.state !== "closed") {
+      activeAudioCtx.close();
+    }
+    activeAudioCtx = new AudioCtx();
+    const ctx = activeAudioCtx;
 
     if (sec > 0) {
       // 5, 4, 3, 2, 1: Heavy Mechanical Studio Tick (Low Body + Click Attack)
@@ -145,9 +164,30 @@ const WinGo = () => {
   // ── History sub tab: "game" or "my"
   const [activeTab, setActiveTab] = useState("game");
 
+  // ── Visibility & Cleanup (Back karne par ya tab switch par aawaz turant band) ──
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        stopAllWingoSounds();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      stopAllWingoSounds();
+      if (clientIntervalRef.current) {
+        clearInterval(clientIntervalRef.current);
+        clientIntervalRef.current = null;
+      }
+    };
+  }, []);
+
   // ── Mode change reset handler
   const handleModeChange = (mode) => {
     if (mode === gameMode) return;
+    stopAllWingoSounds();
     setGameMode(mode);
     setPeriod("Loading...");
     lastPeriodRef.current = null;
@@ -293,6 +333,7 @@ const WinGo = () => {
     const syncInterval = setInterval(syncWithServer, 2500);
     return () => {
       clearInterval(syncInterval);
+      stopAllWingoSounds();
       if (clientIntervalRef.current) clearInterval(clientIntervalRef.current);
     };
   }, [gameApi, gameMode, startClientCountdown, showPopup, fetchBalance]);
