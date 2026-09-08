@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "../styles/payment.css";
 
-import scanner from "../assets/scanner.png";
+import phonepeQR from "../assets/phonepe-qr.png";
+import upiQR from "../assets/upi-qr.png";
 
 const Payment = () => {
   const location = useLocation();
@@ -10,8 +11,10 @@ const Payment = () => {
 
   const amount = location.state?.amount || 0;
 
+  // Deposit page se selected channel
+  const selectedChannel = location.state?.channel || "upi";
+
   const [time, setTime] = useState(300);
-  const [selectedMethod, setSelectedMethod] = useState("paytm");
   const [utr, setUtr] = useState("");
 
   useEffect(() => {
@@ -23,8 +26,14 @@ const Payment = () => {
   }, []);
 
   const copyUPI = () => {
-    navigator.clipboard.writeText("test@upi");
-    alert("UPI Copied!");
+    navigator.clipboard
+      .writeText("45rizwan@yesfam")
+      .then(() => {
+        alert("UPI Copied!");
+      })
+      .catch(() => {
+        alert("Copy failed");
+      });
   };
 
   const handleSubmit = () => {
@@ -36,33 +45,39 @@ const Payment = () => {
     navigate("/payment-status");
   };
 
+  const isPaytm = selectedChannel === "paytm";
+
   return (
     <div className="pay-container">
 
-      {/* HEADER */}
+      {/* ================= HEADER ================= */}
+
       <div className="pay-header">
-        <span
+
+        <button
           className="pay-back"
           onClick={() => navigate(-1)}
         >
           ←
-        </span>
+        </button>
 
         <h2>Deposit</h2>
 
-        <span
+        <button
           className="pay-history"
           onClick={() => navigate("/deposit-history")}
         >
           History
-        </span>
+        </button>
+
       </div>
 
-      {/* AMOUNT CARD */}
+      {/* ================= AMOUNT ================= */}
+
       <div className="pay-amount-card">
 
         <div className="amount-label">
-          💳 &nbsp;Wallet Balance
+          💳 Wallet Balance
         </div>
 
         <div className="amount-value">
@@ -79,105 +94,71 @@ const Payment = () => {
 
       </div>
 
-      {/* PAYMENT METHOD */}
-      <div className="method-section">
+      {/* ================= SELECTED METHOD ================= */}
 
-        <div className="section-title">
-          💳 &nbsp;Select Payment Method
+      <div className="selected-method-card">
+
+        <div className="selected-method-title">
+          {isPaytm ? "Paytm X QR" : "UPI X QR"}
         </div>
 
-        <div className="method-grid">
-
-          {/* PAYTM */}
-          <button
-            type="button"
-            className={
-              selectedMethod === "paytm"
-                ? "method-card selected"
-                : "method-card"
-            }
-            onClick={() => setSelectedMethod("paytm")}
-          >
-
-            <div className="method-logo paytm-logo">
-              paytm
-            </div>
-
-            <div className="method-qr">
-              <img
-                src={scanner}
-                alt="Paytm QR"
-              />
-            </div>
-
-            <div className="method-name">
-              Paytm X QR
-            </div>
-
-          </button>
-
-          {/* UPI */}
-          <button
-            type="button"
-            className={
-              selectedMethod === "upi"
-                ? "method-card selected"
-                : "method-card"
-            }
-            onClick={() => setSelectedMethod("upi")}
-          >
-
-            <div className="method-logo upi-logo">
-              UPI
-            </div>
-
-            <div className="method-qr">
-              <img
-                src={scanner}
-                alt="UPI QR"
-              />
-            </div>
-
-            <div className="method-name">
-              UPI X QR
-            </div>
-
-          </button>
-
-        </div>
-      </div>
-
-      {/* PAYMENT DETAILS */}
-      <div className="details-card">
-
-        <div className="detail-title">
-          {selectedMethod === "paytm"
-            ? "Paytm X QR"
-            : "UPI X QR"}
-        </div>
-
-        <div className="selected-message">
-          Selected payment method
-        </div>
-
-        <div className="upi-box">
-
-          <span>
-            45rizwan@yesfam
-          </span>
-
-          <button
-            type="button"
-            onClick={copyUPI}
-          >
-            Copy
-          </button>
-
+        <div className="selected-method-subtitle">
+          {isPaytm
+            ? "Scan using PhonePe"
+            : "Scan using UPI"}
         </div>
 
       </div>
 
-      {/* TIMER */}
+      {/* ================= ONLY SELECTED QR ================= */}
+
+      <div className="qr-card">
+
+        <div className="qr-title">
+          Scan QR Code
+        </div>
+
+        <div className="qr-frame">
+
+          <img
+            className="main-qr"
+            src={isPaytm ? phonepeQR : upiQR}
+            alt={
+              isPaytm
+                ? "PhonePe QR"
+                : "UPI QR"
+            }
+          />
+
+        </div>
+
+        <div className="qr-caption">
+          {isPaytm
+            ? "PhonePe QR"
+            : "UPI QR"}
+        </div>
+
+      </div>
+
+      {/* ================= UPI DETAILS ================= */}
+
+      <div className="upi-box">
+
+        <span>
+          45rizwan@yesfam
+        </span>
+
+        <button
+          type="button"
+          onClick={copyUPI}
+        >
+          Copy
+        </button>
+
+      </div>
+
+      {/* ================= TIMER ================= */}
+
       <div className="timer-card">
 
         <span>
@@ -191,7 +172,8 @@ const Payment = () => {
 
       </div>
 
-      {/* UTR */}
+      {/* ================= UTR ================= */}
+
       <div className="utr-card">
 
         <div className="utr-title">
@@ -203,12 +185,15 @@ const Payment = () => {
           type="text"
           placeholder="Enter UTR / Reference ID"
           value={utr}
-          onChange={(e) => setUtr(e.target.value)}
+          onChange={(e) =>
+            setUtr(e.target.value)
+          }
         />
 
       </div>
 
-      {/* SUBMIT */}
+      {/* ================= SUBMIT ================= */}
+
       <button
         className="submit-btn"
         disabled={!utr}
@@ -217,7 +202,8 @@ const Payment = () => {
         Submit Payment
       </button>
 
-      {/* INFO */}
+      {/* ================= INFO ================= */}
+
       <div className="payment-info">
 
         <div className="info-title">
@@ -225,11 +211,11 @@ const Payment = () => {
         </div>
 
         <p>
-          Please check the selected payment method before continuing.
+          Please scan the QR shown above.
         </p>
 
         <p>
-          Keep your payment reference number safe.
+          Enter your reference number after payment.
         </p>
 
       </div>
