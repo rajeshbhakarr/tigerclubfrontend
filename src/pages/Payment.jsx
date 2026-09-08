@@ -77,7 +77,7 @@ const Payment = () => {
       <div className="pay-amount-card">
 
         <div className="amount-label">
-          💳 Wallet Balance
+          💳 Payment Ammount
         </div>
 
         <div className="amount-value">
