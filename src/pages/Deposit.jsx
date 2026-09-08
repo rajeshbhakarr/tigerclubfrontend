@@ -97,7 +97,7 @@ const Deposit = () => {
           </span>
 
           <span>
-            Wallet Balance
+            AMMOUNT OF PAYMENT
           </span>
         </div>
 
@@ -113,27 +113,7 @@ const Deposit = () => {
 
       {/* ================= BONUS INFO ================= */}
 
-      <section className="rw-bonus-card">
-
-        <div className="rw-bonus-icon">
-          🎁
-        </div>
-
-        <div className="rw-bonus-text">
-          <strong>
-            Deposit Bonus
-          </strong>
-
-          <span>
-            Select an amount to continue
-          </span>
-        </div>
-
-        <div className="rw-bonus-arrow">
-          ›
-        </div>
-
-      </section>
+      
 
       {/* ================= PAYMENT METHOD ================= */}
 
