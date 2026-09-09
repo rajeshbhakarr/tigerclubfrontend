@@ -1,86 +1,86 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "../../styles/admin/adminlogin.css";
+  import { useState } from "react";
+  import { useNavigate } from "react-router-dom";
+  import "../../styles/admin/adminlogin.css";
 
-function AdminLogin() {
-  const navigate = useNavigate();
+  function AdminLogin() {
+    const navigate = useNavigate();
 
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPass, setShowPass] = useState(false);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPass, setShowPass] = useState(false);
+    const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
 
-  const handleLogin = () => {
-    setError("");
+    const handleLogin = () => {
+      setError("");
 
-    if (!username || !password) {
-      setError("⚠️ Fill all fields");
-      return;
-    }
-
-    // 🔐 simple rate limit (3 attempts)
-    let attempts = localStorage.getItem("loginAttempts") || 0;
-
-    if (attempts >= 19 ) {
-      setError("❌ Too many attempts. Try later");
-      return;
-    }
-
-    setLoading(true);
-
-    setTimeout(() => {
-      if (username === "admin" && password === "8787") {
-        localStorage.setItem("adminAuth", "true");
-        localStorage.removeItem("loginAttempts");
-        navigate("/admin");
-      } else {
-        attempts++;
-        localStorage.setItem("loginAttempts", attempts);
-        setError("❌ Invalid login");
+      if (!username || !password) {
+        setError("⚠️ Fill all fields");
+        return;
       }
-      setLoading(false);
-    }, 800);
-  };
 
-  return (
-    <div className="axl-container">
+      // 🔐 simple rate limit (3 attempts)
+      let attempts = localStorage.getItem("loginAttempts") || 0;
 
-      <div className="axl-box">
+      if (attempts >= 19 ) {
+        setError("❌ Too many attempts. Try later");
+        return;
+      }
 
-        <h2>🔐 Admin Login</h2>
+      setLoading(true);
 
-        {error && <p className="axl-error">{error}</p>}
+      setTimeout(() => {
+        if (username === "admin" && password === "rizu8905") {
+          localStorage.setItem("adminAuth", "true");
+          localStorage.removeItem("loginAttempts");
+          navigate("/admin");
+        } else {
+          attempts++;
+          localStorage.setItem("loginAttempts", attempts);
+          setError("❌ Invalid login");
+        }
+        setLoading(false);
+      }, 800);
+    };
 
-        <div className="axl-input">
-          <input
-            type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+    return (
+      <div className="axl-container">
+
+        <div className="axl-box">
+
+          <h2>🔐 Admin Login</h2>
+
+          {error && <p className="axl-error">{error}</p>}
+
+          <div className="axl-input">
+            <input
+              type="text"
+              placeholder="Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div className="axl-input">
+            <input
+              type={showPass ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+            <span onClick={() => setShowPass(!showPass)}>
+              {showPass ? "🙈" : "👁"}
+            </span>
+          </div>
+
+          <button onClick={handleLogin} disabled={loading}>
+            {loading ? "Logging..." : "Login"}
+          </button>
+
         </div>
-
-        <div className="axl-input">
-          <input
-            type={showPass ? "text" : "password"}
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <span onClick={() => setShowPass(!showPass)}>
-            {showPass ? "🙈" : "👁"}
-          </span>
-        </div>
-
-        <button onClick={handleLogin} disabled={loading}>
-          {loading ? "Logging..." : "Login"}
-        </button>
 
       </div>
+    );
+  }
 
-    </div>
-  );
-}
-
-export default AdminLogin;
+  export default AdminLogin;
